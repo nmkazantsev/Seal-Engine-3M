@@ -21,47 +21,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
 public class Old_Engine {
-    public static final String version = "3.1.9";
-    private GLSurfaceView glSurfaceView;
-    public Context context;
-    protected static Function<Void, GamePageClass> startPage;
 
-    public GLSurfaceView onCreate(Context c, Function<Void, GamePageClass> getStartPage, boolean landscape, boolean debug, boolean MSAA) {
-        Old_Engine.startPage = getStartPage;
-        ActivityManager activityManager = (ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
-        ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-        Log.i("engine version ", version);
-        Log.i("version", String.valueOf(Double.parseDouble(configurationInfo.getGlEsVersion())));
-        Log.i("version", String.valueOf(configurationInfo.reqGlEsVersion >= 0x30000));
-        Log.i("version", String.format("%X", configurationInfo.reqGlEsVersion));
-        Log.i("engine version", version);
-        context = c;
-        MainConfigurationFunctions.context = context;
-        Utils.context = context;
-        if (!supportES2()) {
-            Toast.makeText(context, "OpenGL ES 2.0 is not supported", Toast.LENGTH_LONG).show();
-            return null;
-        }
-        glSurfaceView = new GLSurfaceView(context);
-        glSurfaceView.setEGLContextClientVersion(3);
-        glSurfaceView.setEGLConfigChooser(new MyConfigChooser(MSAA ? 4 : 1));
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        final DisplayMetrics displayMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(displayMetrics);
-        float widthPixels = displayMetrics.widthPixels;
-        float heightPixels = displayMetrics.heightPixels;
-        if (landscape && widthPixels < heightPixels) {
-            glSurfaceView.setRenderer(new OpenGLRenderer(context, heightPixels, widthPixels));
-        } else if (!landscape && widthPixels > heightPixels) {
-            glSurfaceView.setRenderer(new OpenGLRenderer(context, heightPixels, widthPixels));
-        } else {
-            glSurfaceView.setRenderer(new OpenGLRenderer(context, widthPixels, heightPixels));
-        }
-        if (debug) {
-            Debugger.debuggerInit();
-        }
-        return glSurfaceView;
-    }
 
     public void startPage(GamePageClass pageInterface) {
         OpenGLRenderer.startNewPage(pageInterface);
