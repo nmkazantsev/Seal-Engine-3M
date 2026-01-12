@@ -1,4 +1,4 @@
-package com.seal.gl_engine.maths;
+package com.nikitos.maths;
 
 import java.io.Serializable;
 

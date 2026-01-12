@@ -8,7 +8,7 @@ import java.util.function.Function;
  * an abstract class to be extended by platform - dependent implementations
  */
 public class LauncherParams {
-    Function<Void, GamePageClass> startPage = null;
+    protected Function<Void, GamePageClass> startPage = null;
     protected boolean landscape = false;
     protected boolean debug = false;
     protected boolean MSAA = false;

@@ -1,6 +1,6 @@
-package com.seal.gl_engine.maths;
+package com.nikitos.maths;
 
-import static com.seal.gl_engine.maths.PVector.sub;
+import static com.nikitos.maths.PVector.sub;
 import static com.seal.gl_engine.utils.Utils.abs;
 
 import java.io.Serializable;

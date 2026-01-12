@@ -1,6 +1,6 @@
 package com.seal.gl_engine.engine.main.camera;
 
-import com.seal.gl_engine.maths.PVector;
+import com.nikitos.maths.PVector;
 
 public class CameraSettings {
     public float eyeX;

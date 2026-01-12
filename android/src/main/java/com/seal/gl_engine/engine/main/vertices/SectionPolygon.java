@@ -11,8 +11,8 @@ import android.support.annotation.NonNull;
 import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.shaders.ShaderData;
-import com.seal.gl_engine.maths.Section;
-import com.seal.gl_engine.maths.PVector;
+import com.nikitos.maths.Section;
+import com.nikitos.maths.PVector;
 
 import java.lang.ref.WeakReference;
 

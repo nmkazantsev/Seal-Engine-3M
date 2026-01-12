@@ -20,7 +20,7 @@ import com.seal.gl_engine.engine.main.VRAMobject;
 import com.seal.gl_engine.engine.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.vertices.Face;
 import com.nikitos.GamePageClass;
-import com.seal.gl_engine.maths.PVector;
+import com.nikitos.maths.PVector;
 
 public class FrameBuffer extends VRAMobject {
     protected int texture;

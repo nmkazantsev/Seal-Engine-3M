@@ -1,4 +1,4 @@
-package com.seal.gl_engine.maths;
+package com.nikitos.maths;
 
 import static com.seal.gl_engine.engine.config.MainConfigurationFunctions.resetTranslateMatrix;
 import static com.seal.gl_engine.utils.Utils.degrees;

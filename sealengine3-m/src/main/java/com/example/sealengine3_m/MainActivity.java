@@ -1,36 +1,47 @@
 package com.example.sealengine3_m;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.sealengine3_m.databinding.ActivityMainBinding;
+import com.nikitos.Engine;
+import com.seal.gl_engine.AndroidLauncher;
+import com.seal.gl_engine.AndroidLauncherParams;
 
 public class MainActivity extends AppCompatActivity {
-
+    Engine engine;
     private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        AndroidLauncherParams androidLauncherParams = new AndroidLauncherParams(getApplicationContext())
+                .setDebug(true)
+                .setLandscape(true)
+                .setMSAA(true);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        AndroidLauncher androidLauncher = new AndroidLauncher(androidLauncherParams);
+        engine = androidLauncher.getEngine();
+        setContentView(androidLauncher.launch());
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        engine.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        engine.onResume();
+    }
 }

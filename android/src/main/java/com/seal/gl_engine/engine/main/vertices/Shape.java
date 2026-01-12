@@ -22,7 +22,7 @@ import com.seal.gl_engine.engine.main.images.PImage;
 import com.seal.gl_engine.engine.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.textures.Texture;
 import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
-import com.seal.gl_engine.maths.PVector;
+import com.nikitos.maths.PVector;
 import com.seal.gl_engine.utils.Utils;
 
 import java.io.IOException;

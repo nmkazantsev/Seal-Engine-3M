@@ -22,10 +22,10 @@ import javax.microedition.khronos.egl.EGLDisplay;
 
 public class AndroidBridge extends PlatformBridge {
     private Context context;
-    private GLSurfaceView glSurfaceView;
+    private static GLSurfaceView glSurfaceView;
     protected static Function<Void, GamePageClass> startPage;
 
-    GLSurfaceView launch(AndroidLauncherParams androidLauncherParams) {
+    GLSurfaceView launch(AndroidLauncherParams androidLauncherParams, Engine engine) {
         startPage = androidLauncherParams.getStartPage();
         this.context = androidLauncherParams.getContext();
         ActivityManager activityManager = (ActivityManager) context
@@ -49,11 +49,11 @@ public class AndroidBridge extends PlatformBridge {
         float widthPixels = displayMetrics.widthPixels;
         float heightPixels = displayMetrics.heightPixels;
         if (androidLauncherParams.isLandscape() && widthPixels < heightPixels) {
-            glSurfaceView.setRenderer(new OpenGLRenderer(context, heightPixels, widthPixels));
+            glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
         } else if (!androidLauncherParams.isLandscape() && widthPixels > heightPixels) {
-            glSurfaceView.setRenderer(new OpenGLRenderer(context, heightPixels, widthPixels));
+            glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
         } else {
-            glSurfaceView.setRenderer(new OpenGLRenderer(context, widthPixels, heightPixels));
+            glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
         }
         if (androidLauncherParams.isDebug()) {
             Debugger.debuggerInit();
@@ -66,6 +66,16 @@ public class AndroidBridge extends PlatformBridge {
                 (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
         return (configurationInfo.reqGlEsVersion >= 0x20000);
+    }
+
+    @Override
+    public void onPause() {
+        glSurfaceView.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        glSurfaceView.onResume();
     }
 
 

@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 
-import com.seal.gl_engine.maths.Section;
+import com.nikitos.maths.Section;
 import com.seal.gl_engine.utils.Utils;
 
 public class PImage {

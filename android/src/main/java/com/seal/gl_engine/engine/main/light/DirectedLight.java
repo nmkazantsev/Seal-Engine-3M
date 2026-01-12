@@ -6,7 +6,7 @@ import android.opengl.GLES30;
 
 import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.shaders.ShaderData;
-import com.seal.gl_engine.maths.PVector;
+import com.nikitos.maths.PVector;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

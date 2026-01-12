@@ -6,7 +6,7 @@ import android.opengl.GLES30;
 
 import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.shaders.ShaderData;
-import com.seal.gl_engine.maths.PVector;
+import com.nikitos.maths.PVector;
 
 public class AmbientLight extends ShaderData {
     private int aLightLocation; //link to color data
