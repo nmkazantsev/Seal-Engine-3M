@@ -1,0 +1,3 @@
+rootProject.name = 'sealEngine_3M'
+include 'core'
+include 'desktop'
