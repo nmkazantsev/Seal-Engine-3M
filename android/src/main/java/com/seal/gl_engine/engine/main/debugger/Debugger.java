@@ -6,7 +6,7 @@ import static android.opengl.GLES20.GL_SRC_ALPHA;
 import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
-import static com.seal.gl_engine.Engine.version;
+import static com.seal.gl_engine.Old_Engine.version;
 import static com.seal.gl_engine.OpenGLRenderer.fps;
 import static com.seal.gl_engine.engine.config.MainConfigurationFunctions.applyMatrix;
 import static com.seal.gl_engine.engine.config.MainConfigurationFunctions.resetTranslateMatrix;

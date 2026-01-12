@@ -8,7 +8,7 @@ import static android.opengl.GLES30.glDeleteVertexArrays;
 import static android.opengl.GLES30.glGenBuffers;
 import static android.opengl.GLES30.glGenVertexArrays;
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.VRAMobject;
 
 public class VertexBuffer extends VRAMobject {

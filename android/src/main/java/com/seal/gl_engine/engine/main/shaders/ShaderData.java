@@ -1,6 +1,6 @@
 package com.seal.gl_engine.engine.main.shaders;
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 
 public abstract class ShaderData {
     private final GamePageClass gamePageClass;

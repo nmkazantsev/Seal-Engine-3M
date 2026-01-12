@@ -12,7 +12,7 @@ import static android.opengl.GLES20.glGenTextures;
 
 import android.opengl.GLES20;
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.VRAMobject;
 
 

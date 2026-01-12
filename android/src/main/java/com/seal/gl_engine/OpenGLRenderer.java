@@ -13,6 +13,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
 
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.config.MainConfigurationFunctions;
 import com.seal.gl_engine.engine.main.VRAMobject;
 import com.seal.gl_engine.engine.main.debugger.Debugger;
@@ -112,7 +113,7 @@ public class OpenGLRenderer implements Renderer {
 
     private void draw() {
         if (gamePage == null) {
-            startNewPage(Engine.getStartPage.apply(null));
+            startNewPage(Old_Engine.startPage.apply(null));
         }
         VerticesShapesManager.onFrameBegin();
         gamePage.draw();

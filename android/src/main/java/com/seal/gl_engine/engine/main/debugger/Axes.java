@@ -7,7 +7,7 @@ import static com.seal.gl_engine.engine.main.shaders.Shader.applyShader;
 import androidx.annotation.NonNull;
 
 import com.example.gl_engine.R;
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.default_adaptors.SectionShaderAdaptor;
 import com.seal.gl_engine.engine.main.camera.Camera;
 import com.seal.gl_engine.engine.main.shaders.Shader;

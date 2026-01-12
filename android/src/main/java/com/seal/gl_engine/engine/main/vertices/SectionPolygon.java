@@ -5,10 +5,10 @@ import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glGetUniformLocation;
 
 import android.opengl.GLES30;
+import android.support.annotation.NonNull;
 
-import androidx.annotation.NonNull;
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.shaders.ShaderData;
 import com.seal.gl_engine.maths.Section;

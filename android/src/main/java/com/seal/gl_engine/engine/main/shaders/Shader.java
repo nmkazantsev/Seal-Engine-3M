@@ -5,7 +5,7 @@ import static com.seal.gl_engine.engine.main.shaders.ShaderUtils.createShaderPro
 import android.opengl.GLES20;
 
 import com.seal.gl_engine.OpenGLRenderer;
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 
 import java.util.ArrayList;
 import java.util.Iterator;

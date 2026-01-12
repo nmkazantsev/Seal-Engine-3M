@@ -5,7 +5,7 @@ import static com.seal.gl_engine.utils.Utils.millis;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.OpenGLRenderer;
 import com.seal.gl_engine.engine.main.debugger.Debugger;
 

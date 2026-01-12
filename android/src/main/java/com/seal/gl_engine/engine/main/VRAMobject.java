@@ -1,7 +1,7 @@
 package com.seal.gl_engine.engine.main;
 
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.OpenGLRenderer;
 
 import java.util.ArrayList;

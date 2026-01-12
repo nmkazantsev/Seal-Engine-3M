@@ -16,7 +16,7 @@ import static android.opengl.GLES30.GL_TEXTURE_WRAP_R;
 
 import static javax.microedition.khronos.opengles.GL10.GL_CLAMP_TO_EDGE;
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 
 public class CubeMap extends Texture {
     public CubeMap(GamePageClass creator) {

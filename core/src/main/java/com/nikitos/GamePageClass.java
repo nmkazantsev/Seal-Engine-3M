@@ -1,9 +1,10 @@
-package com.seal.gl_engine;
+package com.nikitos;
 
 public abstract class GamePageClass {
-    public GamePageClass(){
-        OpenGLRenderer.resetPageMillis();
+    public GamePageClass() {
+        resetPageMillis();
     }
+
     public abstract void draw();
 
     public abstract void onResume();

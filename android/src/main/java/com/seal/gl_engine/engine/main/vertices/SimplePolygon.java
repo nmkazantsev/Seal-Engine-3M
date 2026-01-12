@@ -1,6 +1,6 @@
 package com.seal.gl_engine.engine.main.vertices;
 
-import com.seal.gl_engine.GamePageClass;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.images.PImage;
 import com.seal.gl_engine.maths.PVector;
 import com.seal.gl_engine.utils.Utils;

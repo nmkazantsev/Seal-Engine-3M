@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.config.MainConfigurationFunctions;
 import com.seal.gl_engine.engine.main.debugger.Debugger;
 import com.seal.gl_engine.utils.Utils;
@@ -19,14 +20,14 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-public class Engine {
+public class Old_Engine {
     public static final String version = "3.1.9";
     private GLSurfaceView glSurfaceView;
     public Context context;
-    protected static Function<Void, GamePageClass> getStartPage;
+    protected static Function<Void, GamePageClass> startPage;
 
     public GLSurfaceView onCreate(Context c, Function<Void, GamePageClass> getStartPage, boolean landscape, boolean debug, boolean MSAA) {
-        Engine.getStartPage = getStartPage;
+        Old_Engine.startPage = getStartPage;
         ActivityManager activityManager = (ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
         ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
         Log.i("engine version ", version);
@@ -66,12 +67,7 @@ public class Engine {
         OpenGLRenderer.startNewPage(pageInterface);
     }
 
-    private boolean supportES2() {
-        ActivityManager activityManager =
-                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-        return (configurationInfo.reqGlEsVersion >= 0x20000);
-    }
+
 
     /**
      * Redefinition of OpenglRenderer.startNewPage(..). Calls the function above.
