@@ -8,8 +8,11 @@ import android.view.WindowManager;
 
 import com.example.sealengine3_m.databinding.ActivityMainBinding;
 import com.nikitos.Engine;
+import com.nikitos.GamePageClass;
 import com.seal.gl_engine.AndroidLauncher;
 import com.seal.gl_engine.AndroidLauncherParams;
+
+import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
     Engine engine;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         AndroidLauncherParams androidLauncherParams = new AndroidLauncherParams(getApplicationContext())
                 .setDebug(true)
                 .setLandscape(true)
+                .setStartPage(unused -> new MainRenderer())
                 .setMSAA(true);
 
         AndroidLauncher androidLauncher = new AndroidLauncher(androidLauncherParams);

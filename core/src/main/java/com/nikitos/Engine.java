@@ -1,5 +1,6 @@
 package com.nikitos;
 
+import com.nikitos.maths.Matrix;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.Utils;
@@ -22,6 +23,7 @@ public class Engine {
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
         this.platformBridge = platformBridge;
         this.launcherParams = launcherParams;
+        Matrix.init();
     }
 
     public void calculateFps() {
@@ -60,9 +62,9 @@ public class Engine {
         System.gc();
         gamePage = newPage;
         resetPageMillis();
-        VRAMobject.onPageChange();
-        Shader.onPageChange();
-        TouchProcessor.onPageChange();
+        //VRAMobject.onPageChange();
+        //Shader.onPageChange();
+        //TouchProcessor.onPageChange();
     }
 
     void startDefaultPage() {
@@ -83,5 +85,9 @@ public class Engine {
 
     GamePageClass getGamePage() {
         return gamePage;
+    }
+
+    public PlatformBridge getPlatformBridge() {
+        return platformBridge;
     }
 }

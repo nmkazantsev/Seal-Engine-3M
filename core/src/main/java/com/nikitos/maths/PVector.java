@@ -1,12 +1,11 @@
 package com.nikitos.maths;
 
-import static com.seal.gl_engine.engine.config.MainConfigurationFunctions.resetTranslateMatrix;
+
+import static com.nikitos.maths.Matrix.resetTranslateMatrix;
 import static java.lang.Math.acos;
 import static java.lang.Math.tan;
 
-import android.opengl.Matrix;
-
-import com.seal.gl_engine.utils.Utils;
+import com.nikitos.utils.Utils;
 
 import java.io.Serializable;
 

@@ -18,6 +18,7 @@ public class OpenGLRenderer implements Renderer {
 
     public OpenGLRenderer(float width, float height, Engine engine) {
         coreRenderer = new CoreRenderer(width, height, engine);
+
     }
 
     @Override

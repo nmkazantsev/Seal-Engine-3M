@@ -1,6 +1,7 @@
 package com.seal.gl_engine.engine.main;
 
 
+import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.seal.gl_engine.OpenGLRenderer;
 
@@ -32,7 +33,7 @@ public abstract class VRAMobject {
         Iterator<VRAMobject> iterator = allObjects.iterator();
         while (iterator.hasNext()) {
             VRAMobject obj = iterator.next();
-            if (!(obj.creator == OpenGLRenderer.getPageClass()) && !(obj.creator == null)) {
+            if (!(obj.creator == CoreRenderer.engine.getPageClass()) && !(obj.creator == null)) {
                 obj.delete();
                 iterator.remove();
             }

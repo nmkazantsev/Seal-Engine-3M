@@ -4,6 +4,7 @@ import static com.seal.gl_engine.engine.main.shaders.ShaderUtils.createShaderPro
 
 import android.opengl.GLES20;
 
+import com.nikitos.CoreRenderer;
 import com.seal.gl_engine.OpenGLRenderer;
 import com.nikitos.GamePageClass;
 
@@ -69,7 +70,7 @@ public class Shader { //means shader program
         if (this.page == null) {
             return false;
         }
-        if (!(this.page == OpenGLRenderer.getPageClass())) {
+        if (!(this.page == CoreRenderer.engine.getPageClass())) {
             this.delete();
             return true;
         }

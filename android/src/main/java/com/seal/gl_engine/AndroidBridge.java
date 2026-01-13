@@ -3,6 +3,7 @@ package com.seal.gl_engine;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
 import com.nikitos.platformBridge.PlatformBridge;
-import com.seal.gl_engine.engine.main.debugger.Debugger;
 
 import java.util.function.Function;
 
@@ -56,7 +56,7 @@ public class AndroidBridge extends PlatformBridge {
             glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
         }
         if (androidLauncherParams.isDebug()) {
-            Debugger.debuggerInit();
+            //Debugger.debuggerInit();
         }
         return glSurfaceView;
     }
@@ -77,7 +77,6 @@ public class AndroidBridge extends PlatformBridge {
     public void onResume() {
         glSurfaceView.onResume();
     }
-
 
     static class MyConfigChooser implements GLSurfaceView.EGLConfigChooser {
         private final int antiAliasMode;
@@ -113,4 +112,81 @@ public class AndroidBridge extends PlatformBridge {
         }
     }
 
+
+    @Override
+    public void setLookAtM(float[] rm, int rmOffset,
+                           float eyeX, float eyeY, float eyeZ,
+                           float centerX, float centerY, float centerZ,
+                           float upX, float upY, float upZ) {
+        android.opengl.Matrix.setLookAtM(rm, rmOffset, eyeX, eyeY, eyeZ,
+                centerX, centerY, centerZ, upX, upY, upZ);
+    }
+
+    @Override
+    public void orthoM(float[] m, int offset,
+                       float left, float right, float bottom, float top,
+                       float near, float far) {
+        android.opengl.Matrix.orthoM(m, offset, left, right, bottom, top, near, far);
+    }
+
+    @Override
+    public void frustumM(float[] m, int offset,
+                         float left, float right, float bottom, float top,
+                         float near, float far) {
+        android.opengl.Matrix.frustumM(m, offset, left, right, bottom, top, near, far);
+    }
+
+    @Override
+    public void multiplyMM(float[] result, int resultOffset,
+                           float[] lhs, int lhsOffset,
+                           float[] rhs, int rhsOffset) {
+        android.opengl.Matrix.multiplyMM(result, resultOffset, lhs, lhsOffset, rhs, rhsOffset);
+    }
+
+    @Override
+    public void multiplyMV(float[] resultVec, int resultVecOffset,
+                           float[] lhsMat, int lhsMatOffset,
+                           float[] rhsVec, int rhsVecOffset) {
+        android.opengl.Matrix.multiplyMV(resultVec, resultVecOffset, lhsMat, lhsMatOffset, rhsVec, rhsVecOffset);
+    }
+
+    @Override
+    public void translateM(float[] m, int mOffset,
+                           float x, float y, float z) {
+        android.opengl.Matrix.translateM(m, mOffset, x, y, z);
+    }
+
+    @Override
+    public void rotateM(float[] m, int mOffset,
+                        float a, float x, float y, float z) {
+        android.opengl.Matrix.rotateM(m, mOffset, a, x, y, z);
+    }
+
+    @Override
+    public void scaleM(float[] m, int mOffset,
+                       float x, float y, float z) {
+        android.opengl.Matrix.scaleM(m, mOffset, x, y, z);
+    }
+
+    @Override
+    public void setIdentityM(float[] sm, int smOffset) {
+        android.opengl.Matrix.setIdentityM(sm, smOffset);
+    }
+
+    @Override
+    public boolean invertM(float[] mInv, int mInvOffset,
+                           float[] m, int mOffset) {
+        return android.opengl.Matrix.invertM(mInv, mInvOffset, m, mOffset);
+    }
+
+    @Override
+    public void transposeM(float[] mTrans, int mTransOffset,
+                           float[] m, int mOffset) {
+        android.opengl.Matrix.transposeM(mTrans, mTransOffset, m, mOffset);
+    }
+
+    @Override
+    public void glClearColor(float r, float g, float b, float a) {
+        GLES30.glClearColor(r, g, b, a);
+    }
 }

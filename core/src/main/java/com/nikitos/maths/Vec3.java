@@ -1,14 +1,11 @@
 package com.nikitos.maths;
 
-import static com.seal.gl_engine.engine.config.MainConfigurationFunctions.resetTranslateMatrix;
-import static com.seal.gl_engine.utils.Utils.degrees;
-import static com.seal.gl_engine.utils.Utils.sq;
-import static com.seal.gl_engine.utils.Utils.sqrt;
+
+import static com.nikitos.maths.Matrix.resetTranslateMatrix;
+import static com.nikitos.utils.Utils.degrees;
+import static com.nikitos.utils.Utils.sq;
+import static com.nikitos.utils.Utils.sqrt;
 import static java.lang.Math.acos;
-
-import android.opengl.Matrix;
-
-import com.seal.gl_engine.utils.Utils;
 
 import java.io.Serializable;
 
@@ -68,7 +65,7 @@ public class Vec3 implements Serializable {
     }
 
     public float length() {
-        return Utils.sqrt(Utils.sq(x) + Utils.sq(y) + Utils.sq(z));
+        return sqrt(sq(x) + sq(y) + sq(z));
     }
 
     public Vec3 add(Vec3 v) {
@@ -112,6 +109,7 @@ public class Vec3 implements Serializable {
         return (float) acos((v.x * u.x + v.y * u.y + v.z * u.z) / v.length() / u.length());
     }
 
+
     /**
      * rotates vector around axis for a specified angle
      *
@@ -130,7 +128,6 @@ public class Vec3 implements Serializable {
                 resultVec[1],
                 resultVec[2]);
     }
-
     public float dot(Vec3 b) {
         return x * b.x + y * b.y + z * b.z;
     }
@@ -167,7 +164,7 @@ public class Vec3 implements Serializable {
                 }
             } else {
                 float d = sqrt(sq(projection) + sq(ort));
-                alpha = degrees((float) Math.acos(projection / d));
+                alpha = degrees((float) acos(projection / d));
                 if (ort <= 0) {
                     alpha = 360 - alpha;
                 }
@@ -177,7 +174,7 @@ public class Vec3 implements Serializable {
                 alpha = 180 + degrees((float) Math.atan(ort / projection));
             } else {
                 float d = sqrt(sq(projection) + sq(ort));
-                alpha = degrees((float) Math.acos(projection / d));
+                alpha = degrees((float) acos(projection / d));
                 if (ort <= 0) {
                     alpha = 360 - alpha;
                 }

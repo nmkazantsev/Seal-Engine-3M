@@ -1,7 +1,6 @@
 package com.seal.gl_engine.utils;
 
 
-import static com.seal.gl_engine.OpenGLRenderer.fps;
 import static java.lang.Float.parseFloat;
 import static java.lang.Thread.sleep;
 
@@ -15,14 +14,10 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.seal.gl_engine.engine.main.animator.Animator;
 import com.seal.gl_engine.engine.main.images.PImage;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -93,29 +88,29 @@ public class Utils {
         return r;
     }
 
-    public static Animator.Animation[] contactArray(Animator.Animation[] a, Animator.Animation[] b) {
-        if (a == null)
-            return b;
-        if (b == null)
-            return a;
-        Animator.Animation[] r = new Animator.Animation[a.length + b.length];
-        System.arraycopy(a, 0, r, 0, a.length);
-        System.arraycopy(b, 0, r, a.length, b.length);
-        return r;
-    }
+    /*   public static Animator.Animation[] contactArray(Animator.Animation[] a, Animator.Animation[] b) {
+           if (a == null)
+               return b;
+           if (b == null)
+               return a;
+           Animator.Animation[] r = new Animator.Animation[a.length + b.length];
+           System.arraycopy(a, 0, r, 0, a.length);
+           System.arraycopy(b, 0, r, a.length, b.length);
+           return r;
+       }
 
-    public static Animator.Animation[] popFromArray(Animator.Animation[] a, Animator.Animation anim) {
-        for (int i = 0; i < a.length; i++) {
-            if (a[i] == anim) {
-                Animator.Animation[] buffer = new Animator.Animation[a.length - 1];
-                System.arraycopy(a, 0, buffer, 0, i);
-                System.arraycopy(a, i + 1, buffer, i, a.length - i - 1);
-                return buffer;
-            }
-        }
-        return a;
-    }
-
+       public static Animator.Animation[] popFromArray(Animator.Animation[] a, Animator.Animation anim) {
+           for (int i = 0; i < a.length; i++) {
+               if (a[i] == anim) {
+                   Animator.Animation[] buffer = new Animator.Animation[a.length - 1];
+                   System.arraycopy(a, 0, buffer, 0, i);
+                   System.arraycopy(a, i + 1, buffer, i, a.length - i - 1);
+                   return buffer;
+               }
+           }
+           return a;
+       }
+   */
     public static void onPause() {
         stopTime = millis();
     }
@@ -165,6 +160,7 @@ public class Utils {
         img.height = img.bitmap.getHeight();
         return img;
     }
+
     public static float getDirection(float px, float py, float tx, float ty) {
         //returns direction to point in radinas. Calculated from north direction (0, top of screen) along the hour line move direction and divided by 2
         //so to convert real value to this shit :  (i / 2.0f + 90) % 360; if i is real right value
@@ -196,7 +192,7 @@ public class Utils {
         return null;
     }
 
-    public static void loadImageAsync(String name, Function<PImage,?> callback){
+    public static void loadImageAsync(String name, Function<PImage, ?> callback) {
         new Thread(() -> {
             PImage image = loadImage(name);
             callback.apply(image);
@@ -357,75 +353,5 @@ public class Utils {
         return (System.currentTimeMillis() - programStartTime - millisBuffer);
     }
 
-    public static void freezeMillis() {
-        if (!millisFrozen) {
-            freezeMillisStart = millis();
-            millisFrozen = true;
-        }
-    }
-
-    public static void unfreezeMillis() {
-        if (millisFrozen) {
-            millisBuffer = System.currentTimeMillis() - freezeMillisStart - programStartTime;
-            millisFrozen = false;
-        }
-    }
-
-    public static long absoluteMillis() {
-        return System.currentTimeMillis() - programStartTime;
-    }
-
-    public static boolean getMillisFrozen() {
-        return millisFrozen;
-    }
-
-    public static String loadFile(String fileName) {
-        StringBuilder content = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(Utils.context.getAssets().open(fileName), StandardCharsets.UTF_8))) {
-
-            // do reading, usually loop until end of file reading
-            String mLine;
-            while ((mLine = reader.readLine()) != null) {
-                content.append(mLine).append('\n');
-            }
-        } catch (IOException e) {
-            //log the exception
-        }
-        //log the exception
-        return content.toString();
-    }
-
-    public static int countSubstrs(String str, String target) {
-        return (str.length() - str.replace(target, "").length()) / target.length();
-    }
-
-    public static String[] split1(String s, char a) {
-        String[] out;
-        out = s.split(String.valueOf(a));
-        return out;
-    }
-
-    private static float timeK;
-
-    /**
-     * Get timing coefficient for physics
-     *
-     * @return 120/current fps
-     */
-    public static float getTimeK() {
-        if (millisFrozen) {
-            return 0;
-        }
-        return timeK;
-    }
-
-    public static void findTimeK() {
-        if (fps == 0) {
-            timeK = 1;
-            return;
-        }
-        timeK = 120.0f / fps;
-    }
 
 }

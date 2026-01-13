@@ -4,15 +4,9 @@ package com.nikitos.utils;
 import static java.lang.Float.parseFloat;
 import static java.lang.Thread.sleep;
 
-import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.CoreRenderer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
-import java.util.function.Function;
 
 public class Utils {
 
@@ -23,7 +17,7 @@ public class Utils {
     private static long stopTime;
 
     public static void background(int r, int b, int g) {
-        PlatformBridge.glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 1);
+        CoreRenderer.engine.getPlatformBridge().glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 1);
     }
 
 
@@ -329,11 +323,11 @@ public class Utils {
     }
 
     public static void findTimeK() {
-        if (fps == 0) {
+        if (CoreRenderer.engine.fps == 0) {
             timeK = 1;
             return;
         }
-        timeK = 120.0f / fps;
+        timeK = 120.0f / CoreRenderer.engine.fps;
     }
 
 }

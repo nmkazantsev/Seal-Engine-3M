@@ -1,7 +1,7 @@
 package com.nikitos.maths;
 
 import static com.nikitos.maths.PVector.sub;
-import static com.seal.gl_engine.utils.Utils.abs;
+import static com.nikitos.utils.Utils.abs;
 
 import java.io.Serializable;
 

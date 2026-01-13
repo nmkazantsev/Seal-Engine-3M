@@ -8,10 +8,10 @@ import com.nikitos.utils.Utils;
  */
 public class CoreRenderer {
     private boolean firstStart = true;
-    private final Engine engine;
+    public static Engine engine;
 
     public CoreRenderer(float width, float height, Engine engine) {
-        this.engine = engine;
+        CoreRenderer.engine = engine;
         Utils.x = width;
         Utils.y = height;
         Utils.ky = Utils.y / 1280.0f;
@@ -39,10 +39,10 @@ public class CoreRenderer {
     }
 
     private void graphicsSetup() {
-        Shader.updateAllLocations();
-        VRAMobject.onRedraw();
-        VerticesShapesManager.onRedrawSetup();
-        VerticesShapesManager.redrawAllSetup();
+        //Shader.updateAllLocations();
+       // VRAMobject.onRedraw();
+       // VerticesShapesManager.onRedrawSetup();
+        //VerticesShapesManager.redrawAllSetup();
     }
 
 
@@ -57,12 +57,12 @@ public class CoreRenderer {
         if (engine.getGamePage() == null) {
             engine.startDefaultPage();
         }
-        VerticesShapesManager.onFrameBegin();
+        //VerticesShapesManager.onFrameBegin();
 
         engine.getGamePage().draw();
-        Debugger.draw();
+        //Debugger.draw();
 
-        VerticesShapesManager.redrawAll();
-        TouchProcessor.processMotions();
+        //VerticesShapesManager.redrawAll();
+        //TouchProcessor.processMotions();
     }
 }
