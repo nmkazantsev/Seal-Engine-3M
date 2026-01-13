@@ -1,14 +1,13 @@
 package com.nikitos.maths;
 
-import com.nikitos.CoreRenderer;
 import com.nikitos.platformBridge.PlatformBridge;
 
 public class Matrix {
 
     private static PlatformBridge platformBridge;
 
-    public static void init() {
-        platformBridge = CoreRenderer.engine.getPlatformBridge();
+    public static void init(PlatformBridge platformBridge) {
+        Matrix.platformBridge = platformBridge;
     }
 
     /**
@@ -25,7 +24,7 @@ public class Matrix {
         };
     }
 
-    public static float[] resetTranslateMatrix(float [] arr) {
+    public static float[] resetTranslateMatrix(float[] arr) {
         arr = new float[]{
                 1, 0, 0, 0,
                 0, 1, 0, 0,
@@ -206,12 +205,12 @@ public class Matrix {
      * Выполняет операцию resultVec = lhsMat × rhsVec, где lhsMat - матрица 4x4,
      * а rhsVec - вектор-столбец [x, y, z, w].
      *
-     * @param resultVec массив для результата длиной не менее 4
+     * @param resultVec       массив для результата длиной не менее 4
      * @param resultVecOffset смещение в массиве результата
-     * @param lhsMat массив матрицы 4x4 длиной 16
-     * @param lhsMatOffset смещение в массиве матрицы
-     * @param rhsVec массив исходного вектора длиной не менее 4
-     * @param rhsVecOffset смещение в массиве исходного вектора
+     * @param lhsMat          массив матрицы 4x4 длиной 16
+     * @param lhsMatOffset    смещение в массиве матрицы
+     * @param rhsVec          массив исходного вектора длиной не менее 4
+     * @param rhsVecOffset    смещение в массиве исходного вектора
      */
     public static void multiplyMV(float[] resultVec, int resultVecOffset,
                                   float[] lhsMat, int lhsMatOffset,

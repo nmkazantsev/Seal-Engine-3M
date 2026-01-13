@@ -30,7 +30,7 @@ public class OpenGLRenderer implements Renderer {
     @Override
     public void onSurfaceChanged(GL10 arg0, int width, int height) {
         glViewport(0, 0, width, height);
-        Log.e("surface changed", String.valueOf(Utils.x));
+        Log.e("surface changed", String.valueOf(width));
     }
 
 

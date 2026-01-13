@@ -23,7 +23,7 @@ public class Engine {
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
         this.platformBridge = platformBridge;
         this.launcherParams = launcherParams;
-        Matrix.init();
+        Matrix.init(platformBridge);
     }
 
     public void calculateFps() {
