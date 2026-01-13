@@ -5,7 +5,6 @@ plugins {
 group = 'com.nikitos'
 version = '1.0-SNAPSHOT'
 
-
 ext.lwjglVersion = "3.3.3"
 
 dependencies {
@@ -14,9 +13,15 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation(project(":core"))
     implementation 'org.joml:joml:1.10.8'
+    // Базовый модуль LWJGL
+    implementation "org.lwjgl:lwjgl:${lwjglVersion}"
 
-    implementation "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+    // Модули по необходимости (добавляйте только нужные)
+
     implementation "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-opengles:${lwjglVersion}"
+
 
     // Нативные библиотеки для разных платформ
     runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
@@ -27,6 +32,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
     runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos-arm64"
 
+    // Для модулей тоже нужны natives (пример для opengl и glfw)
     runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-windows"
     runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-linux"
     runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-macos"

@@ -2,7 +2,10 @@ plugins {
     id 'com.android.library'
 }
 
+
+
 android {
+
     namespace 'com.nikitos.android'
     compileSdk 36
 

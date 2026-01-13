@@ -3,6 +3,11 @@ plugins {
 }
 
 android {
+    packagingOptions {
+        exclude ':desktop'
+    }
+
+
     namespace 'com.example.sealengine3_m'
     compileSdk 36
 
