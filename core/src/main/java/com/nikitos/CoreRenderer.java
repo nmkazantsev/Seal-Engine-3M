@@ -46,7 +46,7 @@ public class CoreRenderer {
     }
 
 
-    public void setup() {
+    private void setup() {
         engine.resetPrevPageChangeTime();
     }
 

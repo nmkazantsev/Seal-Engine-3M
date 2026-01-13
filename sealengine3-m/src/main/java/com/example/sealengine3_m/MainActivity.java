@@ -9,6 +9,7 @@ import android.view.WindowManager;
 
 import com.example.sealengine3_m.databinding.ActivityMainBinding;
 import com.nikitos.Engine;
+import com.nikitos.MainRenderer;
 import com.seal.gl_engine.AndroidLauncher;
 import com.seal.gl_engine.AndroidLauncherParams;
 

@@ -18,3 +18,6 @@ include 'core'
 include 'desktop'
 include ':android'
 include ':sealengine3-m'
+
+include 'TestDesktopApp'
+include 'DemoAppCore'

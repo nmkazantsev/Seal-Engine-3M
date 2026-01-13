@@ -6,12 +6,33 @@ group = 'com.nikitos'
 version = '1.0-SNAPSHOT'
 
 
+ext.lwjglVersion = "3.3.3"
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation(project(":core"))
+    implementation 'org.joml:joml:1.10.8'
+
+    implementation "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+
+    // Нативные библиотеки для разных платформ
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows-x86"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux-arm64"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux-arm32"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos-arm64"
+
+    runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-macos"
 }
 
 test {

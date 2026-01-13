@@ -68,6 +68,9 @@ public class Engine {
     }
 
     void startDefaultPage() {
+        if (launcherParams.getStartPage() == null) {
+            throw new IllegalStateException("Start page can not be null!\nDeclare it in LaunchParams.");
+        }
         startNewPage(launcherParams.getStartPage().apply(null));
     }
 
