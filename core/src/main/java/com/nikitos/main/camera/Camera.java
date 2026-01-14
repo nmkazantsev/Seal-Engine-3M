@@ -1,9 +1,12 @@
-package com.seal.gl_engine.engine.main.camera;
+package com.nikitos.main.camera;
 
-import static com.seal.gl_engine.engine.config.MainConfigurationFunctions.applyCameraSettings;
-import static com.seal.gl_engine.engine.config.MainConfigurationFunctions.applyProjectionMatrix;
-import static com.seal.gl_engine.utils.Utils.x;
-import static com.seal.gl_engine.utils.Utils.y;
+
+import com.nikitos.CoreRenderer;
+import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.utils.Utils;
+
+import static com.nikitos.utils.Utils.x;
+import static com.nikitos.utils.Utils.y;
 
 /**
  * Just a container with public CameraSettings and ProjectionMatrixSettings
@@ -12,12 +15,14 @@ public class Camera {
     public CameraSettings cameraSettings;
     public ProjectionMatrixSettings projectionMatrixSettings;
     private boolean mode3d = true;
+    private PlatformBridge platformBridge;
 
     /**
      * A constructor to create new game camera. Resets CameraSettings and ProjectionMatrix Settings for 3d drawing.
      * Takes x and y dimensions equal to screen size.
      */
     public Camera() {
+        platformBridge = CoreRenderer.engine.getPlatformBridge();
         cameraSettings = new CameraSettings(x, y);
         projectionMatrixSettings = new ProjectionMatrixSettings(x, y);
         resetFor3d();
@@ -51,8 +56,8 @@ public class Camera {
      * applies camera and projection matrix. Perspective boolean is always true if called after resetFor3d() and false after resetFor2d()
      */
     public void apply() {
-        applyCameraSettings(cameraSettings);
-        applyProjectionMatrix(projectionMatrixSettings, mode3d);
+        platformBridge.applyCameraSettings(cameraSettings);
+        platformBridge.applyProjectionMatrix(projectionMatrixSettings, mode3d);
     }
 
     /**
@@ -61,7 +66,7 @@ public class Camera {
      * @param perspectiveEnabled enables or disables perspective.
      */
     public void apply(boolean perspectiveEnabled) {
-        applyCameraSettings(cameraSettings);
-        applyProjectionMatrix(projectionMatrixSettings, perspectiveEnabled);
+        platformBridge.applyCameraSettings(cameraSettings);
+        platformBridge.applyProjectionMatrix(projectionMatrixSettings, perspectiveEnabled);
     }
 }

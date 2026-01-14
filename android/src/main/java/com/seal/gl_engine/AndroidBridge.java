@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -12,13 +13,19 @@ import android.widget.Toast;
 
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
+import com.nikitos.main.camera.CameraSettings;
+import com.nikitos.main.camera.ProjectionMatrixSettings;
 import com.nikitos.platformBridge.PlatformBridge;
+import com.seal.gl_engine.engine.main.shaders.Shader;
 
 import java.util.function.Function;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
+
+import static android.opengl.GLES20.glUniform3f;
+import static android.opengl.GLES20.glUniformMatrix4fv;
 
 public class AndroidBridge extends PlatformBridge {
     private Context context;
@@ -112,6 +119,44 @@ public class AndroidBridge extends PlatformBridge {
         }
     }
 
+    public void bindAllMatrix(CameraSettings c, ProjectionMatrixSettings p, float[] mMatrix) {
+        applyMatrix(mMatrix);
+        applyProjectionMatrix(p);
+        applyCameraSettings(c);
+    }
+
+    public void applyProjectionMatrix(ProjectionMatrixSettings p, boolean perspectiveEnabled) {
+        //choose wehther use perspective or not
+        float[] mProjectionMatrix = new float[16];
+        passProjectionMatrix(p, perspectiveEnabled, mProjectionMatrix);
+    }
+
+    public static void passProjectionMatrix(ProjectionMatrixSettings p, boolean perspectiveEnabled, float[] mProjectionMatrix) {
+        if (perspectiveEnabled) {
+            Matrix.frustumM(mProjectionMatrix, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
+        } else {
+            Matrix.orthoM(mProjectionMatrix, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
+        }
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(), 1, false, mProjectionMatrix, 0);
+    }
+
+    public void applyProjectionMatrix(ProjectionMatrixSettings p) {
+        float[] mProjectionMatrix = new float[16];
+        //perspective is always enabled here
+        Matrix.frustumM(mProjectionMatrix, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(), 1, false, mProjectionMatrix, 0);
+    }
+
+    public void applyCameraSettings(CameraSettings cam) {
+        float[] mViewMatrix = new float[16];
+        Matrix.setLookAtM(mViewMatrix, 0, cam.eyeX, cam.eyeY, cam.eyeZ, cam.centerX, cam.centerY, cam.centerZ, cam.upX, cam.upY, cam.upZ);
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getCameraLocation(), 1, false, mViewMatrix, 0);
+        glUniform3f(Shader.getActiveShader().getAdaptor().getCameraPosLlocation(), cam.eyeX, cam.eyeY, cam.eyeZ);
+    }
+
+    public void applyMatrix(float[] mMatrix) {
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getTransformMatrixLocation(), 1, false, mMatrix, 0);
+    }
 
     @Override
     public void setLookAtM(float[] rm, int rmOffset,

@@ -1,15 +1,17 @@
 package com.nikitos;
 
+import com.nikitos.main.camera.CameraSettings;
+import com.nikitos.main.camera.ProjectionMatrixSettings;
 import com.nikitos.platformBridge.PlatformBridge;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL32;
+
+import static org.lwjgl.opengl.GL20.glUniform3f;
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 
 public class DesktopBridge extends PlatformBridge {
-
-
     @Override
     public void onPause() {
 
@@ -20,18 +22,60 @@ public class DesktopBridge extends PlatformBridge {
 
     }
 
-    // Временные объекты для минимизации аллокаций в циклах рендеринга
-    private final Matrix4f tempMatrix = new Matrix4f();
-    private final Vector4f tempVector = new Vector4f();
-    private final Matrix4f leftMatrix = new Matrix4f();
-    private final Matrix4f rightMatrix = new Matrix4f();
-    private final Matrix4f sourceMatrix = new Matrix4f();
+    @Override
+    public void bindAllMatrix(CameraSettings c, ProjectionMatrixSettings p, float[] mMatrix) {
+        applyMatrix(mMatrix);
+        applyProjectionMatrix(p);
+        applyCameraSettings(c);
+    }
+
+    @Override
+    public void applyProjectionMatrix(ProjectionMatrixSettings p, boolean perspectiveEnabled) {
+        float[] matrixArray = new float[16];
+        if (perspectiveEnabled) {
+            frustumM(matrixArray, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
+        } else {
+            orthoM(matrixArray, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
+        }
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),
+                false, matrixArray);
+    }
+
+    @Override
+    public void applyProjectionMatrix(ProjectionMatrixSettings p) {
+        float[] matrixArray = new float[16];
+        frustumM(matrixArray, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),
+                false, matrixArray);
+    }
+
+    @Override
+    public void applyCameraSettings(CameraSettings cam) {
+        float[] matrixArray = new float[16];
+        setLookAtM(matrixArray, 0,
+                cam.eyeX, cam.eyeY, cam.eyeZ,
+                cam.centerX, cam.centerY, cam.centerZ,
+                cam.upX, cam.upY, cam.upZ);
+
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getCameraLocation(),
+                false, matrixArray);
+        glUniform3f(Shader.getActiveShader().getAdaptor().getCameraPosLlocation(),
+                cam.eyeX, cam.eyeY, cam.eyeZ);
+    }
+
+    @Override
+    public void applyMatrix(float[] mMatrix) {
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getTransformMatrixLocation(),
+                false, mMatrix);
+    }
+
 
     @Override
     public void setLookAtM(float[] rm, int rmOffset,
                            float eyeX, float eyeY, float eyeZ,
                            float centerX, float centerY, float centerZ,
                            float upX, float upY, float upZ) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Создаем матрицу вида (look-at) аналогично gluLookAt
         tempMatrix.identity()
                 .lookAt(eyeX, eyeY, eyeZ,
@@ -44,6 +88,7 @@ public class DesktopBridge extends PlatformBridge {
     public void orthoM(float[] m, int offset,
                        float left, float right, float bottom, float top,
                        float near, float far) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Ортографическая проекция
         tempMatrix.identity()
                 .ortho(left, right, bottom, top, near, far)
@@ -54,6 +99,7 @@ public class DesktopBridge extends PlatformBridge {
     public void frustumM(float[] m, int offset,
                          float left, float right, float bottom, float top,
                          float near, float far) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Перспективная проекция через усеченную пирамиду
         tempMatrix.identity()
                 .frustum(left, right, bottom, top, near, far)
@@ -64,6 +110,9 @@ public class DesktopBridge extends PlatformBridge {
     public void multiplyMM(float[] result, int resultOffset,
                            float[] lhs, int lhsOffset,
                            float[] rhs, int rhsOffset) {
+        Matrix4f leftMatrix = new Matrix4f();
+        Matrix4f tempMatrix = new Matrix4f();
+        Matrix4f rightMatrix = new Matrix4f();
         // Умножение матриц: result = lhs × rhs
         leftMatrix.set(lhs, lhsOffset);
         rightMatrix.set(rhs, rhsOffset);
@@ -75,10 +124,12 @@ public class DesktopBridge extends PlatformBridge {
     public void multiplyMV(float[] resultVec, int resultVecOffset,
                            float[] lhsMat, int lhsMatOffset,
                            float[] rhsVec, int rhsVecOffset) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Умножение матрицы на вектор: resultVec = lhsMat × rhsVec
         // Вектор предполагается однородным (4 компонента)
         tempMatrix.set(lhsMat, lhsMatOffset);
 
+        Vector4f tempVector = new Vector4f();
         // Создаем вектор из массива
         tempVector.set(rhsVec[rhsVecOffset],
                 rhsVec[rhsVecOffset + 1],
@@ -98,6 +149,7 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public void translateM(float[] m, int mOffset,
                            float x, float y, float z) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Трансляция (смещение) матрицы
         tempMatrix.set(m, mOffset)
                 .translate(x, y, z)
@@ -107,6 +159,7 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public void rotateM(float[] m, int mOffset,
                         float a, float x, float y, float z) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Вращение матрицы на угол 'a' градусов вокруг оси (x, y, z)
         // JOML работает с радианами, поэтому конвертируем
         float angleRad = (float) Math.toRadians(a);
@@ -118,6 +171,7 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public void scaleM(float[] m, int mOffset,
                        float x, float y, float z) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Масштабирование матрицы
         tempMatrix.set(m, mOffset)
                 .scale(x, y, z)
@@ -126,6 +180,7 @@ public class DesktopBridge extends PlatformBridge {
 
     @Override
     public void setIdentityM(float[] sm, int smOffset) {
+        Matrix4f tempMatrix = new Matrix4f();
         // Установка единичной матрицы
         tempMatrix.identity().get(sm, smOffset);
     }
@@ -133,6 +188,7 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public boolean invertM(float[] mInv, int mInvOffset,
                            float[] m, int mOffset) {
+        Matrix4f sourceMatrix = new Matrix4f();
         // Инверсия матрицы, возвращает false если матрица вырожденная
         sourceMatrix.set(m, mOffset);
         if (sourceMatrix.determinant() < Float.MIN_VALUE) {
@@ -145,6 +201,7 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public void transposeM(float[] mTrans, int mTransOffset,
                            float[] m, int mOffset) {
+        Matrix4f sourceMatrix = new Matrix4f();
         // Транспонирование матрицы
         sourceMatrix.set(m, mOffset)
                 .transpose()
@@ -156,25 +213,4 @@ public class DesktopBridge extends PlatformBridge {
         // Установка цвета очистки экрана
         GL32.glClearColor(r, g, b, a);
     }
-
-    /**
-     * Дополнительный метод: создание перспективной проекции (аналог gluPerspective)
-     * Не входит в абстрактный класс, но полезен для 3D-графики.
-     */
-    public void perspectiveM(float[] m, int offset,
-                             float fovy, float aspect, float near, float far) {
-        tempMatrix.identity()
-                .perspective((float) Math.toRadians(fovy), aspect, near, far)
-                .get(m, offset);
-    }
-
-    /**
-     * Дополнительный метод: копирование матрицы
-     */
-    public void copyMatrix(float[] dest, int destOffset,
-                           float[] src, int srcOffset) {
-        System.arraycopy(src, srcOffset, dest, destOffset, 16);
-    }
-
-
 }

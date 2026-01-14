@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main.camera;
+package com.nikitos.main.camera;
 
 import com.nikitos.maths.PVector;
 
