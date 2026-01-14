@@ -1,13 +1,15 @@
 package com.seal.gl_engine;
 
+import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
+import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glViewport;
+import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_BUFFER_BIT;
 
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
-import com.seal.gl_engine.utils.Utils;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -36,6 +38,8 @@ public class OpenGLRenderer implements Renderer {
 
     @Override
     public void onDrawFrame(GL10 arg0) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
         coreRenderer.draw();
     }
 }

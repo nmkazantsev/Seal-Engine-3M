@@ -5,7 +5,6 @@ import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glGetUniformLocation;
 
 import android.opengl.GLES30;
-import android.support.annotation.NonNull;
 
 
 import com.nikitos.GamePageClass;
@@ -23,7 +22,7 @@ public class SectionPolygon implements VerticesSet {
     private PVector color = new PVector(1);
     ShaderData lineColorData;
 
-    public SectionPolygon(@NonNull GamePageClass page) {
+    public SectionPolygon( GamePageClass page) {
         VerticesShapesManager.allShapes.add(new WeakReference<>(this));//add link to this object
 
         creatorClassName = page.getClass().getName();
