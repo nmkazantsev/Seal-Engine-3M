@@ -3,6 +3,8 @@ package com.nikitos;
 import com.nikitos.platformBridge.PlatformBridge;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL32;
 
 
 public class DesktopBridge extends PlatformBridge {
@@ -152,7 +154,7 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public void glClearColor(float r, float g, float b, float a) {
         // Установка цвета очистки экрана
-        glClearColor(r, g, b, a);
+        GL32.glClearColor(r, g, b, a);
     }
 
     /**
