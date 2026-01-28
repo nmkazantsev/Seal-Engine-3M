@@ -2,6 +2,7 @@ package com.nikitos;
 
 import com.nikitos.main.camera.CameraSettings;
 import com.nikitos.main.camera.ProjectionMatrixSettings;
+import com.nikitos.platformBridge.MatrixPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -23,6 +24,11 @@ public class DesktopBridge extends PlatformBridge {
     }
 
     @Override
+    public MatrixPlatformBridge getMatrixPlatformBridge() {
+        return null;
+    }
+
+    @Override
     public void bindAllMatrix(CameraSettings c, ProjectionMatrixSettings p, float[] mMatrix) {
         applyMatrix(mMatrix);
         applyProjectionMatrix(p);
@@ -37,16 +43,14 @@ public class DesktopBridge extends PlatformBridge {
         } else {
             orthoM(matrixArray, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
         }
-        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),
-                false, matrixArray);
+        // glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),false, matrixArray);
     }
 
     @Override
     public void applyProjectionMatrix(ProjectionMatrixSettings p) {
         float[] matrixArray = new float[16];
         frustumM(matrixArray, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
-        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),
-                false, matrixArray);
+        // glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),false, matrixArray);
     }
 
     @Override
@@ -57,16 +61,13 @@ public class DesktopBridge extends PlatformBridge {
                 cam.centerX, cam.centerY, cam.centerZ,
                 cam.upX, cam.upY, cam.upZ);
 
-        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getCameraLocation(),
-                false, matrixArray);
-        glUniform3f(Shader.getActiveShader().getAdaptor().getCameraPosLlocation(),
-                cam.eyeX, cam.eyeY, cam.eyeZ);
+        //glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getCameraLocation(),false, matrixArray);
+        //glUniform3f(Shader.getActiveShader().getAdaptor().getCameraPosLlocation(), cam.eyeX, cam.eyeY, cam.eyeZ);
     }
 
     @Override
     public void applyMatrix(float[] mMatrix) {
-        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getTransformMatrixLocation(),
-                false, mMatrix);
+        // glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getTransformMatrixLocation(), false, mMatrix);
     }
 
 

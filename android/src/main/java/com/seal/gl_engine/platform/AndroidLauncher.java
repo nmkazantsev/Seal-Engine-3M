@@ -1,4 +1,4 @@
-package com.seal.gl_engine;
+package com.seal.gl_engine.platform;
 
 import android.opengl.GLSurfaceView;
 

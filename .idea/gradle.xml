@@ -4,25 +4,22 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="CHOOSE_PER_TEST" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="" />
-        <option name="gradleJvm" value="ms-21" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../Demo" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/android" />
+            <option value="$PROJECT_DIR$/../Demo" />
+            <option value="$PROJECT_DIR$/../Demo/game" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/desktop" />
           </set>
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/Demo" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/Demo" />
-            <option value="$PROJECT_DIR$/Demo/game" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/android" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/desktop" />
           </set>
