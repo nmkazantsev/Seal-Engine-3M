@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main.vertices;
+package com.nikitos.main.vertices;
 
 /*
 этот интерфейс отвечает за поведение всего, что яляется набором вершин.

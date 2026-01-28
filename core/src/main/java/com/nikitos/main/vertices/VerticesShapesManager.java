@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main.vertices;
+package com.nikitos.main.vertices;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main.vertices;
+package com.nikitos.main.vertices;
 
 import static android.opengl.GLES20.GL_LINES;
 import static android.opengl.GLES20.glDrawArrays;

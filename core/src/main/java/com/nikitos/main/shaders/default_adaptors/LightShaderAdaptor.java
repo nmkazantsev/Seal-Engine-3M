@@ -1,8 +1,8 @@
 package com.nikitos.main.shaders.default_adaptors;
 
 import com.nikitos.main.shaders.Adaptor;
-import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
-import com.seal.gl_engine.engine.main.vertices.Face;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
+import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
 
 import java.nio.ByteBuffer;
@@ -182,11 +182,11 @@ public class LightShaderAdaptor extends Adaptor {
         bitangentLocation = glGetAttribLocation(programId, "aB");
         uTextureUnitLocation = glGetUniformLocation(programId, "u_TextureUnit");
         normalMapLocation = glGetUniformLocation(programId, "normalMap");
-        projectionMatrixLoation = GLES30.glGetUniformLocation(programId, "projection");
-        viewMatrixLocation = GLES30.glGetUniformLocation(programId, "view");
-        modelMtrixLocation = GLES30.glGetUniformLocation(programId, "model");
-        cameraPosLocation = GLES30.glGetUniformLocation(programId, "viewPos");
-        normalMapEnableLocation = GLES30.glGetUniformLocation(programId, "normalMapEnable");
+        projectionMatrixLoation = glGetUniformLocation(programId, "projection");
+        viewMatrixLocation = glGetUniformLocation(programId, "view");
+        modelMtrixLocation = glGetUniformLocation(programId, "model");
+        cameraPosLocation = glGetUniformLocation(programId, "viewPos");
+        normalMapEnableLocation = glGetUniformLocation(programId, "normalMapEnable");
     }
 
     @Override

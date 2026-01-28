@@ -15,6 +15,7 @@ import com.nikitos.GamePageClass;
 import com.nikitos.platformBridge.MatrixPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.platformBridge.ShaderBridge;
+import com.nikitos.platformBridge.VertexBridge;
 import com.seal.gl_engine.OpenGLRenderer;
 
 import java.util.function.Function;
@@ -93,6 +94,11 @@ public class AndroidBridge extends PlatformBridge {
         return new ShaderBridgeAndroid();
     }
 
+    @Override
+    public VertexBridge getVertexBridge() {
+        return new VertexBridgeAndroid();
+    }
+
     static class MyConfigChooser implements GLSurfaceView.EGLConfigChooser {
         private final int antiAliasMode;
 
@@ -130,5 +136,25 @@ public class AndroidBridge extends PlatformBridge {
     @Override
     public void glClearColor(float r, float g, float b, float a) {
         GLES30.glClearColor(r, g, b, a);
+    }
+
+    @Override
+    public int glGetError() {
+        return GLES30.glGetError();
+    }
+
+    @Override
+    public void log_e(String tag, String message) {
+        Log.e(tag, message);
+    }
+
+    @Override
+    public void log_i(String tag, String message) {
+        Log.i(tag, message);
+    }
+
+    @Override
+    public void print(String text) {
+        Log.i("print", text);
     }
 }

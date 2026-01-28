@@ -9,8 +9,8 @@ import static android.opengl.GLES20.glVertexAttribPointer;
 import android.opengl.GLES30;
 
 import com.nikitos.main.shaders.Adaptor;
-import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
-import com.seal.gl_engine.engine.main.vertices.Face;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
+import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
 
 import java.nio.ByteBuffer;

@@ -24,7 +24,7 @@ public abstract class ShaderBridge {
 
     public abstract String glGetProgramInfoLog(int programId);
 
-    public abstract void glGetShaderiv(int shaderId, int type, int [] status, int i);
+    public abstract void glGetShaderiv(int shaderId, int type, int []    status, int i);
 
     public abstract int glCreateShader(int type);
 

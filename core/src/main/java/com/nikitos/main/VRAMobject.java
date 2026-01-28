@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main;
+package com.nikitos.main;
 
 
 import com.nikitos.CoreRenderer;

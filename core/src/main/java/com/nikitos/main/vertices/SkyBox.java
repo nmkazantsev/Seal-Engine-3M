@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main.vertices;
+package com.nikitos.main.vertices;
 
 import static android.opengl.GLES10.GL_TRIANGLES;
 import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;

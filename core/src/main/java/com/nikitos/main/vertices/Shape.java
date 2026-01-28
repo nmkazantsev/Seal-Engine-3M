@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main.vertices;
+package com.nikitos.main.vertices;
 
 import static android.opengl.GLES10.GL_TRIANGLES;
 import static android.opengl.GLES10.glDisable;
@@ -21,7 +21,7 @@ import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.textures.Texture;
-import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.maths.PVector;
 import com.seal.gl_engine.utils.Utils;
 
