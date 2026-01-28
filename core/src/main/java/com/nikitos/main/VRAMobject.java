@@ -3,7 +3,6 @@ package com.nikitos.main;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
-import com.seal.gl_engine.OpenGLRenderer;
 
 import java.util.ArrayList;
 import java.util.Iterator;

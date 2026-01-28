@@ -7,6 +7,8 @@ public abstract class GLConstBridge {
     public abstract int GL_CULL_FACE();
     public abstract int GL_SCISSOR_TEST();
     public abstract int GL_STENCIL_TEST();
+    public abstract int GL_TRIANGLES();
+
 
     // 2. Константы шейдеров
     public abstract int GL_VERTEX_SHADER();

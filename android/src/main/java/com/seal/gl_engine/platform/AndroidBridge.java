@@ -12,10 +12,7 @@ import android.widget.Toast;
 
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
-import com.nikitos.platformBridge.MatrixPlatformBridge;
-import com.nikitos.platformBridge.PlatformBridge;
-import com.nikitos.platformBridge.ShaderBridge;
-import com.nikitos.platformBridge.VertexBridge;
+import com.nikitos.platformBridge.*;
 import com.seal.gl_engine.OpenGLRenderer;
 
 import java.util.function.Function;
@@ -97,6 +94,16 @@ public class AndroidBridge extends PlatformBridge {
     @Override
     public VertexBridge getVertexBridge() {
         return new VertexBridgeAndroid();
+    }
+
+    @Override
+    public GeneralPlatformBridge getGeneralPlatformBridge() {
+        return new GeneralBridgeAndroid();
+    }
+
+    @Override
+    public GLConstBridge getGLConstBridge() {
+        return new GLConstBridgeAndroid();
     }
 
     static class MyConfigChooser implements GLSurfaceView.EGLConfigChooser {

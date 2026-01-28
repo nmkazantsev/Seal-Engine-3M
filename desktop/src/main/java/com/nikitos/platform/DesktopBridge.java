@@ -1,9 +1,6 @@
 package com.nikitos.platform;
 
-import com.nikitos.platformBridge.MatrixPlatformBridge;
-import com.nikitos.platformBridge.PlatformBridge;
-import com.nikitos.platformBridge.ShaderBridge;
-import com.nikitos.platformBridge.VertexBridge;
+import com.nikitos.platformBridge.*;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 
@@ -32,6 +29,16 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public VertexBridge getVertexBridge() {
         return new VertexBridgeDesktop();
+    }
+
+    @Override
+    public GeneralPlatformBridge getGeneralPlatformBridge() {
+        return new  GeneralPlatformBridgeDesktop();
+    }
+
+    @Override
+    public GLConstBridge getGLConstBridge() {
+        return new GLConstBridgeDesktop();
     }
 
     @Override

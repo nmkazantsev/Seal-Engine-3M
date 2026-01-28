@@ -1,9 +1,9 @@
 package com.nikitos.main.vertices;
 
 import com.nikitos.GamePageClass;
+import com.nikitos.utils.Utils;
 import com.seal.gl_engine.engine.main.images.PImage;
 import com.nikitos.maths.PVector;
-import com.seal.gl_engine.utils.Utils;
 
 import java.util.List;
 import java.util.function.Function;

@@ -4,33 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="refactor shaders">
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GLConstBridgeAndroid.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/VertexBridgeAndroid.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GLConstBridge.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/VertexBridge.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GLConstBridgeDesktop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/VertexBridgeDesktop.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="on the way to refactor shaders - add consts">
+      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GeneralPlatformBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralPlatformBridgeDesktop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/VRAMobject.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/VRAMobject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/frameBuffers/FrameBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/frameBuffers/FrameBuffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/textures/Texture.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/textures/Texture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertex_bueffer/VertexBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertex_bueffer/VertexBuffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/Face.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Face.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Polygon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/SectionPolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SectionPolygon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/SimplePolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SimplePolygon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/SkyBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/VerticesSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/VerticesSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/vertices/VerticesShapesManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/VerticesShapesManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/SkyBoxShaderAdaptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/SkyBoxShaderAdaptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/Adaptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/Adaptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/LightShaderAdaptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/LightShaderAdaptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/VRAMobject.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/VRAMobject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Polygon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SectionPolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SectionPolygon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GLConstBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GLConstBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/ShaderBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/ShaderBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GLConstBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GLConstBridgeDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,7 +149,7 @@
       <workItem from="1768669601298" duration="579000" />
       <workItem from="1769590939756" duration="13676000" />
       <workItem from="1769619100682" duration="42000" />
-      <workItem from="1769626098699" duration="3616000" />
+      <workItem from="1769626098699" duration="5926000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -189,7 +175,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769614832852</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="on the way to refactor shaders - add consts">
+      <option name="closed" value="true" />
+      <created>1769630532009</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1769630532009</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,6 +216,7 @@
     <MESSAGE value="refactor android matrix platform bridge" />
     <MESSAGE value="delete unused module" />
     <MESSAGE value="refactor shaders" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor shaders" />
+    <MESSAGE value="on the way to refactor shaders - add consts" />
+    <option name="LAST_COMMIT_MESSAGE" value="on the way to refactor shaders - add consts" />
   </component>
 </project>

@@ -37,7 +37,7 @@ public class SectionPolygon implements VerticesSet {
 
             @Override
             protected void forwardData() {
-                GLES30.glUniform3f(colorLoc, color.x, color.y, color.z);
+                glUniform3f(colorLoc, color.x, color.y, color.z);
             }
 
             @Override

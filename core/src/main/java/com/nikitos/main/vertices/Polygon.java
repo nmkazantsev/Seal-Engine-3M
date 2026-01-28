@@ -1,19 +1,9 @@
 package com.nikitos.main.vertices;
 
-import static android.opengl.GLES20.GL_RGBA;
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glGenerateMipmap;
-import static android.opengl.GLES20.glUniform1i;
-
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
-
+import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.seal.gl_engine.engine.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.textures.Texture;
@@ -28,6 +18,8 @@ import java.util.function.Function;
  * this is 3D glShape (glShape deleted in version 3.0.0)
  */
 public class Polygon implements VerticesSet {
+    private final GeneralPlatformBridge gl;
+    private final GLConstBridge  glConst;
     private Face face1;
     private Face face2;
     private final boolean saveMemory;
@@ -42,6 +34,8 @@ public class Polygon implements VerticesSet {
     private final Function<List<Object>, PImage> redrawFunction;
 
     public Polygon(Function<List<Object>, PImage> redrawFunction, boolean saveMemory, int paramSize, GamePageClass page) {
+        gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
+        glConst = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
         this.redrawFunction = redrawFunction;
         VerticesShapesManager.allShapes.add(new WeakReference<>(this));//добавить ссылку на Poligon
         texture = new Texture(page);
@@ -58,6 +52,8 @@ public class Polygon implements VerticesSet {
     }
 
     public Polygon(Function<List<Object>, PImage> redrawFunction, boolean saveMemory, int paramSize, GamePageClass page, boolean mipMap) {
+        gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
+        glConst = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
         this.redrawFunction = redrawFunction;
         VerticesShapesManager.allShapes.add(new WeakReference<>(this));//добавить ссылку на Poligon
         texture = new Texture(page, mipMap);
@@ -213,15 +209,15 @@ public class Polygon implements VerticesSet {
 
         Shader.getActiveShader().getAdaptor().bindData(new Face[]{this.face1, this.face2});
         // помещаем текстуру в target 2D юнита 0
-        glActiveTexture(GL_TEXTURE0);
+        gl.glActiveTexture(glConst.GL_TEXTURE0());
         if (!postToGlNeeded) {
-            glBindTexture(GL_TEXTURE_2D, texture.getId());
+            gl.glBindTexture(glConst.GL_TEXTURE_2D(), texture.getId());
         }
         if (postToGlNeeded) {
             postToGl();
         }
         // юнит текстуры
-        glUniform1i(Shader.getActiveShader().getAdaptor().getTextureLocation(), 0);
+        gl.glUniform1i(Shader.getActiveShader().getAdaptor().getTextureLocation(), 0);
 
     }
 
@@ -230,11 +226,11 @@ public class Polygon implements VerticesSet {
             redrawNow();
         }
         postToGlNeeded = false;
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture.getId());
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GL_RGBA, image.bitmap, 0);
+        gl.glActiveTexture(glConst.GL_TEXTURE0());
+        gl.glBindTexture(glConst.GL_TEXTURE_2D(), texture.getId());
+        GLUtils.texImage2D(glConst.GL_TEXTURE_2D(), 0, glConst.GL_RGBA(), image.bitmap, 0);
         if (texture.hasMinMaps()) {
-            glGenerateMipmap(GL_TEXTURE_2D);
+            gl.glGenerateMipmap(glConst.GL_TEXTURE_2D());
         }
         if (saveMemory) {
             image.delete();
@@ -245,19 +241,19 @@ public class Polygon implements VerticesSet {
     public void prepareAndDraw(PVector a, PVector b, PVector c) {
         prepareData(a, b, c);
         bindData();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        gl.glDrawArrays(glConst.GL_TRIANGLES(), 0, 6);
     }
 
     public void prepareAndDraw(PVector a, PVector b, float texx, float texy, float teexa, float texb) {
         prepareData(a, b, texx, texy, teexa, texb);
         bindData();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        gl.glDrawArrays(glConst.GL_TRIANGLES(), 0, 6);
     }
 
     public void prepareAndDraw(PVector a, PVector b, PVector c, float texx, float texy, float teexa, float texb) {
         prepareData(a, b, c, texx, texy, teexa, texb);
         bindData();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        gl.glDrawArrays(glConst.GL_TRIANGLES(), 0, 6);
     }
 
     @Override
