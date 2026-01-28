@@ -4,12 +4,12 @@ import android.opengl.Matrix;
 import com.nikitos.main.camera.CameraSettings;
 import com.nikitos.main.camera.ProjectionMatrixSettings;
 import com.nikitos.platformBridge.MatrixPlatformBridge;
-import com.seal.gl_engine.engine.main.shaders.Shader;
+import com.nikitos.main.shaders.Shader;
 
 import static android.opengl.GLES20.glUniform3f;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 
-public class MatrixPlatformBridgeAndroid extends MatrixPlatformBridge {
+public class MatrixBridgeAndroid extends MatrixPlatformBridge {
 
     @Override
     public void setLookAtM(float[] rm, int rmOffset,

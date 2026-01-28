@@ -3,7 +3,7 @@ package com.seal.gl_engine.engine.main.light;
 import android.opengl.GLES30;
 
 import com.nikitos.GamePageClass;
-import com.seal.gl_engine.engine.main.shaders.ShaderData;
+import com.nikitos.main.shaders.ShaderData;
 
 public class ExpouseSettings extends ShaderData {
     private int expouseLoc, gammaLoc;

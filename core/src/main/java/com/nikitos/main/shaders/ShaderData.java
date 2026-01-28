@@ -1,4 +1,4 @@
-package com.seal.gl_engine.engine.main.shaders;
+package com.nikitos.main.shaders;
 
 import com.nikitos.GamePageClass;
 

@@ -5,7 +5,7 @@ import static android.opengl.GLES20.glGetUniformLocation;
 import android.opengl.GLES30;
 
 import com.nikitos.GamePageClass;
-import com.seal.gl_engine.engine.main.shaders.ShaderData;
+import com.nikitos.main.shaders.ShaderData;
 import com.nikitos.maths.PVector;
 
 import java.lang.ref.WeakReference;

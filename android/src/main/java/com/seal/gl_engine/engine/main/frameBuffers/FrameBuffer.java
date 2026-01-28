@@ -17,7 +17,7 @@ import static android.opengl.GLES30.GL_RGBA16F;
 import android.opengl.GLES20;
 
 import com.seal.gl_engine.engine.main.VRAMobject;
-import com.seal.gl_engine.engine.main.shaders.Shader;
+import com.nikitos.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.vertices.Face;
 import com.nikitos.GamePageClass;
 import com.nikitos.maths.PVector;

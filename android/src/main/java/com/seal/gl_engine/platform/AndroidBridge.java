@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -13,12 +12,10 @@ import android.widget.Toast;
 
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
-import com.nikitos.main.camera.CameraSettings;
-import com.nikitos.main.camera.ProjectionMatrixSettings;
 import com.nikitos.platformBridge.MatrixPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.platformBridge.ShaderBridge;
 import com.seal.gl_engine.OpenGLRenderer;
-import com.seal.gl_engine.engine.main.shaders.Shader;
 
 import java.util.function.Function;
 
@@ -26,7 +23,6 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import static android.opengl.GLES20.glUniform3f;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 
 public class AndroidBridge extends PlatformBridge {
@@ -89,7 +85,12 @@ public class AndroidBridge extends PlatformBridge {
 
     @Override
     public MatrixPlatformBridge getMatrixPlatformBridge() {
-        return new MatrixPlatformBridgeAndroid();
+        return new MatrixBridgeAndroid();
+    }
+
+    @Override
+    public ShaderBridge getShaderBridge() {
+        return new ShaderBridgeAndroid();
     }
 
     static class MyConfigChooser implements GLSurfaceView.EGLConfigChooser {

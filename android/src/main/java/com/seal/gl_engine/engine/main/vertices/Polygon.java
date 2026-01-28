@@ -15,7 +15,7 @@ import android.opengl.GLUtils;
 
 import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.images.PImage;
-import com.seal.gl_engine.engine.main.shaders.Shader;
+import com.nikitos.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.textures.Texture;
 import com.nikitos.maths.PVector;
 

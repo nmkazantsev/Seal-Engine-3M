@@ -8,8 +8,8 @@ import android.opengl.GLES30;
 
 
 import com.nikitos.GamePageClass;
-import com.seal.gl_engine.engine.main.shaders.Shader;
-import com.seal.gl_engine.engine.main.shaders.ShaderData;
+import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.shaders.ShaderData;
 import com.nikitos.maths.Section;
 import com.nikitos.maths.PVector;
 

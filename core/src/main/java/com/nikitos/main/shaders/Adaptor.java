@@ -1,8 +1,7 @@
-package com.seal.gl_engine.engine.main.shaders;
+package com.nikitos.main.shaders;
 
 
 import com.nikitos.CoreRenderer;
-import com.seal.gl_engine.OpenGLRenderer;
 import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
 import com.seal.gl_engine.engine.main.vertices.Face;
 import com.nikitos.maths.PVector;

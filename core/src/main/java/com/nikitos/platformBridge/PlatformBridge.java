@@ -13,5 +13,14 @@ public abstract class PlatformBridge {
 
     public abstract MatrixPlatformBridge getMatrixPlatformBridge();
 
+    public abstract ShaderBridge getShaderBridge();
+
     public abstract void glClearColor(float r, float g, float b, float a);
+
+    public abstract String glGetError();
+
+    public abstract void log_e(String tag, String message);
+    public abstract void log_i(String tag, String message);
+
+    public abstract void print(String text);
 }

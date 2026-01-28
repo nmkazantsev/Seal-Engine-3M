@@ -1,13 +1,6 @@
-package com.seal.gl_engine.default_adaptors;
+package com.nikitos.main.shaders.default_adaptors;
 
-import static android.opengl.GLES20.GL_FLOAT;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
-import static android.opengl.GLES20.glGetAttribLocation;
-import static android.opengl.GLES20.glVertexAttribPointer;
-
-import android.opengl.GLES30;
-
-import com.seal.gl_engine.engine.main.shaders.Adaptor;
+import com.nikitos.main.shaders.Adaptor;
 import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
 import com.seal.gl_engine.engine.main.vertices.Face;
 import com.nikitos.maths.PVector;

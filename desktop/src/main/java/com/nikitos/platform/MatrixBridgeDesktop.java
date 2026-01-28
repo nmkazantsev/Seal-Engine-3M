@@ -6,7 +6,7 @@ import com.nikitos.platformBridge.MatrixPlatformBridge;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-public class MatrixPlatformBridgeDesktop extends MatrixPlatformBridge {
+public class MatrixBridgeDesktop extends MatrixPlatformBridge {
     @Override
     public void bindAllMatrix(CameraSettings c, ProjectionMatrixSettings p, float[] mMatrix) {
         applyMatrix(mMatrix);

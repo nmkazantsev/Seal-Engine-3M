@@ -1,11 +1,8 @@
-package com.seal.gl_engine.engine.main.shaders;
+package com.nikitos.main.shaders;
 
-import static com.seal.gl_engine.engine.main.shaders.ShaderUtils.createShaderProgram;
-
-import android.opengl.GLES20;
 
 import com.nikitos.CoreRenderer;
-import com.seal.gl_engine.OpenGLRenderer;
+import com.nikitos.platformBridge.ShaderBridge;
 import com.nikitos.GamePageClass;
 
 import java.util.ArrayList;
@@ -15,16 +12,20 @@ import java.util.List;
 public class Shader { //means shader program
     private static final List<Shader> allShaders = new ArrayList<>();
     private int link;
-    private final int vertex;
-    private final int fragment;
-    private int geom = -1;
+    private final String vertex;
+    private final String fragment;
+    private String geom = null;
     private Class<?> page;
     private boolean reloadNeeded = false;
     private final Adaptor adaptor;
     private static Shader activeShader;
 
-    public Shader(int vertex, int fragment, GamePageClass page, Adaptor adaptor) {
-        link = createShaderProgram(vertex, fragment);
+    private final ShaderBridge shaderBridge;
+    private final ShaderUtils shaderUtils;
+
+    public Shader(String vertex, String fragment, GamePageClass page, Adaptor adaptor) {
+        shaderUtils = new ShaderUtils();
+        link = shaderUtils.createShaderProgram(vertex, fragment);
         this.vertex = vertex;
         this.fragment = fragment;
         if (page != null) {
@@ -33,10 +34,12 @@ public class Shader { //means shader program
         allShaders.add(this);
         this.adaptor = adaptor;
         adaptor.setProgramId(link);
+        shaderBridge = CoreRenderer.engine.getPlatformBridge().getShaderBridge();
     }
 
-    public Shader(int vertex, int fragment, int geom, GamePageClass page, Adaptor adaptor) {
-        link = createShaderProgram(vertex, fragment, geom);
+    public Shader(String vertex, String fragment, String geom, GamePageClass page, Adaptor adaptor) {
+        shaderUtils = new ShaderUtils();
+        link = shaderUtils.createShaderProgram(vertex, fragment, geom);
         this.vertex = vertex;
         this.fragment = fragment;
         this.geom = geom;
@@ -46,22 +49,23 @@ public class Shader { //means shader program
         allShaders.add(this);
         this.adaptor = adaptor;
         adaptor.setProgramId(link);
+        shaderBridge = CoreRenderer.engine.getPlatformBridge().getShaderBridge();
     }
 
     private void reload() {
         //this.delete();
-        if (geom == -1) {
-            link = createShaderProgram(vertex, fragment);
+        if (geom == null) {
+            link = shaderUtils.createShaderProgram(vertex, fragment);
         } else {
-            link = createShaderProgram(vertex, fragment, geom);
+            link = shaderUtils.createShaderProgram(vertex, fragment, geom);
         }
     }
 
     public static void updateAllLocations() {
         ShaderUtils.prevProgramId = -1;
-        for (int i = 0; i < allShaders.size(); i++) {
-            if (allShaders.get(i) != null) {
-                allShaders.get(i).reloadNeeded = true;
+        for (Shader allShader : allShaders) {
+            if (allShader != null) {
+                allShader.reloadNeeded = true;
             }
         }
     }
@@ -78,16 +82,19 @@ public class Shader { //means shader program
     }
 
     public void delete() {
-        GLES20.glDeleteProgram(link);
+        shaderBridge.deleteProgram(link);
     }
 
+    public void apply() {
+        applyShader(this);
+    }
 
-    public static void applyShader(Shader s) {
+    public void applyShader(Shader s) {
         if (s.reloadNeeded) {
             s.reload();
             s.reloadNeeded = false;
         }
-        ShaderUtils.applyShader(s.link);
+        shaderUtils.applyShader(s.link);
         activeShader = s;
         s.adaptor.programId = s.link;
         s.adaptor.updateLocations();

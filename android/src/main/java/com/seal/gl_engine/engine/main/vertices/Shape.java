@@ -19,7 +19,7 @@ import android.util.Log;
 
 import com.nikitos.GamePageClass;
 import com.seal.gl_engine.engine.main.images.PImage;
-import com.seal.gl_engine.engine.main.shaders.Shader;
+import com.nikitos.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.textures.Texture;
 import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.maths.PVector;

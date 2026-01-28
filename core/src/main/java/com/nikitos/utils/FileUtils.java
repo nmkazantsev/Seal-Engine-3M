@@ -1,18 +1,18 @@
-package com.seal.gl_engine.utils;
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+package com.nikitos.utils;
+
+import com.nikitos.CoreRenderer;
+import com.nikitos.platformBridge.PlatformBridge;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 public class FileUtils {
+    private final PlatformBridge platformBridge;
 
-    public static String readTextFromRaw(Context context, int resourceId) {
+    /*public static String readTextFromRaw(Context context, int resourceId) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = null;
@@ -36,9 +36,25 @@ public class FileUtils {
             nfex.printStackTrace();
         }
         return stringBuilder.toString();
+    }*/
+    public FileUtils() {
+        platformBridge = CoreRenderer.engine.getPlatformBridge();
     }
 
-    public static Bitmap getBitmapFromAssets(String fileName, Context context) throws IOException {
+
+    public String readFileFromAssets(Class<?> cls, String fileName) {
+        String result;
+        try (InputStream is = cls.getResourceAsStream("/test.csv")) {
+            result = new BufferedReader(new InputStreamReader(is))
+                    .lines().collect(Collectors.joining("\n"));
+            return result;
+        } catch (Exception e) {
+            platformBridge.log_e("file utils", "ERROR opening " + fileName);
+            throw new RuntimeException(e);
+        }
+    }
+
+  /*  public static Bitmap getBitmapFromAssets(String fileName, Context context) throws IOException {
         AssetManager assetManager = context.getAssets();
 
         InputStream istr = assetManager.open(fileName);
@@ -46,5 +62,5 @@ public class FileUtils {
 
         return bitmap;
     }
-
+*/
 }
