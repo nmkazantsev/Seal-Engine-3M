@@ -1,13 +1,14 @@
 package com.nikitos.maths;
 
+import com.nikitos.platformBridge.MatrixPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 
 public class Matrix {
 
-    private static PlatformBridge platformBridge;
+    private static MatrixPlatformBridge matrixPlatformBridge;
 
     public static void init(PlatformBridge platformBridge) {
-        Matrix.platformBridge = platformBridge;
+        Matrix.matrixPlatformBridge = platformBridge.getMatrixPlatformBridge();
     }
 
     /**
@@ -53,7 +54,7 @@ public class Matrix {
                                   float eyeX, float eyeY, float eyeZ,
                                   float centerX, float centerY, float centerZ,
                                   float upX, float upY, float upZ) {
-        platformBridge.setLookAtM(rm, rmOffset, eyeX, eyeY, eyeZ,
+        matrixPlatformBridge.setLookAtM(rm, rmOffset, eyeX, eyeY, eyeZ,
                 centerX, centerY, centerZ, upX, upY, upZ);
     }
 
@@ -72,7 +73,7 @@ public class Matrix {
     public static void orthoM(float[] m, int offset,
                               float left, float right, float bottom, float top,
                               float near, float far) {
-        platformBridge.orthoM(m, offset, left, right, bottom, top, near, far);
+        matrixPlatformBridge.orthoM(m, offset, left, right, bottom, top, near, far);
     }
 
     /**
@@ -91,7 +92,7 @@ public class Matrix {
     public static void frustumM(float[] m, int offset,
                                 float left, float right, float bottom, float top,
                                 float near, float far) {
-        platformBridge.frustumM(m, offset, left, right, bottom, top, near, far);
+        matrixPlatformBridge.frustumM(m, offset, left, right, bottom, top, near, far);
     }
 
     /**
@@ -108,7 +109,7 @@ public class Matrix {
     public static void multiplyMM(float[] result, int resultOffset,
                                   float[] lhs, int lhsOffset,
                                   float[] rhs, int rhsOffset) {
-        platformBridge.multiplyMM(result, resultOffset, lhs, lhsOffset, rhs, rhsOffset);
+        matrixPlatformBridge.multiplyMM(result, resultOffset, lhs, lhsOffset, rhs, rhsOffset);
     }
 
     /**
@@ -124,7 +125,7 @@ public class Matrix {
 
     public static void translateM(float[] m, int mOffset,
                                   float x, float y, float z) {
-        platformBridge.translateM(m, mOffset, x, y, z);
+        matrixPlatformBridge.translateM(m, mOffset, x, y, z);
     }
 
     /**
@@ -141,7 +142,7 @@ public class Matrix {
 
     public static void rotateM(float[] m, int mOffset,
                                float a, float x, float y, float z) {
-        platformBridge.rotateM(m, mOffset, a, x, y, z);
+        matrixPlatformBridge.rotateM(m, mOffset, a, x, y, z);
     }
 
     /**
@@ -157,7 +158,7 @@ public class Matrix {
 
     public static void scaleM(float[] m, int mOffset,
                               float x, float y, float z) {
-        platformBridge.scaleM(m, mOffset, x, y, z);
+        matrixPlatformBridge.scaleM(m, mOffset, x, y, z);
     }
 
     /**
@@ -167,7 +168,7 @@ public class Matrix {
      * @param smOffset смещение в массиве результата
      */
     public static void setIdentityM(float[] sm, int smOffset) {
-        platformBridge.setIdentityM(sm, smOffset);
+        matrixPlatformBridge.setIdentityM(sm, smOffset);
     }
 
     /**
@@ -183,7 +184,7 @@ public class Matrix {
 
     public static boolean invertM(float[] mInv, int mInvOffset,
                                   float[] m, int mOffset) {
-        return platformBridge.invertM(mInv, mInvOffset, m, mOffset);
+        return matrixPlatformBridge.invertM(mInv, mInvOffset, m, mOffset);
     }
 
     /**
@@ -197,7 +198,7 @@ public class Matrix {
 
     public static void transposeM(float[] mTrans, int mTransOffset,
                                   float[] m, int mOffset) {
-        platformBridge.transposeM(mTrans, mTransOffset, m, mOffset);
+        matrixPlatformBridge.transposeM(mTrans, mTransOffset, m, mOffset);
     }
 
     /**
@@ -215,7 +216,7 @@ public class Matrix {
     public static void multiplyMV(float[] resultVec, int resultVecOffset,
                                   float[] lhsMat, int lhsMatOffset,
                                   float[] rhsVec, int rhsVecOffset) {
-        platformBridge.multiplyMV(resultVec, resultVecOffset, lhsMat, lhsMatOffset, rhsVec, rhsVecOffset);
+        matrixPlatformBridge.multiplyMV(resultVec, resultVecOffset, lhsMat, lhsMatOffset, rhsVec, rhsVecOffset);
     }
 }
 

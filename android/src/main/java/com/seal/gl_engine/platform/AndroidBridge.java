@@ -89,7 +89,7 @@ public class AndroidBridge extends PlatformBridge {
 
     @Override
     public MatrixPlatformBridge getMatrixPlatformBridge() {
-        return null;
+        return new MatrixPlatformBridgeAndroid();
     }
 
     static class MyConfigChooser implements GLSurfaceView.EGLConfigChooser {

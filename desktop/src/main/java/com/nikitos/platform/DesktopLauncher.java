@@ -1,5 +1,7 @@
-package com.nikitos;
+package com.nikitos.platform;
 
+import com.nikitos.CoreRenderer;
+import com.nikitos.Engine;
 import com.nikitos.platformBridge.LauncherParams;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;

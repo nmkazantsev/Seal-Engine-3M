@@ -2,6 +2,7 @@ package com.nikitos.main.camera;
 
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.platformBridge.MatrixPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.Utils;
 
@@ -15,14 +16,14 @@ public class Camera {
     public CameraSettings cameraSettings;
     public ProjectionMatrixSettings projectionMatrixSettings;
     private boolean mode3d = true;
-    private PlatformBridge platformBridge;
+    private MatrixPlatformBridge platformBridge;
 
     /**
      * A constructor to create new game camera. Resets CameraSettings and ProjectionMatrix Settings for 3d drawing.
      * Takes x and y dimensions equal to screen size.
      */
     public Camera() {
-        platformBridge = CoreRenderer.engine.getPlatformBridge();
+        platformBridge = CoreRenderer.engine.getPlatformBridge().getMatrixPlatformBridge();
         cameraSettings = new CameraSettings(x, y);
         projectionMatrixSettings = new ProjectionMatrixSettings(x, y);
         resetFor3d();
