@@ -28,11 +28,11 @@ public class VertexBuffer extends VRAMobject {
     }
 
     public void bindVbo(int vboInd) {
-        vertexBridge.glBindBuffer(vertexBridge.GL_ARRAY_BUFFER(), vbo[vboInd]);
+        vertexBridge.glBindBuffer(glc.GL_ARRAY_BUFFER(), vbo[vboInd]);
     }
 
     public void bindDefaultVbo() {
-        vertexBridge.glBindBuffer(vertexBridge.GL_ARRAY_BUFFER(), 0);
+        vertexBridge.glBindBuffer(glc.GL_ARRAY_BUFFER(), 0);
     }
 
     public void bindVao() {

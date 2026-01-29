@@ -2,6 +2,7 @@ package com.nikitos.main.shaders;
 
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.platformBridge.ShaderBridge;
 
@@ -9,9 +10,12 @@ public class ShaderUtils {
     private final ShaderBridge shaderBridge;
     private final PlatformBridge platformBridge;
 
+    private final GLConstBridge glc;
+
     public ShaderUtils() {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
         shaderBridge = platformBridge.getShaderBridge();
+        glc = platformBridge.getGLConstBridge();
     }
 
     protected int createProgram(int vertexShaderId, int fragmentShaderId) {
@@ -25,7 +29,7 @@ public class ShaderUtils {
 
         shaderBridge.glLinkProgram(programId);
         final int[] linkStatus = new int[1];
-        shaderBridge.glGetProgramiv(programId, GL_LINK_STATUS, linkStatus, 0);
+        shaderBridge.glGetProgramiv(programId, glc.GL_LINK_STATUS(), linkStatus, 0);
         if (linkStatus[0] == 0) {
             platformBridge.log_e("error compiling shaders", String.valueOf(platformBridge.glGetError()));
             platformBridge.log_e("Load Shader Failed", "loading\n" + shaderBridge.glGetProgramInfoLog(programId));
@@ -47,7 +51,7 @@ public class ShaderUtils {
         shaderBridge.glAttachShader(programId, geomShaderId);
         shaderBridge.glLinkProgram(programId);
         final int[] linkStatus = new int[1];
-        shaderBridge.glGetProgramiv(programId, GL_LINK_STATUS, linkStatus, 0);
+        shaderBridge.glGetProgramiv(programId, glc.GL_LINK_STATUS(), linkStatus, 0);
         if (linkStatus[0] == 0) {
             platformBridge.log_e("error compiling shaders", String.valueOf(platformBridge.glGetError()));
             platformBridge.log_e("Load Shader Failed", "loading\n" + shaderBridge.glGetProgramInfoLog(programId));
@@ -68,7 +72,7 @@ public class ShaderUtils {
         shaderBridge.glShaderSource(shaderId, shaderText);
         shaderBridge.glCompileShader(shaderId);
         final int[] compileStatus = new int[1];
-        shaderBridge.glGetShaderiv(shaderId, GL_COMPILE_STATUS, compileStatus, 0);
+        shaderBridge.glGetShaderiv(shaderId, glc.GL_COMPILE_STATUS(), compileStatus, 0);
         if (compileStatus[0] == 0) {
             platformBridge.log_e("Load Shader Failed" + shaderText, "Compilation\n" + shaderBridge.glGetShaderInfoLog(shaderId));
             shaderBridge.glDeleteShader(shaderId);
@@ -79,17 +83,17 @@ public class ShaderUtils {
 
     protected int createShaderProgram(String vertexShader, String fragmentShader) {
         int programId;
-        int vertexShaderId = createShader(GL_VERTEX_SHADER, vertexShader);
-        int fragmentShaderId = createShader(GL_FRAGMENT_SHADER, fragmentShader);
+        int vertexShaderId = createShader(glc.GL_VERTEX_SHADER(), vertexShader);
+        int fragmentShaderId = createShader(glc.GL_FRAGMENT_SHADER(), fragmentShader);
         programId = createProgram(vertexShaderId, fragmentShaderId);
         return programId;
     }
 
     protected int createShaderProgram(String vertexShader, String fragmentShader, String geomShader) {
         int programId;
-        int vertexShaderId = createShader(GL_VERTEX_SHADER, vertexShader);
-        int fragmentShaderId = createShader(GL_FRAGMENT_SHADER, fragmentShader);
-        int geomShaderId = createShader(GL_GEOMETRY_SHADER, geomShader);
+        int vertexShaderId = createShader(glc.GL_VERTEX_SHADER(), vertexShader);
+        int fragmentShaderId = createShader(glc.GL_FRAGMENT_SHADER(), fragmentShader);
+        int geomShaderId = createShader(glc.GL_GEOMETRY_SHADER(), geomShader);
         programId = createProgram(vertexShaderId, fragmentShaderId, geomShaderId);
         return programId;
     }
