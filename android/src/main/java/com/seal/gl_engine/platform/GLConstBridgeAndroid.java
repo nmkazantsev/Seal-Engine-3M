@@ -370,4 +370,14 @@ public class GLConstBridgeAndroid extends GLConstBridge {
     public int GL_MIRRORED_REPEAT() {
         return GLES30.GL_MIRRORED_REPEAT;
     }
+
+    @Override
+    public int GL_CLAMP_TO_EDGE() {
+        return GLES30.GL_CLAMP_TO_EDGE;
+    }
+
+    @Override
+    public int GL_TEXTURE_WRAP_R() {
+        return GLES30.GL_TEXTURE_WRAP_R;
+    }
 }

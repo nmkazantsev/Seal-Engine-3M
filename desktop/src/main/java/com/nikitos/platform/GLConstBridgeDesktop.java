@@ -368,4 +368,14 @@ public class GLConstBridgeDesktop extends GLConstBridge {
     public int GL_MIRRORED_REPEAT() {
         return GL33.GL_MIRRORED_REPEAT;
     }
+
+    @Override
+    public int GL_CLAMP_TO_EDGE() {
+        return GL33.GL_CLAMP_TO_EDGE;
+    }
+
+    @Override
+    public int GL_TEXTURE_WRAP_R() {
+        return GL33.GL_TEXTURE_WRAP_R;
+    }
 }

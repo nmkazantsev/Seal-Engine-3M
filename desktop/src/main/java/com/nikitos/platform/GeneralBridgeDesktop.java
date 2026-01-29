@@ -134,7 +134,6 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     public void glTexParameteri(int textureType, int filter, int interpolation) {
         GL33.glTexParameteri(textureType, filter, interpolation);
     }
-
     @Override
     public void glGenTextures(int number, int[] textureIds, int offset) {
         GL33.glGenTextures(textureIds);

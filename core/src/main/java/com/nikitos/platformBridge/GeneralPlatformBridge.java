@@ -37,7 +37,9 @@ public abstract class GeneralPlatformBridge {
 
     public abstract void texImage2D(int mode, int level, int type, PImage bitmap, int memSize, int i);
 
-    public abstract void glTexParameteri(int textureType, int filter,int interpolation);
-    public abstract void glGenTextures(int number,int [] textureIds, int offset);
-    public abstract void glDeleteTextures(int number, int [] ids, int offset);
+    public abstract void glTexParameteri(int textureType, int filter, int interpolation);
+
+    public abstract void glGenTextures(int number, int[] textureIds, int offset);
+
+    public abstract void glDeleteTextures(int number, int[] ids, int offset);
 }

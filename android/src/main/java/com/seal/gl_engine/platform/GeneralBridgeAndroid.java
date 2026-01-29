@@ -93,7 +93,6 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     public void glTexParameteri(int textureType, int filter, int interpolation) {
         GLES30.glTexParameteri(textureType, filter, interpolation);
     }
-
     @Override
     public void glGenTextures(int number, int[] textureIds, int offset) {
         GLES30.glGenTextures(number, textureIds, offset);

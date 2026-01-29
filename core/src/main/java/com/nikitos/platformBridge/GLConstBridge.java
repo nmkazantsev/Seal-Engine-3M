@@ -152,4 +152,8 @@ public abstract class GLConstBridge {
     public abstract int GL_POLYGON_OFFSET_FILL();
 
     public abstract int GL_MIRRORED_REPEAT();
+
+    public abstract int GL_CLAMP_TO_EDGE();
+
+    public abstract int GL_TEXTURE_WRAP_R();
 }
