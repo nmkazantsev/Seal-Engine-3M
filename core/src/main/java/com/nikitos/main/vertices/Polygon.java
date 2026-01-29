@@ -2,11 +2,11 @@ package com.nikitos.main.vertices;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.main.images.PImage;
+import com.nikitos.main.textures.Texture;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
-import com.seal.gl_engine.engine.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
-import com.seal.gl_engine.engine.main.textures.Texture;
 import com.nikitos.maths.PVector;
 
 import java.lang.ref.WeakReference;
@@ -228,7 +228,7 @@ public class Polygon implements VerticesSet {
         postToGlNeeded = false;
         gl.glActiveTexture(glConst.GL_TEXTURE0());
         gl.glBindTexture(glConst.GL_TEXTURE_2D(), texture.getId());
-        GLUtils.texImage2D(glConst.GL_TEXTURE_2D(), 0, glConst.GL_RGBA(), image.bitmap, 0);
+        gl.texImage2D(glConst.GL_TEXTURE_2D(), 0, image, 0);
         if (texture.hasMinMaps()) {
             gl.glGenerateMipmap(glConst.GL_TEXTURE_2D());
         }

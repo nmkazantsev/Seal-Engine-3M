@@ -16,7 +16,6 @@ import com.seal.gl_engine.utils.Utils;
 public class PImageAndroid extends PImage {
     private Bitmap bitmap;
     protected float width, height;
-    private boolean isLoaded = false;
 
     float textSize;
     public Paint paintImg = new Paint();
@@ -51,19 +50,19 @@ public class PImageAndroid extends PImage {
 
     //после нее сам img не равне null, но bitmap удаляется
     public void delete() {
-        if (isLoaded) {
+        if (getLoaded()) {
             imgBridge.recycleBitmap(bitmap);
             bitmap = null;
-            isLoaded = false;
+            setLoaded(false);
         }
     }
 
     public boolean isLoaded() {
-        return isLoaded;
+        return getLoaded();
     }
 
     public void setLoaded(boolean loaded) {
-        isLoaded = loaded;
+        super.setLoaded(loaded);
     }
 
 
@@ -308,7 +307,7 @@ public class PImageAndroid extends PImage {
         return height;
     }
 
-    public Bitmap getBitmap(){
+    public Bitmap getBitmap() {
         return bitmap;
     }
 

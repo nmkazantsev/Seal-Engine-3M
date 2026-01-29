@@ -5,6 +5,7 @@ import com.nikitos.platformBridge.ImgBridge;
 
 public abstract class PImage {
     protected final ImgBridge imgBridge;
+    private boolean isLoaded = false;
 
     public PImage() {
         imgBridge = CoreRenderer.engine.getPlatformBridge().getImgBridge();
@@ -55,4 +56,12 @@ public abstract class PImage {
 
     // Утилиты
     public abstract void delete();
+
+    public boolean getLoaded(){
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded){
+        isLoaded = loaded;
+    }
 }
