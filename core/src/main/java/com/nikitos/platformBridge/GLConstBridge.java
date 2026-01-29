@@ -156,4 +156,11 @@ public abstract class GLConstBridge {
     public abstract int GL_CLAMP_TO_EDGE();
 
     public abstract int GL_TEXTURE_WRAP_R();
+
+    public abstract int GL_TEXTURE_CUBE_MAP_NEGATIVE_X();
+    public abstract int GL_TEXTURE_CUBE_MAP_POSITIVE_X();
+    public abstract int GL_TEXTURE_CUBE_MAP_NEGATIVE_Y();
+    public abstract int GL_TEXTURE_CUBE_MAP_POSITIVE_Y();
+    public abstract int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z();
+    public abstract int GL_TEXTURE_CUBE_MAP_POSITIVE_Z();
 }

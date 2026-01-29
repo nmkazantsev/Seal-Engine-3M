@@ -380,4 +380,34 @@ public class GLConstBridgeAndroid extends GLConstBridge {
     public int GL_TEXTURE_WRAP_R() {
         return GLES30.GL_TEXTURE_WRAP_R;
     }
+
+    @Override
+    public int GL_TEXTURE_CUBE_MAP_NEGATIVE_X() {
+        return GLES30.GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+    }
+
+    @Override
+    public int GL_TEXTURE_CUBE_MAP_POSITIVE_X() {
+        return GLES30.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+    }
+
+    @Override
+    public int GL_TEXTURE_CUBE_MAP_NEGATIVE_Y() {
+        return GLES30.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+    }
+
+    @Override
+    public int GL_TEXTURE_CUBE_MAP_POSITIVE_Y() {
+        return GLES30.GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+    }
+
+    @Override
+    public int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z() {
+        return GLES30.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+    }
+
+    @Override
+    public int GL_TEXTURE_CUBE_MAP_POSITIVE_Z() {
+        return GLES30.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+    }
 }

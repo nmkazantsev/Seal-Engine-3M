@@ -42,4 +42,8 @@ public abstract class GeneralPlatformBridge {
     public abstract void glGenTextures(int number, int[] textureIds, int offset);
 
     public abstract void glDeleteTextures(int number, int[] ids, int offset);
+    public abstract void texImage2D(int target, int level, PImage image, int border);
+
+    public abstract void glDepthMask(boolean on);
+
 }

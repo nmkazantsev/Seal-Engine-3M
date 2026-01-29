@@ -134,6 +134,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     public void glTexParameteri(int textureType, int filter, int interpolation) {
         GL33.glTexParameteri(textureType, filter, interpolation);
     }
+
     @Override
     public void glGenTextures(int number, int[] textureIds, int offset) {
         GL33.glGenTextures(textureIds);
@@ -144,5 +145,14 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         GL33.glDeleteTextures(ids);
     }
 
+    @Override
+    public void texImage2D(int target, int level, PImage bitmap, int border) {
+        texImage2D(target, level, GL33.GL_UNSIGNED_BYTE, bitmap, GL33.GL_RGBA, border);
+    }
 
+
+    @Override
+    public void glDepthMask(boolean on) {
+        GL33.glDepthMask(on);
+    }
 }

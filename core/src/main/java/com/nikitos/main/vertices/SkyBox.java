@@ -1,39 +1,27 @@
 package com.nikitos.main.vertices;
 
-import static android.opengl.GLES10.GL_TRIANGLES;
-import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE_CUBE_MAP;
-import static android.opengl.GLES20.GL_TEXTURE_WRAP_S;
-import static android.opengl.GLES20.GL_TEXTURE_WRAP_T;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glDepthMask;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glTexParameteri;
-import static android.opengl.GLES20.glUniform1i;
-import static android.opengl.GLES30.GL_TEXTURE_WRAP_R;
-
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
-
-import com.seal.gl_engine.engine.main.textures.CubeMap;
+import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
-import com.seal.gl_engine.engine.main.images.PImage;
+import com.nikitos.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
-import com.nikitos.maths.PVector;
-import com.seal.gl_engine.utils.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
+import com.nikitos.main.textures.CubeMap;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
 import de.javagl.obj.ObjUtils;
 
+import static com.nikitos.utils.FileUtils.loadImage;
+
 public class SkyBox implements VerticesSet {
+    private final GeneralPlatformBridge gl;
+    private final GLConstBridge glc;
     private final CubeMap texture;
     private final String textureFileName, res;
     private Face[] faces;
@@ -44,10 +32,15 @@ public class SkyBox implements VerticesSet {
 
     private final Function<Void, PImage> redrawFunction;
 
+    private final Class<?> context;
     private final String[] names = new String[]{"right", "left", "bottom", "top", "front", "back"};
 
     public SkyBox(String textureFileName, String res, GamePageClass page) {
+        gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
+        glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
+
         this.res = res;
+        this.context = page.getClass();
         this.redrawFunction = this::loadTexture;
         this.textureFileName = textureFileName;
         VerticesShapesManager.allShapes.add(new java.lang.ref.WeakReference<>(this));//добавить ссылку на Poligon
@@ -127,7 +120,7 @@ public class SkyBox implements VerticesSet {
 
     private PImage loadTexture(Void v) {
         for (int i = 0; i < images.length; i++) {
-            images[i] = Utils.loadImage(textureFileName + names[i] + "." + res);
+            images[i] = loadImage(textureFileName + names[i] + "." + res, context);
         }
         return null;
     }
@@ -138,36 +131,36 @@ public class SkyBox implements VerticesSet {
         Shader.getActiveShader().getAdaptor().bindData(faces);
 
         // помещаем текстуру в target 2D юнита 0
-        glActiveTexture(GL_TEXTURE0);
+        gl.glActiveTexture(glc.GL_TEXTURE0());
         if (!postToGlNeeded) {
-            glBindTexture(GL_TEXTURE_CUBE_MAP, texture.getId());
+            gl.glBindTexture(glc.GL_TEXTURE_CUBE_MAP(), texture.getId());
         }
         if (postToGlNeeded) {
             postToGl();
         }
         // юнит текстуры
-        glUniform1i(Shader.getActiveShader().getAdaptor().getTextureLocation(), 0);
+        gl.glUniform1i(Shader.getActiveShader().getAdaptor().getTextureLocation(), 0);
         postToGlNeeded = false;
     }
 
     private void postToGl() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, texture.getId());
-        glTexParameteri(GLES20.GL_TEXTURE_CUBE_MAP, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-        glTexParameteri(GLES20.GL_TEXTURE_CUBE_MAP, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        gl.glActiveTexture(glc.GL_TEXTURE0());
+        gl.glBindTexture(glc.GL_TEXTURE_CUBE_MAP(), texture.getId());
+        gl.glTexParameteri(glc.GL_TEXTURE_CUBE_MAP(), glc.GL_TEXTURE_MIN_FILTER(), glc.GL_LINEAR());
+        gl.glTexParameteri(glc.GL_TEXTURE_CUBE_MAP(), glc.GL_TEXTURE_MAG_FILTER(), glc.GL_LINEAR());
+        gl.glTexParameteri(glc.GL_TEXTURE_CUBE_MAP(), glc.GL_TEXTURE_WRAP_S(), glc.GL_CLAMP_TO_EDGE());
+        gl.glTexParameteri(glc.GL_TEXTURE_CUBE_MAP(), glc.GL_TEXTURE_WRAP_T(), glc.GL_CLAMP_TO_EDGE());
+        gl.glTexParameteri(glc.GL_TEXTURE_CUBE_MAP(), glc.GL_TEXTURE_WRAP_R(), glc.GL_CLAMP_TO_EDGE());
 
 
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, images[0].bitmap, 0);
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, images[1].bitmap, 0);
+        gl.texImage2D(glc.GL_TEXTURE_CUBE_MAP_NEGATIVE_X(), 0, images[0], 0);
+        gl.texImage2D(glc.GL_TEXTURE_CUBE_MAP_POSITIVE_X(), 0, images[1], 0);
 
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, images[2].bitmap, 0);
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, images[3].bitmap, 0);
+        gl.texImage2D(glc.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y(), 0, images[2], 0);
+        gl.texImage2D(glc.GL_TEXTURE_CUBE_MAP_POSITIVE_Y(), 0, images[3], 0);
 
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, images[4].bitmap, 0);
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, images[5].bitmap, 0);
+        gl.texImage2D(glc.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z(), 0, images[4], 0);
+        gl.texImage2D(glc.GL_TEXTURE_CUBE_MAP_POSITIVE_Z(), 0, images[5], 0);
         for (PImage i : images) {
             i.delete();
         }
@@ -175,9 +168,9 @@ public class SkyBox implements VerticesSet {
 
     public void prepareAndDraw() {
         bindData();
-        glDepthMask(false);
-        glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
-        glDepthMask(true);
+        gl.glDepthMask(false);
+        gl.glDrawArrays(glc.GL_TRIANGLES(), 0, 12 * 3);
+        gl.glDepthMask(true);
     }
 
     @Override
