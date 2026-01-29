@@ -1,5 +1,7 @@
 package com.nikitos.platformBridge;
 
+import com.nikitos.main.images.PImage;
+
 import java.nio.FloatBuffer;
 
 public abstract class GeneralPlatformBridge {

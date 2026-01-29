@@ -3,13 +3,12 @@ package com.nikitos.main.vertices;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.Utils;
-import com.seal.gl_engine.engine.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
-import com.seal.gl_engine.engine.main.textures.Texture;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.maths.PVector;
 import de.javagl.obj.Obj;

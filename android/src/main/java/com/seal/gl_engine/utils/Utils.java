@@ -168,9 +168,6 @@ public class Utils {
             PImageAndroid img = new PImageAndroid(getBitmapFromAssets(name, context));
             img.width =imgBridge.getWidth(img.bitmap);
             img.height = imgBridge.getHeight(img.bitmap);
-            if (img == null) {
-                Log.e("ERROR LOADING", name);
-            }
             img.setLoaded(true);
             return img;
         } catch (Exception e) {
