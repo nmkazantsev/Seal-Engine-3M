@@ -1,12 +1,12 @@
 package com.nikitos.utils;
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.main.images.PImage;
+import com.nikitos.platformBridge.ImgBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.awt.*;
+import java.io.*;
 import java.util.stream.Collectors;
 
 public class FileUtils {
@@ -53,6 +53,16 @@ public class FileUtils {
             platformBridge.log_e("file utils", "ERROR opening " + fileName);
             throw new RuntimeException(e);
         }
+    }
+
+    public static PImage loadImage(InputStream inputStream) {
+        ImgBridge imgBridge = CoreRenderer.engine.getPlatformBridge().getImgBridge();
+        return imgBridge.loadImage(inputStream);
+    }
+
+    public static PImage loadImage(String fileName, Class<?> cls) {
+        InputStream inputStream = cls.getResourceAsStream(fileName);
+        return loadImage(inputStream);
     }
 
   /*  public static Bitmap getBitmapFromAssets(String fileName, Context context) throws IOException {

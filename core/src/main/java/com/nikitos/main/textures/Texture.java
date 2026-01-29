@@ -1,16 +1,4 @@
-package com.seal.gl_engine.engine.main.textures;
-
-import static android.opengl.GLES20.GL_MIRRORED_REPEAT;
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.GL_TEXTURE_WRAP_S;
-import static android.opengl.GLES20.GL_TEXTURE_WRAP_T;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glDeleteTextures;
-import static android.opengl.GLES20.glGenTextures;
-
-import android.opengl.GLES20;
+package com.nikitos.main.textures;
 
 import com.nikitos.GamePageClass;
 import com.nikitos.main.VRAMobject;

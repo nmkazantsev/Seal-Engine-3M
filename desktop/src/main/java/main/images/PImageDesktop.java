@@ -31,12 +31,10 @@ public class PImageDesktop extends PImage {
         canvas.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 
-    public PImageDesktop(Object bitmap) {
-        if (bitmap instanceof BufferedImage) {
-            this.bitmap = (BufferedImage) bitmap;
-            this.canvas = this.bitmap.createGraphics();
-            canvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
+    public PImageDesktop(BufferedImage bitmap) {
+        this.bitmap = bitmap;
+        this.canvas = this.bitmap.createGraphics();
+        canvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     @Override
@@ -178,7 +176,7 @@ public class PImageDesktop extends PImage {
 
         PImageDesktop desktopImg = (PImageDesktop) img;
         canvas.drawImage(desktopImg.bitmap, (int) x, (int) y, null);
-        
+
     }
 
     @Override

@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="need PImage refactor">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="import obj lib">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/core/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/librares/obj-0.4.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/libs/obj-0.4.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/ImgBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/ImgBridgeAndroid.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GeneralPlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GeneralPlatformBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/ImgBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/ImgBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +152,7 @@
       <workItem from="1769686387895" duration="1947000" />
       <workItem from="1769689520547" duration="2089000" />
       <workItem from="1769700728726" duration="3000" />
-      <workItem from="1769700748418" duration="2513000" />
+      <workItem from="1769700748418" duration="5103000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -203,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769687731666</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="import obj lib">
+      <option name="closed" value="true" />
+      <created>1769704700859</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1769704700859</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,6 +246,7 @@
     <MESSAGE value="on the way to refactor shaders - add consts" />
     <MESSAGE value="fix main shader adaptor" />
     <MESSAGE value="need PImage refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="need PImage refactor" />
+    <MESSAGE value="import obj lib" />
+    <option name="LAST_COMMIT_MESSAGE" value="import obj lib" />
   </component>
 </project>

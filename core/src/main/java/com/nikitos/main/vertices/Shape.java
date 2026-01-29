@@ -4,6 +4,7 @@ package com.nikitos.main.vertices;
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
+import com.nikitos.main.textures.Texture;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
@@ -21,12 +22,15 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.function.Function;
 
+import static com.nikitos.utils.FileUtils.loadImage;
+
 
 public class Shape implements VerticesSet {
     private final GeneralPlatformBridge gl;
     private final GLConstBridge glc;
     private final PlatformBridge platformBridge;
 
+    private final Class<?> contextClass;
     private boolean isVertexLoaded = false, globalLoaded = false;
 
     private final Texture texture;
@@ -51,6 +55,7 @@ public class Shape implements VerticesSet {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
         gl = platformBridge.getGeneralPlatformBridge();
         glc = platformBridge.getGLConstBridge();
+        contextClass = page.getClass();
 
         creator = page;
         this.redrawFunction = this::loadTexture;
@@ -69,6 +74,8 @@ public class Shape implements VerticesSet {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
         gl = platformBridge.getGeneralPlatformBridge();
         glc = platformBridge.getGLConstBridge();
+        contextClass = page.getClass();
+
         creator = page;
         this.redrawFunction = this::loadTexture;
         this.textureFileName = textureFileName;
@@ -153,15 +160,15 @@ public class Shape implements VerticesSet {
 
     public void addNormalMap(String normalMapFileName) {
         this.normalMapFileName = normalMapFileName;
-        normalImage = Utils.loadImage(normalMapFileName);
+        normalImage = loadImage(normalMapFileName, contextClass);
         normalTexture = new Texture(creator);
     }
 
     private PImage loadTexture(Void v) {
         if (normalMapFileName != null) {
-            normalImage = Utils.loadImage(normalMapFileName);
+            normalImage = loadImage(normalMapFileName, contextClass);
         }
-        return Utils.loadImage(textureFileName);
+        return loadImage(textureFileName, contextClass);
     }
 
 
@@ -183,38 +190,38 @@ public class Shape implements VerticesSet {
         gl.glUniform1i(Shader.getActiveShader().getAdaptor().getTextureLocation(), 0);
 
         //  place texture in target 2D unit 0
-       gl.glActiveTexture(glc.GL_TEXTURE1());
+        gl.glActiveTexture(glc.GL_TEXTURE1());
         if (!postToGlNeeded && normalTexture != null) {
-           gl.glBindTexture(glc.GL_TEXTURE_2D(), normalTexture.getId());
+            gl.glBindTexture(glc.GL_TEXTURE_2D(), normalTexture.getId());
         }
         if (postToGlNeeded) {
             postToGlNormals();
         }
         //texture unit
-       gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalTextureLocation(), 1);
+        gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalTextureLocation(), 1);
 
         //enable or disable normal map in shader
         if (normalTexture != null) {
-           gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
+            gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
         } else {
-           gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
+            gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
         }
         postToGlNeeded = false;
     }
 
     private void postToGl() {
-       gl.glActiveTexture(glc.GL_TEXTURE0());
-       gl.glBindTexture(glc.GL_TEXTURE_2D(), texture.getId());
-        GLUtils.texImage2D(glc.GL_TEXTURE_2D(), 0, glc.GL_RGBA(), image.bitmap, glc.GL_UNSIGNED_BYTE(), 0);
+        gl.glActiveTexture(glc.GL_TEXTURE0());
+        gl.glBindTexture(glc.GL_TEXTURE_2D(), texture.getId());
+        gl.texImage2D(glc.GL_TEXTURE_2D(), 0, glc.GL_RGBA(), image, glc.GL_UNSIGNED_BYTE(), 0);
     }
 
     private void postToGlNormals() {
         if (normalImage != null && normalImage.isLoaded()) {
-           gl.glActiveTexture(glc.GL_TEXTURE1());
-           gl.glBindTexture(glc.GL_TEXTURE_2D(), normalTexture.getId());
-            GLUtils.texImage2D(glc.GL_TEXTURE_2D(), 0,glc. GL_RGBA(), normalImage.bitmap, 0);
+            gl.glActiveTexture(glc.GL_TEXTURE1());
+            gl.glBindTexture(glc.GL_TEXTURE_2D(), normalTexture.getId());
+            gl.texImage2D(glc.GL_TEXTURE_2D(), 0, glc.GL_RGBA(), normalImage, glc.GL_UNSIGNED_BYTE(), 0);
             normalImage.delete();
-           gl.glActiveTexture(glc.GL_TEXTURE0());
+            gl.glActiveTexture(glc.GL_TEXTURE0());
         }
     }
 
@@ -223,9 +230,9 @@ public class Shape implements VerticesSet {
         if (globalLoaded) {
             bindData();
             vertexBuffer.bindVao();
-           gl.glEnable(glc.GL_CULL_FACE()); //i dont know what is it, it should be optimization
-           gl.glDrawArrays(glc.GL_TRIANGLES(), 0, object.getNumFaces() * 3);
-           gl.glDisable(glc.GL_CULL_FACE());
+            gl.glEnable(glc.GL_CULL_FACE()); //i dont know what is it, it should be optimization
+            gl.glDrawArrays(glc.GL_TRIANGLES(), 0, object.getNumFaces() * 3);
+            gl.glDisable(glc.GL_CULL_FACE());
             vertexBuffer.bindDefaultVao();
         }
     }
