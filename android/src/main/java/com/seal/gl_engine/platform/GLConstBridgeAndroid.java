@@ -365,4 +365,9 @@ public class GLConstBridgeAndroid extends GLConstBridge {
     public int GL_POLYGON_OFFSET_FILL() {
         return GLES30.GL_POLYGON_OFFSET_FILL;
     }
+
+    @Override
+    public int GL_MIRRORED_REPEAT() {
+        return GLES30.GL_MIRRORED_REPEAT;
+    }
 }

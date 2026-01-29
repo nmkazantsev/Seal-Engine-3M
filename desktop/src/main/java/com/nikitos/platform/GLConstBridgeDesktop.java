@@ -363,4 +363,9 @@ public class GLConstBridgeDesktop extends GLConstBridge {
     public int GL_POLYGON_OFFSET_FILL() {
         return GL33.GL_POLYGON_OFFSET_FILL;
     }
+
+    @Override
+    public int GL_MIRRORED_REPEAT() {
+        return GL33.GL_MIRRORED_REPEAT;
+    }
 }

@@ -4,6 +4,7 @@ import android.opengl.GLES30;
 import android.opengl.GLUtils;
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
+import com.seal.gl_engine.engine.main.images.PImageAndroid;
 
 import java.nio.FloatBuffer;
 
@@ -85,7 +86,22 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
 
     @Override
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
-        GLUtils.texImage2D(target, level, internalFormat, bitmap, type, border);
+        GLUtils.texImage2D(target, level, internalFormat, ((PImageAndroid) image).getBitmap(), type, border);
+    }
+
+    @Override
+    public void glTexParameteri(int textureType, int filter, int interpolation) {
+        GLES30.glTexParameteri(textureType, filter, interpolation);
+    }
+
+    @Override
+    public void glGenTextures(int number, int[] textureIds, int offset) {
+        GLES30.glGenTextures(number, textureIds, offset);
+    }
+
+    @Override
+    public void glDeleteTextures(int number, int[] ids, int offset) {
+        GLES30.glDeleteTextures(number, ids, offset);
     }
 
 

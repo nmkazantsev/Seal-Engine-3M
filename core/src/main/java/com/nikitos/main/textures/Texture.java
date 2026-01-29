@@ -21,7 +21,7 @@ public class Texture extends VRAMobject {
 
     @Override
     public void delete() {
-        glDeleteTextures(1, new int[]{id}, 0);//delete texture with id texture, offset zero, array length 1
+        gl.glDeleteTextures(1, new int[]{id}, 0);//delete texture with id texture, offset zero, array length 1
     }
 
     protected int createTexture() {
@@ -29,25 +29,25 @@ public class Texture extends VRAMobject {
         /*create an empty array of one element
         OpenGL ES will write a free texture number to this array,
         get a free texture name, which will be written to names[0]*/
-        glGenTextures(1, textureIds, 0);
+        gl.glGenTextures(1, textureIds, 0);
         if (textureIds[0] == 0) {
             return 0;
         }
         // настройка объекта текстуры
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureIds[0]);
+        gl.glActiveTexture(glc.GL_TEXTURE0());
+        gl.glBindTexture(glc.GL_TEXTURE_2D(), textureIds[0]);
         if (!mipMap) {
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+            gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_MIN_FILTER(), glc.GL_LINEAR());
+            gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_MAG_FILTER(), glc.GL_LINEAR());
         } else {
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+            gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_MIN_FILTER(), glc.GL_LINEAR_MIPMAP_LINEAR());
+            gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_MAG_FILTER(), glc.GL_LINEAR());
         }
-        GLES20.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-        GLES20.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_WRAP_S(), glc.GL_MIRRORED_REPEAT());
+        gl.glTexParameteri(glc.GL_TEXTURE_2D(),glc. GL_TEXTURE_WRAP_T(), glc.GL_MIRRORED_REPEAT());
 
         // сброс target
-        glBindTexture(GL_TEXTURE_2D, 0);
+        gl.glBindTexture(glc.GL_TEXTURE_2D(), 0);
 
         return textureIds[0];
     }

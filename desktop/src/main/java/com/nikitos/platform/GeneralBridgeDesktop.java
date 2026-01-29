@@ -1,9 +1,15 @@
 package com.nikitos.platform;
 
+import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
+import main.images.PImageDesktop;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.GLUtil;
 
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
@@ -81,9 +87,63 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     public void glDisable(int mode) {
         GL33.glDisable(mode);
     }
+
     @Override
-    public void texImage2D(int target, int level, int internalFormat, PImage bitmap, int type, int border) {
-        GLUtils.texImage2D(target, level, internalFormat, bitmap, type, border);
+    public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
+        //в результате костыля - преобразования все текстуры становятся с альфа каналом,
+        // если его нет - он добавляется как 0% прозрачности
+        GL33.glTexImage2D(target, level, internalFormat,
+                (int) image.getWidth(), (int) image.getHeight(), border,
+                type, GL33.GL_RGBA, bufferedImageToByteBuffer(((PImageDesktop) image).getBitmap()));
     }
+
+    //костыль для конвертации нормального формата в уебщиный
+    //спасибо разрабам lwgl
+    private ByteBuffer bufferedImageToByteBuffer(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        // Гарантируем нужный формат
+        BufferedImage argbImage = new BufferedImage(
+                width, height, BufferedImage.TYPE_INT_ARGB
+        );
+        argbImage.getGraphics().drawImage(image, 0, 0, null);
+
+        int[] pixels = new int[width * height];
+        argbImage.getRGB(0, 0, width, height, pixels, 0, width);
+
+        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+
+        // OpenGL ожидает RGBA
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = pixels[y * width + x];
+
+                buffer.put((byte) ((pixel >> 16) & 0xFF)); // R
+                buffer.put((byte) ((pixel >> 8) & 0xFF));  // G
+                buffer.put((byte) (pixel & 0xFF));         // B
+                buffer.put((byte) ((pixel >> 24) & 0xFF)); // A
+            }
+        }
+
+        buffer.flip();
+        return buffer;
+    }
+
+    @Override
+    public void glTexParameteri(int textureType, int filter, int interpolation) {
+        GL33.glTexParameteri(textureType, filter, interpolation);
+    }
+
+    @Override
+    public void glGenTextures(int number, int[] textureIds, int offset) {
+        GL33.glGenTextures(textureIds);
+    }
+
+    @Override
+    public void glDeleteTextures(int number, int[] ids, int offset) {
+        GL33.glDeleteTextures(ids);
+    }
+
 
 }

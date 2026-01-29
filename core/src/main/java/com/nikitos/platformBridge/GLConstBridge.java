@@ -150,4 +150,6 @@ public abstract class GLConstBridge {
     public abstract int GL_DITHER();
 
     public abstract int GL_POLYGON_OFFSET_FILL();
+
+    public abstract int GL_MIRRORED_REPEAT();
 }

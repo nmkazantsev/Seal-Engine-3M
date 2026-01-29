@@ -308,4 +308,8 @@ public class PImageAndroid extends PImage {
         return height;
     }
 
+    public Bitmap getBitmap(){
+        return bitmap;
+    }
+
 }
