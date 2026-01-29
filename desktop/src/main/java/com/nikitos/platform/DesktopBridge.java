@@ -33,7 +33,7 @@ public class DesktopBridge extends PlatformBridge {
 
     @Override
     public GeneralPlatformBridge getGeneralPlatformBridge() {
-        return new  GeneralPlatformBridgeDesktop();
+        return new GeneralBridgeDesktop();
     }
 
     @Override

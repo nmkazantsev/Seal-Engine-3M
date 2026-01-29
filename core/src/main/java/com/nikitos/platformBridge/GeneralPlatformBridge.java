@@ -1,5 +1,7 @@
 package com.nikitos.platformBridge;
 
+import java.nio.FloatBuffer;
+
 public abstract class GeneralPlatformBridge {
     public abstract void glDrawArrays(int type, int offest, int count);
     public abstract int glGetUniformLocation(int program, String name);
@@ -8,4 +10,10 @@ public abstract class GeneralPlatformBridge {
     public abstract void glBindTexture(int texture, int location);
     public abstract void glUniform1i(int textureLocation, int slot);
     public abstract void glGenerateMipmap (int type);
+    public abstract void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized, int size, FloatBuffer vertexData);
+    public abstract void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized, int size, int vertexData);
+    public abstract void glEnableVertexAttribArray(int aPositionLocation);
+    public abstract int glGetAttribLocation(int programId, String name);
+    public abstract void glBufferData(int type, int length, FloatBuffer vertexData, int mode);
+    public abstract void glBindBuffer(int type, int address);
 }

@@ -3,9 +3,11 @@ package com.nikitos.main.shaders.default_adaptors;
 
 
 import com.nikitos.main.shaders.Adaptor;
-import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
-import com.seal.gl_engine.engine.main.vertices.Face;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
+import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -42,20 +44,20 @@ public class MainShaderAdaptor extends Adaptor {
         vertexData.put(vertices);//4 байта на флоат
         // координаты вершин
         vertexData.position(0);
-        glVertexAttribPointer(aPositionLocation, POSITION_COUNT, GL_FLOAT,
+        gl.glVertexAttribPointer(aPositionLocation, POSITION_COUNT, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(aPositionLocation);
+        gl.glEnableVertexAttribArray(aPositionLocation);
 
         // координаты текстур
         vertexData.position(POSITION_COUNT);
-        glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT, GL_FLOAT,
+        gl.glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT,glConstBridge. GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(aTextureLocation);
+        gl.glEnableVertexAttribArray(aTextureLocation);
 
         vertexData.position(POSITION_COUNT + TEXTURE_COUNT);
-        glVertexAttribPointer(normalLocation, NORMAL_COUNT, GL_FLOAT,
+        gl.glVertexAttribPointer(normalLocation, NORMAL_COUNT, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(normalLocation);
+        gl.glEnableVertexAttribArray(normalLocation);
         return vertexesNumber;
     }
 
@@ -68,7 +70,7 @@ public class MainShaderAdaptor extends Adaptor {
         vertexBuffer.bindVao();
         vertexBuffer.bindVbo(bufferIndex);//vertex coords
         vertexData.position(0);
-        glBufferData(GL_ARRAY_BUFFER, vertices.length * 4, vertexData, GL_STATIC_DRAW);
+        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
     }
 
     @Override
@@ -112,13 +114,13 @@ public class MainShaderAdaptor extends Adaptor {
             loadDataToBuffer(vertices, 2, vertexBuffer);
         }
         vertexBuffer.bindVao();
-        glEnableVertexAttribArray(aPositionLocation);
-        glEnableVertexAttribArray(aTextureLocation);
+        gl.glEnableVertexAttribArray(aPositionLocation);
+        gl.glEnableVertexAttribArray(aTextureLocation);
         // glEnableVertexAttribArray(normalLocation);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(0));
-        glVertexAttribPointer(aPositionLocation, 3, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(1));
-        glVertexAttribPointer(aTextureLocation, 2, GL_FLOAT, false, 0, 0);
+        gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(0));
+        gl.glVertexAttribPointer(aPositionLocation, 3, glConstBridge.GL_FLOAT(), false, 0, 0);
+        gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(1));
+        gl.glVertexAttribPointer(aTextureLocation, 2, glConstBridge.GL_FLOAT(), false, 0, 0);
         // glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(2));
         //glVertexAttribPointer(normalLocation, 3, GL_FLOAT, false, 0, 0);
         vertexBuffer.bindDefaultVbo();//vertex coords
@@ -133,13 +135,13 @@ public class MainShaderAdaptor extends Adaptor {
 
     @Override
     public void updateLocations() {
-        aPositionLocation = glGetAttribLocation(programId, "aPos");
-        aTextureLocation = glGetAttribLocation(programId, "aTexCoord");
-        normalLocation = glGetAttribLocation(programId, "normal");
-        uTextureUnitLocation = glGetUniformLocation(programId, "u_TextureUnit");
-        projectionMatrixLoation = GLES30.glGetUniformLocation(programId, "projection");
-        viewMatrixLocation = GLES30.glGetUniformLocation(programId, "view");
-        modelMtrixLocation = GLES30.glGetUniformLocation(programId, "model");
+        aPositionLocation = gl.glGetAttribLocation(programId, "aPos");
+        aTextureLocation = gl.glGetAttribLocation(programId, "aTexCoord");
+        normalLocation = gl.glGetAttribLocation(programId, "normal");
+        uTextureUnitLocation = gl.glGetUniformLocation(programId, "u_TextureUnit");
+        projectionMatrixLoation = gl.glGetUniformLocation(programId, "projection");
+        viewMatrixLocation = gl.glGetUniformLocation(programId, "view");
+        modelMtrixLocation = gl.glGetUniformLocation(programId, "model");
     }
 
     @Override

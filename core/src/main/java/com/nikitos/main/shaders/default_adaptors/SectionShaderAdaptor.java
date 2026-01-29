@@ -1,8 +1,8 @@
 package com.nikitos.main.shaders.default_adaptors;
 
 import com.nikitos.main.shaders.Adaptor;
-import com.seal.gl_engine.engine.main.vertex_bueffer.VertexBuffer;
-import com.seal.gl_engine.engine.main.vertices.Face;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
+import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
 
 import java.nio.ByteBuffer;
@@ -30,24 +30,24 @@ public class SectionShaderAdaptor extends Adaptor {
         float[] vertices = new float[]{a.x, a.y, a.z, b.x, b.y, b.z, color.x, color.y, color.z};
         int vertexesNumber = 0;
 
-        FloatBuffer vertexData = ByteBuffer
+            FloatBuffer vertexData = ByteBuffer
                 .allocateDirect(vertices.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
         vertexData.put(vertices);//4 байта на флоат
         // координаты вершин
         vertexData.position(0);
-        glVertexAttribPointer(aPositionLocation, 3, GL_FLOAT,
+        gl.glVertexAttribPointer(aPositionLocation, 3, glConstBridge.GL_FLOAT(),
                 false, 3 * 4, vertexData);
-        glEnableVertexAttribArray(aPositionLocation);
+        gl.glEnableVertexAttribArray(aPositionLocation);
     }
 
     @Override
     public void updateLocations() {
-        aPositionLocation = glGetAttribLocation(programId, "aPos");
-        projectionMatrixLoation = GLES30.glGetUniformLocation(programId, "projection");
-        viewMatrixLocation = GLES30.glGetUniformLocation(programId, "view");
-        modelMtrixLocation = GLES30.glGetUniformLocation(programId, "model");
+        aPositionLocation = gl.glGetAttribLocation(programId, "aPos");
+        projectionMatrixLoation = gl.glGetUniformLocation(programId, "projection");
+        viewMatrixLocation = gl.glGetUniformLocation(programId, "view");
+        modelMtrixLocation = gl.glGetUniformLocation(programId, "model");
     }
 
     @Override

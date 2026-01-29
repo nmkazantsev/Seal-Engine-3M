@@ -5,6 +5,8 @@ import com.nikitos.CoreRenderer;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +14,14 @@ import java.util.Iterator;
 public abstract class Adaptor {
     private static final ArrayList<ShaderData> shaderData = new ArrayList<>();
     protected int programId;
+
+    protected final GLConstBridge glConstBridge;
+    protected final GeneralPlatformBridge gl;
+
+    public Adaptor(){
+        this.gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
+        this.glConstBridge = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
+    }
 
     protected static void addLightAdaptor(ShaderData shaderData) {
         Adaptor.shaderData.add(shaderData);
