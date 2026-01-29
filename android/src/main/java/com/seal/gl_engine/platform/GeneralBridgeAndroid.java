@@ -1,6 +1,7 @@
 package com.seal.gl_engine.platform;
 
 import android.opengl.GLES30;
+import android.opengl.GLUtils;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 
 import java.nio.FloatBuffer;
@@ -45,8 +46,9 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     public void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized, int size, FloatBuffer vertexData) {
         GLES30.glVertexAttribPointer(aPositionLocation, step, type, normalized, size, vertexData);
     }
+
     @Override
-    public void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized ,int size, int vertexData) {
+    public void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized, int size, int vertexData) {
         GLES30.glVertexAttribPointer(aPositionLocation, step, type, false, size, vertexData);
     }
 
@@ -66,8 +68,24 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     }
 
     @Override
-    public void glBindBuffer(int type, int address){GLES30.glBindBuffer( type,  address);}
+    public void glBindBuffer(int type, int address) {
+        GLES30.glBindBuffer(type, address);
+    }
 
+    @Override
+    public void glEnable(int mode) {
+        GLES30.glEnable(mode);
+    }
+
+    @Override
+    public void glDisable(int mode) {
+        GLES30.glDisable(mode);
+    }
+
+    @Override
+    public void texImage2D(int target, int level, int internalFormat, PImage bitmap, int type, int border) {
+        GLUtils.texImage2D(target, level, internalFormat, bitmap, type, border);
+    }
 
 
 }

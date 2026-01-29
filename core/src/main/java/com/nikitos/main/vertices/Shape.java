@@ -1,41 +1,35 @@
 package com.nikitos.main.vertices;
 
-import static android.opengl.GLES10.GL_TRIANGLES;
-import static android.opengl.GLES10.glDisable;
-import static android.opengl.GLES20.GL_CULL_FACE;
-import static android.opengl.GLES20.GL_RGBA;
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE1;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glEnable;
-import static android.opengl.GLES20.glUniform1i;
 
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
-import android.util.Log;
-
+import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
+import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.utils.Utils;
 import com.seal.gl_engine.engine.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
 import com.seal.gl_engine.engine.main.textures.Texture;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.maths.PVector;
-import com.seal.gl_engine.utils.Utils;
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
+
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
-import de.javagl.obj.Obj;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
 
 public class Shape implements VerticesSet {
+    private final GeneralPlatformBridge gl;
+    private final GLConstBridge glc;
+    private final PlatformBridge platformBridge;
+
     private boolean isVertexLoaded = false, globalLoaded = false;
 
     private final Texture texture;
@@ -57,6 +51,10 @@ public class Shape implements VerticesSet {
     private boolean vboLoaded = false;
 
     public Shape(PreLoadedMesh preLoadedMesh, String textureFileName, GamePageClass page) {
+        platformBridge = CoreRenderer.engine.getPlatformBridge();
+        gl = platformBridge.getGeneralPlatformBridge();
+        glc = platformBridge.getGLConstBridge();
+
         creator = page;
         this.redrawFunction = this::loadTexture;
         this.textureFileName = textureFileName;
@@ -70,7 +68,10 @@ public class Shape implements VerticesSet {
         redrawNow();
     }
 
-    public Shape(String fileName, String textureFileName, GamePageClass page) {
+    public Shape(String fileName, String textureFileName, GamePageClass page, Class<?> context) {
+        platformBridge = CoreRenderer.engine.getPlatformBridge();
+        gl = platformBridge.getGeneralPlatformBridge();
+        glc = platformBridge.getGLConstBridge();
         creator = page;
         this.redrawFunction = this::loadTexture;
         this.textureFileName = textureFileName;
@@ -81,7 +82,7 @@ public class Shape implements VerticesSet {
             faces = facesAndObject.facesArr;
             object = (Obj) facesAndObject.object;
             return null;
-        });
+        }, context);
         onRedrawSetup();
         redrawNow();
     }
@@ -91,52 +92,60 @@ public class Shape implements VerticesSet {
         private Object object;
     }
 
-    public static void loadFacesAsync(String fileName, Function<PreLoadedMesh, Void> callback) {
+    //тут оправдан статик чтобы не городить еще класс на preloader
+    //и нужен свой platform bridge
+    public static void loadFacesAsync(String fileName, Function<PreLoadedMesh, Void> callback, Class<?> cls) {
+        PlatformBridge platformBridge = CoreRenderer.engine.getPlatformBridge();
         new Thread(() -> {
             Face[] faces1;
-            InputStreamReader inputStream;
+            InputStream inputStream;
             Obj object = null;
             try {
-                inputStream = new InputStreamReader(Utils.context.getAssets().open(fileName), StandardCharsets.UTF_8);
+                inputStream = cls.getResourceAsStream(fileName);
+                assert inputStream != null;
                 object = ObjUtils.convertToRenderable(
                         ObjReader.read(inputStream));
             } catch (IOException e) {
-                Log.e("ERROR LOADING", fileName);
+                platformBridge.log_e("ERROR LOADING", fileName);
             }
             if (object == null) {
                 return;
             }
             //convert to Face
             faces1 = new Face[object.getNumFaces()];
-            for (int i = 0; i < object.getNumFaces(); i++) {
-                faces1[i] = new Face(new PVector[]{
-                        new PVector(object.getVertex(object.getFace(i).getVertexIndex(0)).getX(),
-                                object.getVertex(object.getFace(i).getVertexIndex(0)).getY(),
-                                object.getVertex(object.getFace(i).getVertexIndex(0)).getZ()),
-                        new PVector(object.getVertex(object.getFace(i).getVertexIndex(1)).getX(),
-                                object.getVertex(object.getFace(i).getVertexIndex(1)).getY(),
-                                object.getVertex(object.getFace(i).getVertexIndex(1)).getZ()),
-                        new PVector(object.getVertex(object.getFace(i).getVertexIndex(2)).getX(),
-                                object.getVertex(object.getFace(i).getVertexIndex(2)).getY(),
-                                object.getVertex(object.getFace(i).getVertexIndex(2)).getZ())},
-                        new PVector[]{
-                                new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(0)).getX(),
-                                        object.getTexCoord(object.getFace(i).getTexCoordIndex(0)).getY()),
-                                new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(1)).getX(),
-                                        object.getTexCoord(object.getFace(i).getTexCoordIndex(1)).getY()),
-                                new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getX(),
-                                        object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getY())},
-                        new PVector(
-                                object.getNormal(object.getFace(i).getNormalIndex(0)).getX(),
-                                object.getNormal(object.getFace(i).getNormalIndex(0)).getY(),
-                                object.getNormal(object.getFace(i).getNormalIndex(0)).getZ()
-                        ));
-            }
+            parseObj(faces1, object);
             PreLoadedMesh preLoadedMesh = new PreLoadedMesh();
             preLoadedMesh.facesArr = faces1;
             preLoadedMesh.object = object;
             callback.apply(preLoadedMesh);
         }).start();
+    }
+
+    static void parseObj(Face[] faces1, Obj object) {
+        for (int i = 0; i < object.getNumFaces(); i++) {
+            faces1[i] = new Face(new PVector[]{
+                    new PVector(object.getVertex(object.getFace(i).getVertexIndex(0)).getX(),
+                            object.getVertex(object.getFace(i).getVertexIndex(0)).getY(),
+                            object.getVertex(object.getFace(i).getVertexIndex(0)).getZ()),
+                    new PVector(object.getVertex(object.getFace(i).getVertexIndex(1)).getX(),
+                            object.getVertex(object.getFace(i).getVertexIndex(1)).getY(),
+                            object.getVertex(object.getFace(i).getVertexIndex(1)).getZ()),
+                    new PVector(object.getVertex(object.getFace(i).getVertexIndex(2)).getX(),
+                            object.getVertex(object.getFace(i).getVertexIndex(2)).getY(),
+                            object.getVertex(object.getFace(i).getVertexIndex(2)).getZ())},
+                    new PVector[]{
+                            new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(0)).getX(),
+                                    object.getTexCoord(object.getFace(i).getTexCoordIndex(0)).getY()),
+                            new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(1)).getX(),
+                                    object.getTexCoord(object.getFace(i).getTexCoordIndex(1)).getY()),
+                            new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getX(),
+                                    object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getY())},
+                    new PVector(
+                            object.getNormal(object.getFace(i).getNormalIndex(0)).getX(),
+                            object.getNormal(object.getFace(i).getNormalIndex(0)).getY(),
+                            object.getNormal(object.getFace(i).getNormalIndex(0)).getZ()
+                    ));
+        }
     }
 
     public void onFrameBegin() {
@@ -166,49 +175,49 @@ public class Shape implements VerticesSet {
         Shader.getActiveShader().getAdaptor().bindData(faces, vertexBuffer, vboLoaded);
         vboLoaded = true;
         // place texture in target 2D unit 0
-        glActiveTexture(GL_TEXTURE0);
+        gl.glActiveTexture(glc.GL_TEXTURE0());
         if (!postToGlNeeded) {
-            glBindTexture(GL_TEXTURE_2D, texture.getId());
+            gl.glBindTexture(glc.GL_TEXTURE_2D(), texture.getId());
         }
         if (postToGlNeeded) {
             postToGl();
         }
         // texture unit
-        glUniform1i(Shader.getActiveShader().getAdaptor().getTextureLocation(), 0);
+        gl.glUniform1i(Shader.getActiveShader().getAdaptor().getTextureLocation(), 0);
 
         //  place texture in target 2D unit 0
-        glActiveTexture(GL_TEXTURE1);
+       gl.glActiveTexture(glc.GL_TEXTURE1());
         if (!postToGlNeeded && normalTexture != null) {
-            glBindTexture(GL_TEXTURE_2D, normalTexture.getId());
+           gl.glBindTexture(glc.GL_TEXTURE_2D(), normalTexture.getId());
         }
         if (postToGlNeeded) {
             postToGlNormals();
         }
         //texture unit
-        glUniform1i(Shader.getActiveShader().getAdaptor().getNormalTextureLocation(), 1);
+       gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalTextureLocation(), 1);
 
         //enable or disable normal map in shader
         if (normalTexture != null) {
-            glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
+           gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
         } else {
-            glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
+           gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
         }
         postToGlNeeded = false;
     }
 
     private void postToGl() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture.getId());
-        GLUtils.texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.bitmap, GLES20.GL_UNSIGNED_BYTE, 0);
+       gl.glActiveTexture(glc.GL_TEXTURE0());
+       gl.glBindTexture(glc.GL_TEXTURE_2D(), texture.getId());
+        GLUtils.texImage2D(glc.GL_TEXTURE_2D(), 0, glc.GL_RGBA(), image.bitmap, glc.GL_UNSIGNED_BYTE(), 0);
     }
 
     private void postToGlNormals() {
         if (normalImage != null && normalImage.isLoaded()) {
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, normalTexture.getId());
-            GLUtils.texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, normalImage.bitmap, 0);
+           gl.glActiveTexture(glc.GL_TEXTURE1());
+           gl.glBindTexture(glc.GL_TEXTURE_2D(), normalTexture.getId());
+            GLUtils.texImage2D(glc.GL_TEXTURE_2D(), 0,glc. GL_RGBA(), normalImage.bitmap, 0);
             normalImage.delete();
-            glActiveTexture(GL_TEXTURE0);
+           gl.glActiveTexture(glc.GL_TEXTURE0());
         }
     }
 
@@ -217,9 +226,9 @@ public class Shape implements VerticesSet {
         if (globalLoaded) {
             bindData();
             vertexBuffer.bindVao();
-            glEnable(GL_CULL_FACE); //i dont know what is it, it should be optimization
-            glDrawArrays(GL_TRIANGLES, 0, object.getNumFaces() * 3);
-            glDisable(GL_CULL_FACE);
+           gl.glEnable(glc.GL_CULL_FACE()); //i dont know what is it, it should be optimization
+           gl.glDrawArrays(glc.GL_TRIANGLES(), 0, object.getNumFaces() * 3);
+           gl.glDisable(glc.GL_CULL_FACE());
             vertexBuffer.bindDefaultVao();
         }
     }

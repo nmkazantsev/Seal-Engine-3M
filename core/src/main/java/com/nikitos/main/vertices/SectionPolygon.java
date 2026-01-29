@@ -1,17 +1,13 @@
 package com.nikitos.main.vertices;
 
-import static android.opengl.GLES20.GL_LINES;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glGetUniformLocation;
-
-import android.opengl.GLES30;
-
-
+import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.shaders.ShaderData;
 import com.nikitos.maths.Section;
 import com.nikitos.maths.PVector;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
 
 import java.lang.ref.WeakReference;
 
@@ -22,7 +18,12 @@ public class SectionPolygon implements VerticesSet {
     private PVector color = new PVector(1);
     ShaderData lineColorData;
 
-    public SectionPolygon( GamePageClass page) {
+    private final GeneralPlatformBridge gl;
+    private final GLConstBridge glc;
+
+    public SectionPolygon(GamePageClass page) {
+        gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
+        glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
         VerticesShapesManager.allShapes.add(new WeakReference<>(this));//add link to this object
 
         creatorClassName = page.getClass().getName();
@@ -32,12 +33,12 @@ public class SectionPolygon implements VerticesSet {
 
             @Override
             protected void getLocations(int programId) {
-                colorLoc = glGetUniformLocation(programId, "vColor");
+                colorLoc = gl.glGetUniformLocation(programId, "vColor");
             }
 
             @Override
             protected void forwardData() {
-                glUniform3f(colorLoc, color.x, color.y, color.z);
+                gl.glUniform3f(colorLoc, color.x, color.y, color.z);
             }
 
             @Override
@@ -55,7 +56,7 @@ public class SectionPolygon implements VerticesSet {
     public void draw(Section section) {
         lineColorData.forwardNow();
         bindData(section);
-        glDrawArrays(GL_LINES, 0, 2);
+        gl.glDrawArrays(glc.GL_LINES(), 0, 2);
     }
 
     public void setColor(PVector color) {

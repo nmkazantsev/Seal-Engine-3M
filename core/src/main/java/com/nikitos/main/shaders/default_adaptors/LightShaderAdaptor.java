@@ -44,30 +44,30 @@ public class LightShaderAdaptor extends Adaptor {
         vertexData.put(vertices);//4 байта на флоат
         // координаты вершин
         vertexData.position(0);
-        glVertexAttribPointer(aPositionLocation, POSITION_COUNT, GL_FLOAT,
+        gl.glVertexAttribPointer(aPositionLocation, POSITION_COUNT, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(aPositionLocation);
+       gl.glEnableVertexAttribArray(aPositionLocation);
 
         // координаты текстур
         vertexData.position(POSITION_COUNT);
-        glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT, GL_FLOAT,
+       gl.glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(aTextureLocation);
+       gl.glEnableVertexAttribArray(aTextureLocation);
 
         vertexData.position(POSITION_COUNT + TEXTURE_COUNT);
-        glVertexAttribPointer(normalLocation, NORMAL_COUNT, GL_FLOAT,
+       gl.glVertexAttribPointer(normalLocation, NORMAL_COUNT, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(normalLocation);
+       gl.glEnableVertexAttribArray(normalLocation);
 
         vertexData.position(POSITION_COUNT + TEXTURE_COUNT + NORMAL_COUNT);
-        glVertexAttribPointer(tangetntLocation, TANGENT_VEC, GL_FLOAT,
+       gl.glVertexAttribPointer(tangetntLocation, TANGENT_VEC, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(tangetntLocation);
+       gl.glEnableVertexAttribArray(tangetntLocation);
 
         vertexData.position(POSITION_COUNT + TEXTURE_COUNT + NORMAL_COUNT + TANGENT_VEC);
-        glVertexAttribPointer(bitangentLocation, BITANGENT_VEC, GL_FLOAT,
+       gl.glVertexAttribPointer(bitangentLocation, BITANGENT_VEC, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
-        glEnableVertexAttribArray(bitangentLocation);
+       gl.glEnableVertexAttribArray(bitangentLocation);
 
         return vertexesNumber;
     }
@@ -80,7 +80,7 @@ public class LightShaderAdaptor extends Adaptor {
         vertexData.put(vertices);//4 байта на флоат
         vertexBuffer.bindVbo(bufferIndex);//vertex coords
         vertexData.position(0);
-        glBufferData(GL_ARRAY_BUFFER, vertices.length * 4, vertexData, GL_STATIC_DRAW);
+       gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
     }
 
     @Override
@@ -147,21 +147,21 @@ public class LightShaderAdaptor extends Adaptor {
             loadDataToBuffer(vertices, 4, vertexBuffer);
         }
         vertexBuffer.bindVao();
-        glEnableVertexAttribArray(aPositionLocation);
-        glEnableVertexAttribArray(aTextureLocation);
-        glEnableVertexAttribArray(normalLocation);
-        glEnableVertexAttribArray(tangetntLocation);
-        glEnableVertexAttribArray(bitangentLocation);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(0));
-        glVertexAttribPointer(aPositionLocation, 3, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(1));
-        glVertexAttribPointer(aTextureLocation, 2, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(2));
-        glVertexAttribPointer(normalLocation, 3, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(3));
-        glVertexAttribPointer(tangetntLocation, 3, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.getVboAdress(4));
-        glVertexAttribPointer(bitangentLocation, 3, GL_FLOAT, false, 0, 0);
+       gl.glEnableVertexAttribArray(aPositionLocation);
+       gl.glEnableVertexAttribArray(aTextureLocation);
+       gl.glEnableVertexAttribArray(normalLocation);
+       gl.glEnableVertexAttribArray(tangetntLocation);
+       gl.glEnableVertexAttribArray(bitangentLocation);
+       gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(0));
+       gl.glVertexAttribPointer(aPositionLocation, 3, glConstBridge.GL_FLOAT(), false, 0, 0);
+       gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(1));
+       gl.glVertexAttribPointer(aTextureLocation, 2, glConstBridge.GL_FLOAT(), false, 0, 0);
+       gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(2));
+       gl.glVertexAttribPointer(normalLocation, 3, glConstBridge.GL_FLOAT(), false, 0, 0);
+       gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(3));
+       gl.glVertexAttribPointer(tangetntLocation, 3, glConstBridge.GL_FLOAT(), false, 0, 0);
+       gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(4));
+       gl.glVertexAttribPointer(bitangentLocation, 3, glConstBridge.GL_FLOAT(), false, 0, 0);
 
         vertexBuffer.bindDefaultVbo();//vertex coords
         vertexBuffer.bindDefaultVao();
@@ -175,18 +175,18 @@ public class LightShaderAdaptor extends Adaptor {
 
     @Override
     public void updateLocations() {
-        aPositionLocation = glGetAttribLocation(programId, "aPos");
-        aTextureLocation = glGetAttribLocation(programId, "aTexCoord");
-        normalLocation = glGetAttribLocation(programId, "normalVec");
-        tangetntLocation = glGetAttribLocation(programId, "aT");
-        bitangentLocation = glGetAttribLocation(programId, "aB");
-        uTextureUnitLocation = glGetUniformLocation(programId, "u_TextureUnit");
-        normalMapLocation = glGetUniformLocation(programId, "normalMap");
-        projectionMatrixLoation = glGetUniformLocation(programId, "projection");
-        viewMatrixLocation = glGetUniformLocation(programId, "view");
-        modelMtrixLocation = glGetUniformLocation(programId, "model");
-        cameraPosLocation = glGetUniformLocation(programId, "viewPos");
-        normalMapEnableLocation = glGetUniformLocation(programId, "normalMapEnable");
+        aPositionLocation = gl.glGetAttribLocation(programId, "aPos");
+        aTextureLocation = gl.glGetAttribLocation(programId, "aTexCoord");
+        normalLocation = gl.glGetAttribLocation(programId, "normalVec");
+        tangetntLocation = gl.glGetAttribLocation(programId, "aT");
+        bitangentLocation = gl.glGetAttribLocation(programId, "aB");
+        uTextureUnitLocation = gl.glGetUniformLocation(programId, "u_TextureUnit");
+        normalMapLocation = gl.glGetUniformLocation(programId, "normalMap");
+        projectionMatrixLoation = gl.glGetUniformLocation(programId, "projection");
+        viewMatrixLocation = gl.glGetUniformLocation(programId, "view");
+        modelMtrixLocation = gl.glGetUniformLocation(programId, "model");
+        cameraPosLocation = gl.glGetUniformLocation(programId, "viewPos");
+        normalMapEnableLocation = gl.glGetUniformLocation(programId, "normalMapEnable");
     }
 
     @Override

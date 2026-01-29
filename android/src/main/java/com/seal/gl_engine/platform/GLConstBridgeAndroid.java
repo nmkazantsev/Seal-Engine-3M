@@ -37,6 +37,11 @@ public class GLConstBridgeAndroid extends GLConstBridge {
         return GLES30.GL_TRIANGLES;
     }
 
+    @Override
+    public int GL_LINES() {
+        return GLES30.GL_LINES;
+    }
+
 
     // 2. Шейдеры
     @Override
@@ -124,6 +129,11 @@ public class GLConstBridgeAndroid extends GLConstBridge {
     @Override
     public int GL_TEXTURE0() {
         return GLES30.GL_TEXTURE0;
+    }
+
+    @Override
+    public int GL_TEXTURE1() {
+        return GLES30.GL_TEXTURE1;
     }
 
     @Override

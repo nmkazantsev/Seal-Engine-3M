@@ -45,6 +45,7 @@ public class FileUtils {
     public String readFileFromAssets(Class<?> cls, String fileName) {
         String result;
         try (InputStream is = cls.getResourceAsStream("/test.csv")) {
+            assert is != null;
             result = new BufferedReader(new InputStreamReader(is))
                     .lines().collect(Collectors.joining("\n"));
             return result;

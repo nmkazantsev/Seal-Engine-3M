@@ -122,30 +122,7 @@ public class SkyBox implements VerticesSet {
 
         //конвертируем в Face
         this.faces = new Face[object.getNumFaces()];
-        for (int i = 0; i < object.getNumFaces(); i++) {
-            faces[i] = new Face(new PVector[]{
-                    new PVector(object.getVertex(object.getFace(i).getVertexIndex(0)).getX(),
-                            object.getVertex(object.getFace(i).getVertexIndex(0)).getY(),
-                            object.getVertex(object.getFace(i).getVertexIndex(0)).getZ()),
-                    new PVector(object.getVertex(object.getFace(i).getVertexIndex(1)).getX(),
-                            object.getVertex(object.getFace(i).getVertexIndex(1)).getY(),
-                            object.getVertex(object.getFace(i).getVertexIndex(1)).getZ()),
-                    new PVector(object.getVertex(object.getFace(i).getVertexIndex(2)).getX(),
-                            object.getVertex(object.getFace(i).getVertexIndex(2)).getY(),
-                            object.getVertex(object.getFace(i).getVertexIndex(2)).getZ())},
-                    new PVector[]{
-                            new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(0)).getX(),
-                                    object.getTexCoord(object.getFace(i).getTexCoordIndex(0)).getY()),
-                            new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(1)).getX(),
-                                    object.getTexCoord(object.getFace(i).getTexCoordIndex(1)).getY()),
-                            new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getX(),
-                                    object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getY())},
-                    new PVector(
-                            object.getNormal(object.getFace(i).getNormalIndex(0)).getX(),
-                            object.getNormal(object.getFace(i).getNormalIndex(0)).getY(),
-                            object.getNormal(object.getFace(i).getNormalIndex(0)).getZ()
-                    ));
-        }
+        Shape.parseObj(faces, object);
     }
 
     private PImage loadTexture(Void v) {

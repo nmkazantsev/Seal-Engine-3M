@@ -72,5 +72,15 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         GL33.glBindBuffer(type, address);
     }
 
+    @Override
+    public void glEnable(int mode) {
+        GL33.glEnable(mode);
+    }
+
+    @Override
+    public void glDisable(int mode) {
+        GL33.glDisable(mode);
+    }
+
 
 }

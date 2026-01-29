@@ -36,6 +36,11 @@ public class GLConstBridgeDesktop extends GLConstBridge {
         return GL33.GL_TRIANGLES;
     }
 
+    @Override
+    public int GL_LINES() {
+        return GL33.GL_LINES;
+    }
+
     // 2. Шейдеры
     @Override
     public int GL_VERTEX_SHADER() {
@@ -122,6 +127,11 @@ public class GLConstBridgeDesktop extends GLConstBridge {
     @Override
     public int GL_TEXTURE0() {
         return GL33.GL_TEXTURE0;
+    }
+
+    @Override
+    public int GL_TEXTURE1() {
+        return GL33.GL_TEXTURE1;
     }
 
     @Override
