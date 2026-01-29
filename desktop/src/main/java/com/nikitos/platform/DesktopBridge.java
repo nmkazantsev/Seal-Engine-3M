@@ -42,6 +42,11 @@ public class DesktopBridge extends PlatformBridge {
     }
 
     @Override
+    public ImgBridge getImgBridge() {
+        return new ImgBridgeDesktop();
+    }
+
+    @Override
     public void glClearColor(float r, float g, float b, float a) {
         // Установка цвета очистки экрана
         GL32.glClearColor(r, g, b, a);

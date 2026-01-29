@@ -81,6 +81,9 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     public void glDisable(int mode) {
         GL33.glDisable(mode);
     }
-
+    @Override
+    public void texImage2D(int target, int level, int internalFormat, PImage bitmap, int type, int border) {
+        GLUtils.texImage2D(target, level, internalFormat, bitmap, type, border);
+    }
 
 }

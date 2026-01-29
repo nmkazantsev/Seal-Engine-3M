@@ -16,6 +16,8 @@ public abstract class PlatformBridge {
 
     public abstract GeneralPlatformBridge getGeneralPlatformBridge();
     public abstract GLConstBridge getGLConstBridge();
+
+    public abstract ImgBridge getImgBridge();
     public abstract void glClearColor(float r, float g, float b, float a);
 
     public abstract int glGetError();

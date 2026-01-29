@@ -106,6 +106,12 @@ public class AndroidBridge extends PlatformBridge {
         return new GLConstBridgeAndroid();
     }
 
+    @Override
+    public ImgBridge getImgBridge() {
+        return new ImgBridgeAndroid();
+    }
+
+
     static class MyConfigChooser implements GLSurfaceView.EGLConfigChooser {
         private final int antiAliasMode;
 

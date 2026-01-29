@@ -8,12 +8,14 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 
+import com.nikitos.main.images.PImage;
 import com.nikitos.maths.Section;
+import com.nikitos.platformBridge.ImgBridge;
 import com.seal.gl_engine.utils.Utils;
 
-public class PImage {
-    public Bitmap bitmap;
-    public float width, height;
+public class PImageAndroid extends PImage {
+    private Bitmap bitmap;
+    protected float width, height;
     private boolean isLoaded = false;
 
     float textSize;
@@ -28,7 +30,7 @@ public class PImage {
         paint.setTypeface(tf);
     }
 
-    public PImage(Bitmap b) {
+    public PImageAndroid(Bitmap b) {
         bitmap = Bitmap.createBitmap(b.getWidth(), b.getHeight(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         paint = new Paint();
@@ -38,7 +40,7 @@ public class PImage {
         canvas.drawBitmap(b, 0, 0, paintImg);
     }
 
-    public PImage(float x, float y) {
+    public PImageAndroid(float x, float y) {
         bitmap = Bitmap.createBitmap((int) x, (int) y, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         paint = new Paint();
@@ -50,7 +52,7 @@ public class PImage {
     //после нее сам img не равне null, но bitmap удаляется
     public void delete() {
         if (isLoaded) {
-            bitmap.recycle();
+            imgBridge.recycleBitmap(bitmap);
             bitmap = null;
             isLoaded = false;
         }
@@ -197,28 +199,28 @@ public class PImage {
 
     public void image(PImage img, float x, float y) {
         //Paint paintImg = new Paint();
-        canvas.drawBitmap(img.bitmap, x - (float) img.bitmap.getWidth() / 2, y - (float) img.bitmap.getHeight() / 2, paintImg);
+        canvas.drawBitmap(((PImageAndroid) img).bitmap, x - (float) img.getWidth() / 2, y - (float) img.getHeight() / 2, paintImg);
     }
 
     public void image(PImage img, float x, float y, float a, float b) {
         Matrix matrixImg = new Matrix();
 
         float ikx, iky;
-        ikx = a / img.width;
-        iky = b / img.height;
-        matrixImg.preTranslate(x / ikx - (float) img.bitmap.getWidth() / (2), y / iky - (float) img.bitmap.getHeight() / (2));
+        ikx = a / img.getWidth();
+        iky = b / img.getHeight();
+        matrixImg.preTranslate(x / ikx - (float) img.getWidth() / (2), y / iky - (float) img.getHeight() / (2));
         matrixImg.postScale(ikx, iky);
         //  Paint paintImg = new Paint();
-        canvas.drawBitmap(img.bitmap, matrixImg, paintImg);
+        canvas.drawBitmap(((PImageAndroid) img).bitmap, matrixImg, paintImg);
     }
 
     public void image(PImage img, float x, float y, float scale) {
 
         Matrix matrixImg = new Matrix();
         matrixImg.postScale(scale, scale);
-        matrixImg.preTranslate(x / scale - (float) img.bitmap.getWidth() / (2), y / scale - (float) img.bitmap.getHeight() / (2));
+        matrixImg.preTranslate(x / scale - (float) img.getWidth() / (2), y / scale - (float) img.getHeight() / (2));
         // Paint paintImg = new Paint();
-        canvas.drawBitmap(img.bitmap, matrixImg, paintImg);
+        canvas.drawBitmap(((PImageAndroid) img).bitmap, matrixImg, paintImg);
 
 
     }
@@ -226,10 +228,10 @@ public class PImage {
     public void rotImage(PImage img, float x, float y, float scale, float rot) {
         Matrix matrixImg = new Matrix();
         matrixImg.postScale(scale, scale);
-        matrixImg.preTranslate(x / scale - (float) img.bitmap.getWidth() / (2), y / scale - (float) img.bitmap.getHeight() / (2));
+        matrixImg.preTranslate(x / scale - (float) img.getWidth() / (2), y / scale - (float) img.getHeight() / (2));
         Paint paintImg = new Paint();
         canvas.rotate(degrees(rot), x, y);
-        canvas.drawBitmap(img.bitmap, matrixImg, paintImg);
+        canvas.drawBitmap(((PImageAndroid) img).bitmap, matrixImg, paintImg);
         canvas.rotate(-degrees(rot), x, y);
     }
 
@@ -294,5 +296,16 @@ public class PImage {
         canvas.drawArc(rect, startAngle, sweepAngle, includeCenter, paint);
     }
 
+    @Override
+    public float getWidth() {
+        this.width = imgBridge.getWidth(bitmap);
+        return width;
+    }
+
+    @Override
+    public float getHeight() {
+        this.height = imgBridge.getHeight(bitmap);
+        return height;
+    }
 
 }

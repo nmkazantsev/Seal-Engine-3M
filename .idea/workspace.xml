@@ -4,20 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix main shader adaptor">
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="need PImage refactor">
+      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/ImgBridgeAndroid.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/ImgBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/librares/obj-0.4.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/librares/obj-0.4.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GLConstBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GLConstBridgeAndroid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImageAndroid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/core/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/LightShaderAdaptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/LightShaderAdaptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SectionPolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SectionPolygon.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GLConstBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GLConstBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GeneralPlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GeneralPlatformBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GLConstBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GLConstBridgeDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,12 +39,7 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Demo" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </tree_state>
         </projects_view>
@@ -80,26 +76,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build Demo.executor": "Run",
-    "Gradle.Build sealEngine_3M.executor": "Run",
-    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
-    "Gradle.Download Sources.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/Demo",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/Demo&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.nikitos.platform" />
@@ -155,7 +151,8 @@
       <workItem from="1769619100682" duration="42000" />
       <workItem from="1769626098699" duration="5926000" />
       <workItem from="1769673313418" duration="5501000" />
-      <workItem from="1769686387895" duration="1325000" />
+      <workItem from="1769686387895" duration="1947000" />
+      <workItem from="1769689520547" duration="2089000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -197,7 +194,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769676724181</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="need PImage refactor">
+      <option name="closed" value="true" />
+      <created>1769687731666</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1769687731666</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -232,6 +237,7 @@
     <MESSAGE value="refactor shaders" />
     <MESSAGE value="on the way to refactor shaders - add consts" />
     <MESSAGE value="fix main shader adaptor" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix main shader adaptor" />
+    <MESSAGE value="need PImage refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="need PImage refactor" />
   </component>
 </project>

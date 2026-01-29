@@ -14,7 +14,9 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.seal.gl_engine.engine.main.images.PImage;
+import com.nikitos.CoreRenderer;
+import com.nikitos.platformBridge.ImgBridge;
+import com.seal.gl_engine.engine.main.images.PImageAndroid;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -145,22 +147,6 @@ public class Utils {
         return context.getString(p);
     }
 
-    public static PImage scaleImg(PImage img, float w, float h) {
-        img.bitmap = Bitmap.createScaledBitmap(img.bitmap, parseInt(w), parseInt(h), true);
-        img.width = img.bitmap.getWidth();
-        img.height = img.bitmap.getHeight();
-        return img;
-    }
-
-    public static PImage scaleImg(PImage img, float scale) {
-        img.width = img.bitmap.getWidth();
-        img.height = img.bitmap.getHeight();
-        img.bitmap = Bitmap.createScaledBitmap(img.bitmap, parseInt(img.width * scale), parseInt(img.height * scale), true);
-        img.width = img.bitmap.getWidth();
-        img.height = img.bitmap.getHeight();
-        return img;
-    }
-
     public static float getDirection(float px, float py, float tx, float ty) {
         //returns direction to point in radinas. Calculated from north direction (0, top of screen) along the hour line move direction and divided by 2
         //so to convert real value to this shit :  (i / 2.0f + 90) % 360; if i is real right value
@@ -176,11 +162,12 @@ public class Utils {
     }
 
 
-    public static PImage loadImage(String name) {
+    public static PImageAndroid loadImage(String name) {
         try {
-            PImage img = new PImage(getBitmapFromAssets(name, context));
-            img.width = img.bitmap.getWidth();
-            img.height = img.bitmap.getHeight();
+            ImgBridge imgBridge = CoreRenderer.engine.getPlatformBridge().getImgBridge();
+            PImageAndroid img = new PImageAndroid(getBitmapFromAssets(name, context));
+            img.width =imgBridge.getWidth(img.bitmap);
+            img.height = imgBridge.getHeight(img.bitmap);
             if (img == null) {
                 Log.e("ERROR LOADING", name);
             }
@@ -192,9 +179,9 @@ public class Utils {
         return null;
     }
 
-    public static void loadImageAsync(String name, Function<PImage, ?> callback) {
+    public static void loadImageAsync(String name, Function<PImageAndroid, ?> callback) {
         new Thread(() -> {
-            PImage image = loadImage(name);
+            PImageAndroid image = loadImage(name);
             callback.apply(image);
         }).start();
     }

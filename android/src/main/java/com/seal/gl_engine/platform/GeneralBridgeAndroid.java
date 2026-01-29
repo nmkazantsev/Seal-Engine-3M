@@ -2,6 +2,7 @@ package com.seal.gl_engine.platform;
 
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
+import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 
 import java.nio.FloatBuffer;
@@ -83,7 +84,7 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     }
 
     @Override
-    public void texImage2D(int target, int level, int internalFormat, PImage bitmap, int type, int border) {
+    public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
         GLUtils.texImage2D(target, level, internalFormat, bitmap, type, border);
     }
 
