@@ -15,6 +15,7 @@ import com.nikitos.GamePageClass;
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.platformBridge.*;
 import com.seal.gl_engine.OpenGLRenderer;
+import com.seal.gl_engine.engine.main.images.PImageAndroid;
 
 import java.util.function.Function;
 
@@ -114,7 +115,7 @@ public class AndroidBridge extends PlatformBridge {
 
     @Override
     public AbstractImage getAbstractImage() {
-        return null;
+        return new PImageAndroid();
     }
 
 

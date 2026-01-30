@@ -13,6 +13,8 @@ public class PImageDesktop extends AbstractImage {
     private boolean loaded = true;
     private float textSize;
 
+    public PImageDesktop() {}
+
     public PImageDesktop(BufferedImage image) {
         this.image = image;
         g = image.createGraphics();

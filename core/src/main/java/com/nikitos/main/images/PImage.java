@@ -5,6 +5,7 @@ import com.nikitos.CoreRenderer;
 import com.nikitos.maths.Section;
 
 public class PImage {
+    private boolean upperText = false;
     private final AbstractImage impl;
 
     public PImage(AbstractImage impl) {
@@ -20,6 +21,14 @@ public class PImage {
         impl.createBitmap(width, height);
     }
 
+    public void setUpperText(boolean upperText) {
+        this.upperText = upperText;
+    }
+
+    public boolean getUpperText() {
+        return upperText;
+    }
+
     public void delete() {
         impl.delete();
     }
@@ -33,7 +42,7 @@ public class PImage {
     }
 
     public void background(float r, float g, float b, float a) {
-        impl.background((int)(r),(int)(g), (int)(b), (int)(a));
+        impl.background((int) (r), (int) (g), (int) (b), (int) (a));
     }
 
     public void rect(float x, float y, float w, float h) {
@@ -49,11 +58,11 @@ public class PImage {
     }
 
     public void fill(float r, float g, float b, float a) {
-        impl.fill((int)(r), (int)(g), (int)(b), (int)(a));
+        impl.fill((int) (r), (int) (g), (int) (b), (int) (a));
     }
 
     public void stroke(float r, float g, float b, float a) {
-        impl.stroke((int)(r), (int)(g), (int)(b), (int)(a));
+        impl.stroke((int) (r), (int) (g), (int) (b), (int) (a));
     }
 
     public void strokeWeight(float w) {
@@ -77,7 +86,7 @@ public class PImage {
     }
 
     public void text(String s, float x, float y) {
-        impl.text(s, x, y);
+        impl.text(s, x, y, upperText);
     }
 
     public void image(PImage img, float x, float y) {
@@ -96,16 +105,16 @@ public class PImage {
         impl.rotImage(img.impl, x, y, scale, rot);
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return impl.getWidth();
     }
 
 
-    public int getHeight(){
+    public int getHeight() {
         return impl.getHeight();
     }
 
-    public Object getBitmap(){
+    public Object getBitmap() {
         return impl.getBitmap();
     }
 

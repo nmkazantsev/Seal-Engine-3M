@@ -22,6 +22,7 @@ public class PImageAndroid extends AbstractImage {
 
     private float textSize;
 
+    public PImageAndroid() {}
     public PImageAndroid(Bitmap bitmap) {
         this.bitmap = bitmap;
     }

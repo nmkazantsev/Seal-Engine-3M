@@ -29,7 +29,7 @@ public class ImgBridgeAndroid extends ImgBridge {
     public PImage loadImage(InputStream stream) {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(stream);
         Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
-        return new PImageAndroid(bmp);
+        return new PImage(new PImageAndroid(bmp));
     }
 
 }
