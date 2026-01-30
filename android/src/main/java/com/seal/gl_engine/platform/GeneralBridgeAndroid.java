@@ -1,5 +1,6 @@
 package com.seal.gl_engine.platform;
 
+import android.graphics.Bitmap;
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
 
@@ -87,7 +88,7 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
 
     @Override
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
-        GLUtils.texImage2D(target, level, internalFormat, ((PImageAndroid) image).getBitmap(), type, border);
+        GLUtils.texImage2D(target, level, internalFormat, (Bitmap) image.getBitmap(), type, border);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
 
     @Override
     public void texImage2D(int target, int level, PImage image, int border) {
-        GLUtils.texImage2D(target, level, ((PImageAndroid) image).getBitmap(), border);
+        GLUtils.texImage2D(target, level, (Bitmap) image.getBitmap(), border);
     }
 
     @Override

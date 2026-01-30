@@ -4,26 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix shaders">
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="it starts&#10;found problems in file system, found problems with PImage">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/exposition_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/exposition_fragment.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader_light.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shadow.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/line_fragmant.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_fragmant.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/line_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_vertex.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/skybox_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_fragment.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/skybox_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_vertex.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader_light.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shadow.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImageAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImageAndroid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/camera/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/camera/Camera.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/maths/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/maths/Matrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +51,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="1-проблемы-с-pimage" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -90,7 +88,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "1-проблемы-с-pimage",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/librares/obj-0.4.0.jar",
     "node.js.detected.package.eslint": "true",
@@ -166,7 +164,7 @@
       <workItem from="1769689520547" duration="2089000" />
       <workItem from="1769700728726" duration="3000" />
       <workItem from="1769700748418" duration="11722000" />
-      <workItem from="1769753170942" duration="5129000" />
+      <workItem from="1769753170942" duration="8831000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -272,7 +270,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769716212835</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="it starts&#10;found problems in file system, found problems with PImage">
+      <option name="closed" value="true" />
+      <created>1769760730244</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1769760730244</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -315,6 +321,7 @@
     <MESSAGE value="fix skybox" />
     <MESSAGE value="fix polygon" />
     <MESSAGE value="fix shaders" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix shaders" />
+    <MESSAGE value="it starts&#10;found problems in file system, found problems with PImage" />
+    <option name="LAST_COMMIT_MESSAGE" value="it starts&#10;found problems in file system, found problems with PImage" />
   </component>
 </project>

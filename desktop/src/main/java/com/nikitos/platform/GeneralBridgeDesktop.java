@@ -94,7 +94,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         // если его нет - он добавляется как 0% прозрачности
         GL33.glTexImage2D(target, level, internalFormat,
                 (int) image.getWidth(), (int) image.getHeight(), border,
-                type, GL33.GL_RGBA, bufferedImageToByteBuffer(((PImageDesktop) image).getBitmap()));
+                type, GL33.GL_RGBA, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
     }
 
     //костыль для конвертации нормального формата в уебщиный
