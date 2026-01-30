@@ -4,9 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix skybox">
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Polygon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SimplePolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SimplePolygon.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix shaders">
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/exposition_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/exposition_fragment.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader_light.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shadow.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/line_fragmant.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_fragmant.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/line_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_vertex.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/skybox_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_fragment.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/skybox_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_vertex.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader_light.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shadow.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/camera/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/camera/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/maths/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/maths/Matrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +88,7 @@
     "Gradle.Download Sources.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
@@ -80,7 +98,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.49679077",
     "vue.rearranger.settings.migration": "true"
@@ -92,11 +110,11 @@
       <recent name="com.seal.gl_engine.platform" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../Demo/game/src/main/shaders" />
+      <recent name="$PROJECT_DIR$/../Demo/game/src/main/resources" />
       <recent name="$PROJECT_DIR$/core" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/core/src/main" />
-      <recent name="$PROJECT_DIR$/core/src" />
-      <recent name="$PROJECT_DIR$/../Demo/src/main/resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.nikitos.main" />
@@ -147,7 +165,8 @@
       <workItem from="1769686387895" duration="1947000" />
       <workItem from="1769689520547" duration="2089000" />
       <workItem from="1769700728726" duration="3000" />
-      <workItem from="1769700748418" duration="11042000" />
+      <workItem from="1769700748418" duration="11722000" />
+      <workItem from="1769753170942" duration="5129000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -237,7 +256,23 @@
       <option name="project" value="LOCAL" />
       <updated>1769715651163</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fix polygon">
+      <option name="closed" value="true" />
+      <created>1769716121062</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1769716121062</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix shaders">
+      <option name="closed" value="true" />
+      <created>1769716212835</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1769716212835</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -278,6 +313,8 @@
     <MESSAGE value="fix texture class" />
     <MESSAGE value="fix cube map" />
     <MESSAGE value="fix skybox" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix skybox" />
+    <MESSAGE value="fix polygon" />
+    <MESSAGE value="fix shaders" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix shaders" />
   </component>
 </project>

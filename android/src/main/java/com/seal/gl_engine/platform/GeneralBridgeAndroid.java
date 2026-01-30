@@ -2,6 +2,7 @@ package com.seal.gl_engine.platform;
 
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
+
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.seal.gl_engine.engine.main.images.PImageAndroid;
@@ -102,6 +103,11 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     @Override
     public void glDeleteTextures(int number, int[] ids, int offset) {
         GLES30.glDeleteTextures(number, ids, offset);
+    }
+
+    @Override
+    public void texImage2D(int target, int level, PImage image, int border) {
+        GLUtils.texImage2D(target, level, ((PImageAndroid) image).getBitmap(), border);
     }
 
     @Override

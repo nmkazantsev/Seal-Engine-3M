@@ -3,7 +3,7 @@ package com.nikitos.main.images;
 import com.nikitos.CoreRenderer;
 import com.nikitos.platformBridge.ImgBridge;
 
-public abstract class PImage {
+public class PImage {
     protected final ImgBridge imgBridge;
     private boolean isLoaded = false;
 

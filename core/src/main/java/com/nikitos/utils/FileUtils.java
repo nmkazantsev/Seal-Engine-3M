@@ -44,7 +44,7 @@ public class FileUtils {
 
     public String readFileFromAssets(Class<?> cls, String fileName) {
         String result;
-        try (InputStream is = cls.getResourceAsStream("/test.csv")) {
+        try (InputStream is = cls.getResourceAsStream(fileName)) {
             assert is != null;
             result = new BufferedReader(new InputStreamReader(is))
                     .lines().collect(Collectors.joining("\n"));
@@ -53,6 +53,15 @@ public class FileUtils {
             platformBridge.log_e("file utils", "ERROR opening " + fileName);
             throw new RuntimeException(e);
         }
+    }
+
+    public String readFile(InputStream is) {
+        String result;
+        assert is != null;
+        result = new BufferedReader(new InputStreamReader(is))
+                .lines().collect(Collectors.joining("\n"));
+        return result;
+
     }
 
     public static PImage loadImage(InputStream inputStream) {

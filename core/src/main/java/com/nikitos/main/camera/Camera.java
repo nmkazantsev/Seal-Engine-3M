@@ -36,6 +36,7 @@ public class Camera {
      * @param y y dimension of projection matrix and camera
      */
     public Camera(float x, float y) {
+        platformBridge = CoreRenderer.engine.getPlatformBridge().getMatrixPlatformBridge();
         cameraSettings = new CameraSettings(x, y);
         projectionMatrixSettings = new ProjectionMatrixSettings(x, y);
         resetFor3d();

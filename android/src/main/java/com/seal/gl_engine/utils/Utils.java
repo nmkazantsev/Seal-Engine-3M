@@ -166,8 +166,9 @@ public class Utils {
         try {
             ImgBridge imgBridge = CoreRenderer.engine.getPlatformBridge().getImgBridge();
             PImageAndroid img = new PImageAndroid(getBitmapFromAssets(name, context));
-            img.width =imgBridge.getWidth(img.bitmap);
-            img.height = imgBridge.getHeight(img.bitmap);
+            //this will write width and height to corresponding fileds
+            img.getWidth();
+            img.getHeight();
             img.setLoaded(true);
             return img;
         } catch (Exception e) {

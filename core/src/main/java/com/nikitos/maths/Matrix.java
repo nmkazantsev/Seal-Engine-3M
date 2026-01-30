@@ -218,5 +218,9 @@ public class Matrix {
                                   float[] rhsVec, int rhsVecOffset) {
         matrixPlatformBridge.multiplyMV(resultVec, resultVecOffset, lhsMat, lhsMatOffset, rhsVec, rhsVecOffset);
     }
+
+    public static void applyMatrix(float [] mat){
+        matrixPlatformBridge.applyMatrix(mat);
+    }
 }
 
