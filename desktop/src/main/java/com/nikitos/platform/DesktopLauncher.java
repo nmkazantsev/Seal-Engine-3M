@@ -29,18 +29,18 @@ public class DesktopLauncher {
 
     private final Engine engine;
 
+    private GLFWVidMode vidmode;
+
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
         engine = new Engine(new DesktopBridge(), launcherParams);
-        coreRenderer = new CoreRenderer(700, 700, engine);
+        init();
+        coreRenderer = new CoreRenderer(vidmode.width(), vidmode.height(), engine);
     }
 
     public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
-        init();
+        System.out.println("version of LWJGL " + Version.getVersion() + "!");
         loop();
-
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -64,8 +64,10 @@ public class DesktopLauncher {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
+        // Get the resolution of the primary monitor
+        vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Create the window
-        window = glfwCreateWindow(700, 700, "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Hello World!", NULL, NULL);
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -83,9 +85,6 @@ public class DesktopLauncher {
             // Get the window size passed to glfwCreateWindow
             glfwGetWindowSize(window, pWidth, pHeight);
 
-            // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
             // Center the window
             glfwSetWindowPos(
                     window,
@@ -101,7 +100,6 @@ public class DesktopLauncher {
 
         // Make the window visible
         glfwShowWindow(window);
-        coreRenderer.onSurfaceCreated();
     }
 
     private void loop() {
@@ -111,7 +109,7 @@ public class DesktopLauncher {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
-
+        coreRenderer.onSurfaceCreated();
         // Set the clear color
         glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
 
