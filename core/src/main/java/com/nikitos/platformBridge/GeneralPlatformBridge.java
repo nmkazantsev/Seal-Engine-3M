@@ -80,5 +80,6 @@ public abstract class GeneralPlatformBridge {
     public abstract int GL_RGBA();
     public abstract int GL_TEXTURE_MAG_FILTER();
     public abstract int GL_TEXTURE_MIN_FILTER();
+    public abstract void glUniform1f(int location, float val);
 
 }

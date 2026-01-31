@@ -1,7 +1,4 @@
-package com.seal.gl_engine.engine.main.light;
-
-import android.opengl.GLES30;
-
+package com.nikitos.main.light;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.shaders.ShaderData;
 
@@ -17,14 +14,14 @@ public class ExpouseSettings extends ShaderData {
 
     @Override
     protected void getLocations(int programId) {
-        expouseLoc = GLES30.glGetUniformLocation(programId, "exposure");
-        gammaLoc = GLES30.glGetUniformLocation(programId, "gamma");
+        expouseLoc = gl.glGetUniformLocation(programId, "exposure");
+        gammaLoc = gl.glGetUniformLocation(programId, "gamma");
     }
 
     @Override
     protected void forwardData() {
-        GLES30.glUniform1f(expouseLoc, expouse);
-        GLES30.glUniform1f(gammaLoc, gamma);
+        gl.glUniform1f(expouseLoc, expouse);
+        gl.glUniform1f(gammaLoc, gamma);
     }
 
     @Override

@@ -206,5 +206,8 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
         return GLES30.GL_TEXTURE_MIN_FILTER;
     }
 
+    @Override
+    public void glUniform1f(int location, float val){GLES30.glUniform1f( location,  val);}
+
 
 }

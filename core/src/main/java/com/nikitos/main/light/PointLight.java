@@ -1,8 +1,5 @@
-package com.seal.gl_engine.engine.main.light;
+package com.nikitos.main.light;
 
-import static android.opengl.GLES20.glGetUniformLocation;
-
-import android.opengl.GLES30;
 
 import com.nikitos.GamePageClass;
 import com.nikitos.main.shaders.ShaderData;
@@ -42,26 +39,26 @@ public class PointLight extends ShaderData {
 
     @Override
     protected void getLocations(int programId) {
-        colorLoc = glGetUniformLocation(programId, "pLights[" + index + "].color");
-        posLoc = glGetUniformLocation(programId, "pLights[" + index + "].position");
-        diffuseLoc = glGetUniformLocation(programId, "pLights[" + index + "].diffuse");
-        specLoc = glGetUniformLocation(programId, "pLights[" + index + "].specular");
-        constLoc = glGetUniformLocation(programId, "pLights[" + index + "].constant");
-        linLoc = glGetUniformLocation(programId, "pLights[" + index + "].linear");
-        quadLoc = glGetUniformLocation(programId, "pLights[" + index + "].quadratic");
-        numberLoc = glGetUniformLocation(programId, "pLightNum");
+        colorLoc =gl.glGetUniformLocation(programId, "pLights[" + index + "].color");
+        posLoc =gl.glGetUniformLocation(programId, "pLights[" + index + "].position");
+        diffuseLoc =gl.glGetUniformLocation(programId, "pLights[" + index + "].diffuse");
+        specLoc =gl.glGetUniformLocation(programId, "pLights[" + index + "].specular");
+        constLoc =gl.glGetUniformLocation(programId, "pLights[" + index + "].constant");
+        linLoc =gl.glGetUniformLocation(programId, "pLights[" + index + "].linear");
+        quadLoc =gl.glGetUniformLocation(programId, "pLights[" + index + "].quadratic");
+        numberLoc =gl.glGetUniformLocation(programId, "pLightNum");
     }
 
     @Override
     protected void forwardData() {
-        GLES30.glUniform3f(posLoc, position.x, position.y, position.z);
-        GLES30.glUniform3f(colorLoc, color.x, color.y, color.z);
-        GLES30.glUniform1f(specLoc, specular);
-        GLES30.glUniform1f(diffuseLoc, diffuse);
-        GLES30.glUniform1f(constLoc, constant);
-        GLES30.glUniform1f(linLoc, linear);
-        GLES30.glUniform1f(quadLoc, quadratic);
-        GLES30.glUniform1i(numberLoc, pointLights.size());
+        gl.glUniform3f(posLoc, position.x, position.y, position.z);
+        gl.glUniform3f(colorLoc, color.x, color.y, color.z);
+        gl.glUniform1f(specLoc, specular);
+        gl.glUniform1f(diffuseLoc, diffuse);
+        gl.glUniform1f(constLoc, constant);
+        gl.glUniform1f(linLoc, linear);
+        gl.glUniform1f(quadLoc, quadratic);
+        gl.glUniform1i(numberLoc, pointLights.size());
     }
 
     @Override

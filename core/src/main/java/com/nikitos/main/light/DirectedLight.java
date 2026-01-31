@@ -1,8 +1,5 @@
-package com.seal.gl_engine.engine.main.light;
+package com.nikitos.main.light;
 
-import static android.opengl.GLES20.glGetUniformLocation;
-
-import android.opengl.GLES30;
 
 import com.nikitos.GamePageClass;
 import com.nikitos.main.shaders.ShaderData;
@@ -41,20 +38,20 @@ public class DirectedLight extends ShaderData {
 
     @Override
     protected void getLocations(int programId) {
-        colorLoc = glGetUniformLocation(programId, "dLights[" + index + "].color");
-        directionLoc = glGetUniformLocation(programId, "dLights[" + index + "].direction");
-        diffuseLoc = glGetUniformLocation(programId, "dLights[" + index + "].diffuse");
-        specLoc = glGetUniformLocation(programId, "dLights[" + index + "].specular");
-        numberLoc = glGetUniformLocation(programId, "dLightNum");
+        colorLoc = gl.glGetUniformLocation(programId, "dLights[" + index + "].color");
+        directionLoc = gl.glGetUniformLocation(programId, "dLights[" + index + "].direction");
+        diffuseLoc = gl.glGetUniformLocation(programId, "dLights[" + index + "].diffuse");
+        specLoc = gl.glGetUniformLocation(programId, "dLights[" + index + "].specular");
+        numberLoc = gl.glGetUniformLocation(programId, "dLightNum");
     }
 
     @Override
     protected void forwardData() {
-        GLES30.glUniform3f(directionLoc, direction.x, direction.y, direction.z);
-        GLES30.glUniform3f(colorLoc, color.x, color.y, color.z);
-        GLES30.glUniform1f(specLoc, specular);
-        GLES30.glUniform1f(diffuseLoc, diffuse);
-        GLES30.glUniform1i(numberLoc, directLights.size());
+        gl.glUniform3f(directionLoc, direction.x, direction.y, direction.z);
+        gl.glUniform3f(colorLoc, color.x, color.y, color.z);
+        gl.glUniform1f(specLoc, specular);
+        gl.glUniform1f(diffuseLoc, diffuse);
+        gl.glUniform1i(numberLoc, directLights.size());
     }
 
     @Override

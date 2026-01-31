@@ -247,5 +247,10 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         return GL33.GL_TEXTURE_MIN_FILTER;
     }
 
+    @Override
+    public void glUniform1f(int location, float val) {
+        GL33.glUniform1f(location, val);
+    }
+
 
 }

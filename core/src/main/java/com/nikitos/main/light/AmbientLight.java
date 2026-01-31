@@ -1,8 +1,4 @@
-package com.seal.gl_engine.engine.main.light;
-
-import static android.opengl.GLES20.glGetUniformLocation;
-
-import android.opengl.GLES30;
+package com.nikitos.main.light;
 
 import com.nikitos.GamePageClass;
 import com.nikitos.main.shaders.ShaderData;
@@ -18,12 +14,12 @@ public class AmbientLight extends ShaderData {
 
     @Override
     protected void getLocations(int programId) {
-        aLightLocation = glGetUniformLocation(programId, "aLight.color");
+        aLightLocation = gl.glGetUniformLocation(programId, "aLight.color");
     }
 
     @Override
     protected void forwardData() {
-        GLES30.glUniform3f(aLightLocation, color.x, color.y, color.z);
+        gl.glUniform3f(aLightLocation, color.x, color.y, color.z);
     }
 
     @Override
