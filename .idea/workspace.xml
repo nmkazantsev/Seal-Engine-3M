@@ -5,20 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="image works">
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/exposition_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/exposition_fragment.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/fragment_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/fragment_shader_light.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/fragment_shadow.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_fragmant.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/line_fragmant.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/line_vertex.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/skybox_fragment.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/skybox_vertex.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/vertex_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/vertex_shader_light.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/vertex_shadow.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
     </list>

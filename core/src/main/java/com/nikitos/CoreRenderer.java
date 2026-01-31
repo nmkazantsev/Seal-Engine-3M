@@ -1,5 +1,8 @@
 package com.nikitos;
 
+import com.nikitos.main.VRAMobject;
+import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.vertices.VerticesShapesManager;
 import com.nikitos.utils.Utils;
 
 /**
@@ -39,10 +42,10 @@ public class CoreRenderer {
     }
 
     private void graphicsSetup() {
-        //Shader.updateAllLocations();
-       // VRAMobject.onRedraw();
-       // VerticesShapesManager.onRedrawSetup();
-        //VerticesShapesManager.redrawAllSetup();
+        Shader.updateAllLocations();
+        VRAMobject.onRedraw();
+        VerticesShapesManager.onRedrawSetup();
+        VerticesShapesManager.redrawAllSetup();
     }
 
 
