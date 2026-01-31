@@ -6,7 +6,6 @@ import android.opengl.GLUtils;
 
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
-import com.seal.gl_engine.engine.main.images.PImageAndroid;
 
 import java.nio.FloatBuffer;
 
@@ -185,6 +184,26 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
         GLES30.glFramebufferRenderbuffer(
                 target, attachment, renderbuffertarget, renderbuffer
         );
+    }
+
+    @Override
+    public int GL_RGBA16F() {
+        return GLES30.GL_RGBA16F;
+    }
+
+    @Override
+    public int GL_RGBA() {
+        return GLES30.GL_RGBA;
+    }
+
+    @Override
+    public int GL_TEXTURE_MAG_FILTER() {
+        return GLES30.GL_TEXTURE_MAG_FILTER;
+    }
+
+    @Override
+    public int GL_TEXTURE_MIN_FILTER() {
+        return GLES30.GL_TEXTURE_MIN_FILTER;
     }
 
 
