@@ -163,4 +163,12 @@ public abstract class GLConstBridge {
     public abstract int GL_TEXTURE_CUBE_MAP_POSITIVE_Y();
     public abstract int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z();
     public abstract int GL_TEXTURE_CUBE_MAP_POSITIVE_Z();
+
+    public abstract int GL_FRAMEBUFFER();
+    public abstract int GL_RENDERBUFFER();
+    public abstract int GL_COLOR_ATTACHMENT0();
+    public abstract int GL_DEPTH_ATTACHMENT();
+    public abstract int GL_DEPTH_COMPONENT16();
+
+    public abstract int GL_RGBA16F();
 }

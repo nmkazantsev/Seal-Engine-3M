@@ -383,6 +383,7 @@ public class GLConstBridgeDesktop extends GLConstBridge {
     public int GL_TEXTURE_CUBE_MAP_NEGATIVE_X() {
         return GL33.GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
     }
+
     @Override
     public int GL_TEXTURE_CUBE_MAP_POSITIVE_X() {
         return GL33.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
@@ -407,4 +408,35 @@ public class GLConstBridgeDesktop extends GLConstBridge {
     public int GL_TEXTURE_CUBE_MAP_POSITIVE_Z() {
         return GL33.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
     }
+
+    @Override
+    public int GL_FRAMEBUFFER() {
+        return GL33.GL_FRAMEBUFFER;
+    }
+
+    @Override
+    public int GL_RENDERBUFFER() {
+        return GL33.GL_RENDERBUFFER;
+    }
+
+    @Override
+    public int GL_COLOR_ATTACHMENT0() {
+        return GL33.GL_COLOR_ATTACHMENT0;
+    }
+
+    @Override
+    public int GL_DEPTH_ATTACHMENT() {
+        return GL33.GL_DEPTH_ATTACHMENT;
+    }
+
+    @Override
+    public int GL_DEPTH_COMPONENT16() {
+        return GL33.GL_DEPTH_COMPONENT16;
+    }
+
+    @Override
+    public int GL_RGBA16F() {
+        return GL33.GL_RGBA16F;
+    }
+
 }

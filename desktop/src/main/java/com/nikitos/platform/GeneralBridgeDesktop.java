@@ -2,20 +2,14 @@ package com.nikitos.platform;
 
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
-import main.images.PImageDesktop;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
-import org.lwjgl.opengl.GLUtil;
 
 import java.awt.image.*;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
-import static org.lwjgl.opengles.GLES30.GL_RGBA8;
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     @Override
@@ -97,7 +91,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
         //в результате костыля - преобразования все текстуры становятся с альфа каналом,
         // если его нет - он добавляется как 0% прозрачности
-        GL33.glTexImage2D(target, level, GL_RGBA8,
+        GL33.glTexImage2D(target, level, GL33.GL_RGBA8,
                 (int) image.getWidth(), (int) image.getHeight(), border,
                  GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
     }
@@ -160,4 +154,66 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     public void glDepthMask(boolean on) {
         GL33.glDepthMask(on);
     }
+
+    @Override
+    public void glDeleteFramebuffers(int number, int [] framebuffers, int offset){GL33.glDeleteFramebuffers(  framebuffers);}
+
+    @Override
+    public void glDeleteRenderbuffers(int number, int [] buffers, int offset){GL33.glDeleteRenderbuffers( buffers);}
+
+    @Override
+    public void glBindFramebuffer(int type, int id){GL33.glBindFramebuffer( type,  id);}
+
+    @Override
+    public void glClear(int mask){GL33.glClear( mask);}
+
+    @Override
+    public void glGenFramebuffers(int num, int [] buffers, int offset){GL33.glGenFramebuffers(  buffers);}
+
+
+    @Override
+    public void glTexImage2D(int type, int level, int internalFormat, int width, int height, int border, int texType,int localDataType, FloatBuffer pixels){GL33.glTexImage2D( type,  level,  internalFormat,  width,  height,  border,  texType, localDataType,  pixels);}
+
+    // --- texture ---
+    public void texParameterf(int target, int pname, float param) {
+        GL33.glTexParameterf(target, pname, param);
+    }
+
+    public void bindTexture(int target, int texture) {
+        glBindTexture(target, texture);
+    }
+
+    // --- framebuffer ---
+    public void bindFramebuffer(int target, int framebuffer) {
+        glBindFramebuffer(target, framebuffer);
+    }
+
+    public void framebufferTexture2D(
+            int target, int attachment, int textarget, int texture, int level) {
+        GL33.glFramebufferTexture2D(
+                target, attachment, textarget, texture, level
+        );
+    }
+
+    // --- renderbuffer ---
+    public void genRenderbuffers(int n, int[] buffers, int offset) {
+        GL33.glGenRenderbuffers(buffers);
+    }
+
+    public void bindRenderbuffer(int target, int renderbuffer) {
+        GL33.glBindRenderbuffer(target, renderbuffer);
+    }
+
+    public void renderbufferStorage(int target, int internalformat, int width, int height) {
+        GL33.glRenderbufferStorage(target, internalformat, width, height);
+    }
+
+    public void framebufferRenderbuffer(
+            int target, int attachment, int renderbuffertarget, int renderbuffer) {
+        GL33.glFramebufferRenderbuffer(
+                target, attachment, renderbuffertarget, renderbuffer
+        );
+    }
+
+
 }

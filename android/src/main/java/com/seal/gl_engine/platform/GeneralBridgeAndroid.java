@@ -116,4 +116,76 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
         GLES30.glDepthMask(on);
     }
 
+    @Override
+    public void glDeleteFramebuffers(int number, int[] framebuffers, int offset) {
+        GLES30.glDeleteFramebuffers(number, framebuffers, offset);
+    }
+
+    @Override
+    public void glDeleteRenderbuffers(int number, int[] buffers, int offset) {
+        GLES30.glDeleteRenderbuffers(number, buffers, offset);
+    }
+
+    @Override
+    public void glBindFramebuffer(int type, int id) {
+        GLES30.glBindFramebuffer(type, id);
+    }
+
+    @Override
+    public void glClear(int mask) {
+        GLES30.glClear(mask);
+    }
+
+    @Override
+    public void glGenFramebuffers(int num, int[] buffers, int offset) {
+        GLES30.glGenFramebuffers(num, buffers, offset);
+    }
+
+    @Override
+    public void glTexImage2D(int type, int level, int internalFormat, int width, int height, int border, int texType, int localDataType, FloatBuffer pixels) {
+        GLES30.glTexImage2D(type, level, internalFormat, width, height, border, texType, localDataType, pixels);
+    }
+
+    // --- texture ---
+    public void texParameterf(int target, int pname, float param) {
+        GLES30.glTexParameterf(target, pname, param);
+    }
+
+    public void bindTexture(int target, int texture) {
+        GLES30.glBindTexture(target, texture);
+    }
+
+    // --- framebuffer ---
+    public void bindFramebuffer(int target, int framebuffer) {
+        GLES30.glBindFramebuffer(target, framebuffer);
+    }
+
+    public void framebufferTexture2D(
+            int target, int attachment, int textarget, int texture, int level) {
+        GLES30.glFramebufferTexture2D(
+                target, attachment, textarget, texture, level
+        );
+    }
+
+    // --- renderbuffer ---
+    public void genRenderbuffers(int n, int[] buffers, int offset) {
+        GLES30.glGenRenderbuffers(n, buffers, offset);
+    }
+
+    public void bindRenderbuffer(int target, int renderbuffer) {
+        GLES30.glBindRenderbuffer(target, renderbuffer);
+    }
+
+    public void renderbufferStorage(int target, int internalformat, int width, int height) {
+        GLES30.glRenderbufferStorage(target, internalformat, width, height);
+    }
+
+    public void framebufferRenderbuffer(
+            int target, int attachment, int renderbuffertarget, int renderbuffer) {
+        GLES30.glFramebufferRenderbuffer(
+                target, attachment, renderbuffertarget, renderbuffer
+        );
+    }
+
+
 }
