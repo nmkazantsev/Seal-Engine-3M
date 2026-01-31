@@ -144,11 +144,12 @@ public class MatrixBridgeDesktop extends MatrixPlatformBridge {
     public void rotateM(float[] m, int mOffset,
                         float a, float x, float y, float z) {
         Matrix4f tempMatrix = new Matrix4f();
+        float length = (float) Math.pow(x*x+y*y+z*z,0.5);
         // Вращение матрицы на угол 'a' градусов вокруг оси (x, y, z)
         // JOML работает с радианами, поэтому конвертируем
         float angleRad = (float) Math.toRadians(a);
         tempMatrix.set(m, mOffset)
-                .rotate(angleRad, x, y, z)
+                .rotate(angleRad, x/length, y/length, z/length)
                 .get(m, mOffset);
     }
 

@@ -41,6 +41,22 @@ public class FileUtils {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
     }
 
+    /**
+     * Input Stream form Assets
+     * @param path path to file in assets dir
+     * @param cls context class
+     * @return input stream
+     */
+    public InputStream ISA(String path, Class<?> cls)  {
+        InputStream is;
+        try {
+            is = cls.getResourceAsStream(path);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return is;
+    }
+
 
     public String readFileFromAssets(Class<?> cls, String fileName) {
         String result;

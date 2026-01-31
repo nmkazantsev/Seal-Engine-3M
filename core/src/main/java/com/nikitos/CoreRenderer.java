@@ -3,6 +3,8 @@ package com.nikitos;
 import com.nikitos.main.VRAMobject;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.vertices.VerticesShapesManager;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.Utils;
 
@@ -13,12 +15,17 @@ import com.nikitos.utils.Utils;
 public class CoreRenderer {
     private boolean firstStart = true;
     public static Engine engine;
-    private PlatformBridge pf;
+    private final PlatformBridge pf;
+    private final GeneralPlatformBridge gl;
+    private final GLConstBridge glc;
 
     public CoreRenderer(float width, float height, Engine engine) {
         CoreRenderer.engine = engine;
         pf = engine.getPlatformBridge();
-        pf.print("init core renderer "+ Utils.x+" "+Utils.y);
+        gl = pf.getGeneralPlatformBridge();
+        glc = pf.getGLConstBridge();
+
+        pf.print("init core renderer " + Utils.x + " " + Utils.y);
         Utils.x = width;
         Utils.y = height;
         Utils.ky = Utils.y / 1280.0f;
@@ -32,7 +39,7 @@ public class CoreRenderer {
     public void onSurfaceCreated() {
         graphicsSetup();
         //glClearColor(0f, 0f, 0f, 1f);
-        // glEnable(GL_DEPTH_TEST);
+        gl.glEnable(glc.GL_DEPTH_TEST());
         if (firstStart) {
             Utils.programStartTime = System.currentTimeMillis();
             setup();
