@@ -93,7 +93,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         // если его нет - он добавляется как 0% прозрачности
         GL33.glTexImage2D(target, level, GL33.GL_RGBA8,
                 (int) image.getWidth(), (int) image.getHeight(), border,
-                 GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
+                GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
     }
 
     //костыль для конвертации нормального формата в уебщиный
@@ -156,23 +156,35 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     }
 
     @Override
-    public void glDeleteFramebuffers(int number, int [] framebuffers, int offset){GL33.glDeleteFramebuffers(  framebuffers);}
+    public void glDeleteFramebuffers(int number, int[] framebuffers, int offset) {
+        GL33.glDeleteFramebuffers(framebuffers);
+    }
 
     @Override
-    public void glDeleteRenderbuffers(int number, int [] buffers, int offset){GL33.glDeleteRenderbuffers( buffers);}
+    public void glDeleteRenderbuffers(int number, int[] buffers, int offset) {
+        GL33.glDeleteRenderbuffers(buffers);
+    }
 
     @Override
-    public void glBindFramebuffer(int type, int id){GL33.glBindFramebuffer( type,  id);}
+    public void glBindFramebuffer(int type, int id) {
+        GL33.glBindFramebuffer(type, id);
+    }
 
     @Override
-    public void glClear(int mask){GL33.glClear( mask);}
+    public void glClear(int mask) {
+        GL33.glClear(mask);
+    }
 
     @Override
-    public void glGenFramebuffers(int num, int [] buffers, int offset){GL33.glGenFramebuffers(  buffers);}
+    public void glGenFramebuffers(int num, int[] buffers, int offset) {
+        GL33.glGenFramebuffers(buffers);
+    }
 
 
     @Override
-    public void glTexImage2D(int type, int level, int internalFormat, int width, int height, int border, int texType,int localDataType, FloatBuffer pixels){GL33.glTexImage2D( type,  level,  internalFormat,  width,  height,  border,  texType, localDataType,  pixels);}
+    public void glTexImage2D(int type, int level, int internalFormat, int width, int height, int border, int texType, int localDataType, FloatBuffer pixels) {
+        GL33.glTexImage2D(type, level, internalFormat, width, height, border, texType, localDataType, pixels);
+    }
 
     // --- texture ---
     public void texParameterf(int target, int pname, float param) {
@@ -213,6 +225,26 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         GL33.glFramebufferRenderbuffer(
                 target, attachment, renderbuffertarget, renderbuffer
         );
+    }
+
+    @Override
+    public int GL_RGBA16F() {
+        return GL33.GL_RGBA16F;
+    }
+
+    @Override
+    public int GL_RGBA() {
+        return GL33.GL_RGBA;
+    }
+
+    @Override
+    public int GL_TEXTURE_MAG_FILTER() {
+        return GL33.GL_TEXTURE_MAG_FILTER;
+    }
+
+    @Override
+    public int GL_TEXTURE_MIN_FILTER() {
+        return GL33.GL_TEXTURE_MIN_FILTER;
     }
 
 

@@ -93,4 +93,10 @@ public class Engine {
     public PlatformBridge getPlatformBridge() {
         return platformBridge;
     }
+
+    public void glClear() {
+        platformBridge.getGeneralPlatformBridge().glClear(
+                platformBridge.getGLConstBridge().GL_COLOR_BUFFER_BIT() | platformBridge.getGLConstBridge().GL_DEPTH_BUFFER_BIT()
+        );
+    }
 }
