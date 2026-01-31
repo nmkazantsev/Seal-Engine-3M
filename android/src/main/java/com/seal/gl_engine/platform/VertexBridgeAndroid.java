@@ -10,11 +10,6 @@ public class VertexBridgeAndroid extends VertexBridge {
     }
 
     @Override
-    public void glBindBuffer(int target, int buffer) {
-        GLES30.glBindBuffer(target, buffer);
-    }
-
-    @Override
     public void glDeleteBuffers(int n, int[] buffers, int offset) {
         GLES30.glDeleteBuffers(n, buffers, offset);
     }

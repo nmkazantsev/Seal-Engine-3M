@@ -60,12 +60,12 @@ public class CoreRenderer {
         if (engine.getGamePage() == null) {
             engine.startDefaultPage();
         }
-        //VerticesShapesManager.onFrameBegin();
+        VerticesShapesManager.onFrameBegin();
 
         engine.getGamePage().draw();
         //Debugger.draw();
 
-        //VerticesShapesManager.redrawAll();
+        VerticesShapesManager.redrawAll();
         //TouchProcessor.processMotions();
     }
 }

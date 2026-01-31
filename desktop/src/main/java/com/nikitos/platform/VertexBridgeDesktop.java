@@ -9,12 +9,6 @@ public class VertexBridgeDesktop extends VertexBridge {
             buffers[offset + i] = GL30.glGenBuffers();
         }
     }
-
-    @Override
-    public void glBindBuffer(int target, int buffer) {
-        GL30.glBindBuffer(target, buffer);
-    }
-
     @Override
     public void glDeleteBuffers(int n, int[] buffers, int offset) {
         for (int i = 0; i < n; i++) {
