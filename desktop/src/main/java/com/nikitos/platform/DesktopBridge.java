@@ -1,6 +1,8 @@
 package com.nikitos.platform;
 
+import com.nikitos.main.images.AbstractImage;
 import com.nikitos.platformBridge.*;
+import main.images.PImageDesktop;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 
@@ -44,6 +46,11 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public ImgBridge getImgBridge() {
         return new ImgBridgeDesktop();
+    }
+
+    @Override
+    public AbstractImage getAbstractImage() {
+        return new PImageDesktop();
     }
 
     @Override

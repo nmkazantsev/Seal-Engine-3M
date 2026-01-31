@@ -4,13 +4,18 @@ import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import main.images.PImageDesktop;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 import org.lwjgl.opengl.GLUtil;
 
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
+import static org.lwjgl.opengles.GLES30.GL_RGBA8;
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     @Override
@@ -92,9 +97,9 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
         //в результате костыля - преобразования все текстуры становятся с альфа каналом,
         // если его нет - он добавляется как 0% прозрачности
-        GL33.glTexImage2D(target, level, internalFormat,
+        GL33.glTexImage2D(target, level, GL_RGBA8,
                 (int) image.getWidth(), (int) image.getHeight(), border,
-                type, GL33.GL_RGBA, bufferedImageToByteBuffer(((PImageDesktop) image).getBitmap()));
+                 GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
     }
 
     //костыль для конвертации нормального формата в уебщиный

@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
+import com.nikitos.main.images.AbstractImage;
 import com.nikitos.platformBridge.*;
 import com.seal.gl_engine.OpenGLRenderer;
+import com.seal.gl_engine.engine.main.images.PImageAndroid;
 
 import java.util.function.Function;
 
@@ -109,6 +111,11 @@ public class AndroidBridge extends PlatformBridge {
     @Override
     public ImgBridge getImgBridge() {
         return new ImgBridgeAndroid();
+    }
+
+    @Override
+    public AbstractImage getAbstractImage() {
+        return new PImageAndroid();
     }
 
 

@@ -1,9 +1,18 @@
 package com.nikitos.platformBridge;
 
+import com.nikitos.CoreRenderer;
+
 public abstract class VertexBridge {
+    private final GeneralPlatformBridge gl;
+    public VertexBridge(){
+        gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
+    }
     // Буферы
     public abstract void glGenBuffers(int n, int[] buffers, int offset);
-    public abstract void glBindBuffer(int target, int buffer);
+    //duplicate code for usability
+    public void glBindBuffer(int target, int buffer){
+        gl.glBindBuffer(target, buffer);
+    }
     public abstract void glDeleteBuffers(int n, int[] buffers, int offset);
 
     // Vertex Array Objects

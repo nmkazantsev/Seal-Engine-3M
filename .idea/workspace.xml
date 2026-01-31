@@ -4,26 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix shaders">
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/exposition_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/exposition_fragment.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shader_light.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/fragment_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/fragment_shadow.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/line_fragmant.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_fragmant.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/line_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/line_vertex.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/skybox_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_fragment.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/skybox_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/skybox_vertex.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shader_light.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/resources/vertex_shadow.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/shaders/vertex_shadow.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/camera/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/camera/Camera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/maths/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/maths/Matrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="image works">
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +40,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="1-проблемы-с-pimage" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -80,30 +67,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build Demo.executor": "Run",
-    "Gradle.Build sealEngine_3M.executor": "Run",
-    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
-    "Gradle.Download Sources.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/librares/obj-0.4.0.jar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.49679077",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [jar].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [shadowJar].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;1-проблемы-с-pimage&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/librares/obj-0.4.0.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.49679077&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.nikitos.platform" />
@@ -120,7 +109,13 @@
       <recent name="com.nikitos.main" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="gradle jar" />
+      <command value="gradle shadowJar" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
       <module name="Demo.main" />
@@ -134,8 +129,54 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="sealEngine_3M [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="sealEngine_3M [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="shadowJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
+        <item itemvalue="Gradle.sealEngine_3M [jar]" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -166,7 +207,11 @@
       <workItem from="1769689520547" duration="2089000" />
       <workItem from="1769700728726" duration="3000" />
       <workItem from="1769700748418" duration="11722000" />
-      <workItem from="1769753170942" duration="5129000" />
+      <workItem from="1769753170942" duration="9577000" />
+      <workItem from="1769768260366" duration="2682000" />
+      <workItem from="1769794820002" duration="599000" />
+      <workItem from="1769867456583" duration="215000" />
+      <workItem from="1769868683086" duration="1724000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -272,7 +317,31 @@
       <option name="project" value="LOCAL" />
       <updated>1769716212835</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="it starts&#10;found problems in file system, found problems with PImage">
+      <option name="closed" value="true" />
+      <created>1769760730244</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1769760730244</updated>
+    </task>
+    <task id="LOCAL-00015" summary="new PImage">
+      <option name="closed" value="true" />
+      <created>1769765095288</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1769765095288</updated>
+    </task>
+    <task id="LOCAL-00016" summary="image works">
+      <option name="closed" value="true" />
+      <created>1769765688311</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1769765688311</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -315,6 +384,9 @@
     <MESSAGE value="fix skybox" />
     <MESSAGE value="fix polygon" />
     <MESSAGE value="fix shaders" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix shaders" />
+    <MESSAGE value="it starts&#10;found problems in file system, found problems with PImage" />
+    <MESSAGE value="new PImage" />
+    <MESSAGE value="image works" />
+    <option name="LAST_COMMIT_MESSAGE" value="image works" />
   </component>
 </project>
