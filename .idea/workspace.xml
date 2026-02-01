@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="find problem in normal maps">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/animator/Animator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/animator/FC.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Axes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/DebugValueFloat.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="import seal object and check axes (only touch and debugger left)">
       <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/engine_object/SealObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/resources/line_fragmant.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/resources/line_vertex.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/MotionEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/Utils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +51,7 @@
         <entry key="$PROJECT_DIR$" value="1-проблемы-с-pimage" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -91,7 +87,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/java/com/nikitos/main/debugger",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -109,8 +105,9 @@
       <recent name="com.seal.gl_engine.platform" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/core/src/main/resources" />
+      <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main" />
+      <recent name="$PROJECT_DIR$/core/src/main/resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/../Demo/game/src/main/shaders" />
@@ -229,7 +226,7 @@
       <workItem from="1769883524307" duration="3248000" />
       <workItem from="1769891642211" duration="3811000" />
       <workItem from="1769897472773" duration="1836000" />
-      <workItem from="1769927521665" duration="4898000" />
+      <workItem from="1769927521665" duration="7953000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -383,7 +380,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769938089001</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="import seal object and check axes (only touch and debugger left)">
+      <option name="closed" value="true" />
+      <created>1769938957548</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1769938957548</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -432,6 +437,7 @@
     <MESSAGE value="clean up android utils" />
     <MESSAGE value="fix compability" />
     <MESSAGE value="find problem in normal maps" />
-    <option name="LAST_COMMIT_MESSAGE" value="find problem in normal maps" />
+    <MESSAGE value="import seal object and check axes (only touch and debugger left)" />
+    <option name="LAST_COMMIT_MESSAGE" value="import seal object and check axes (only touch and debugger left)" />
   </component>
 </project>
