@@ -5,8 +5,9 @@ import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.ImgBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 
-import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 public class FileUtils {
@@ -43,11 +44,12 @@ public class FileUtils {
 
     /**
      * Input Stream form Assets
+     *
      * @param path path to file in assets dir
-     * @param cls context class
+     * @param cls  context class
      * @return input stream
      */
-    public InputStream ISA(String path, Class<?> cls)  {
+    public InputStream ISA(String path, Class<?> cls) {
         InputStream is;
         try {
             is = cls.getResourceAsStream(path);
@@ -82,7 +84,9 @@ public class FileUtils {
 
     public static PImage loadImage(InputStream inputStream) {
         ImgBridge imgBridge = CoreRenderer.engine.getPlatformBridge().getImgBridge();
-        return imgBridge.loadImage(inputStream);
+        PImage img = imgBridge.loadImage(inputStream);
+        img.setLoaded(true);
+        return img;
     }
 
     public static PImage loadImage(String fileName, Class<?> cls) {

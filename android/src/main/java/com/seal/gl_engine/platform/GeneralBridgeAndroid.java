@@ -3,7 +3,6 @@ package com.seal.gl_engine.platform;
 import android.graphics.Bitmap;
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
-
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 
@@ -31,13 +30,13 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     }
 
     @Override
-    public void glBindTexture(int texture, int location) {
-        GLES30.glBindTexture(texture, location);
+    public void glBindTexture(int target, int texture) {
+        GLES30.glBindTexture(target, texture);
     }
 
     @Override
-    public void glUniform1i(int textureLocation, int slot) {
-        GLES30.glUniform1i(textureLocation, slot);
+    public void glUniform1i(int location, int value) {
+        GLES30.glUniform1i(location, value);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
 
     @Override
     public void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized, int size, int vertexData) {
-        GLES30.glVertexAttribPointer(aPositionLocation, step, type, false, size, vertexData);
+        GLES30.glVertexAttribPointer(aPositionLocation, step, type, normalized, size, vertexData);
     }
 
     @Override
@@ -146,19 +145,21 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     }
 
     // --- texture ---
+    @Override
     public void texParameterf(int target, int pname, float param) {
         GLES30.glTexParameterf(target, pname, param);
     }
-
+    @Override
     public void bindTexture(int target, int texture) {
         GLES30.glBindTexture(target, texture);
     }
 
     // --- framebuffer ---
+    @Override
     public void bindFramebuffer(int target, int framebuffer) {
         GLES30.glBindFramebuffer(target, framebuffer);
     }
-
+    @Override
     public void framebufferTexture2D(
             int target, int attachment, int textarget, int texture, int level) {
         GLES30.glFramebufferTexture2D(
@@ -167,47 +168,29 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     }
 
     // --- renderbuffer ---
+    @Override
     public void genRenderbuffers(int n, int[] buffers, int offset) {
         GLES30.glGenRenderbuffers(n, buffers, offset);
     }
-
+    @Override
     public void bindRenderbuffer(int target, int renderbuffer) {
         GLES30.glBindRenderbuffer(target, renderbuffer);
     }
-
+    @Override
     public void renderbufferStorage(int target, int internalformat, int width, int height) {
         GLES30.glRenderbufferStorage(target, internalformat, width, height);
     }
-
+    @Override
     public void framebufferRenderbuffer(
             int target, int attachment, int renderbuffertarget, int renderbuffer) {
         GLES30.glFramebufferRenderbuffer(
                 target, attachment, renderbuffertarget, renderbuffer
         );
     }
-
     @Override
-    public int GL_RGBA16F() {
-        return GLES30.GL_RGBA16F;
+    public void glUniform1f(int location, float val) {
+        GLES30.glUniform1f(location, val);
     }
-
-    @Override
-    public int GL_RGBA() {
-        return GLES30.GL_RGBA;
-    }
-
-    @Override
-    public int GL_TEXTURE_MAG_FILTER() {
-        return GLES30.GL_TEXTURE_MAG_FILTER;
-    }
-
-    @Override
-    public int GL_TEXTURE_MIN_FILTER() {
-        return GLES30.GL_TEXTURE_MIN_FILTER;
-    }
-
-    @Override
-    public void glUniform1f(int location, float val){GLES30.glUniform1f( location,  val);}
 
 
 }

@@ -204,7 +204,7 @@ public class Shape implements VerticesSet {
         if (normalTexture != null) {
             gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
         } else {
-            gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
+            gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0 );
         }
         postToGlNeeded = false;
     }

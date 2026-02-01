@@ -38,8 +38,8 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     }
 
     @Override
-    public void glUniform1i(int textureLocation, int slot) {
-        GL30.glUniform1i(textureLocation, slot);
+    public void glUniform1i(int location, int value) {
+        GL30.glUniform1i(location, value);
     }
 
     @Override
@@ -226,27 +226,6 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
                 target, attachment, renderbuffertarget, renderbuffer
         );
     }
-
-    @Override
-    public int GL_RGBA16F() {
-        return GL33.GL_RGBA16F;
-    }
-
-    @Override
-    public int GL_RGBA() {
-        return GL33.GL_RGBA;
-    }
-
-    @Override
-    public int GL_TEXTURE_MAG_FILTER() {
-        return GL33.GL_TEXTURE_MAG_FILTER;
-    }
-
-    @Override
-    public int GL_TEXTURE_MIN_FILTER() {
-        return GL33.GL_TEXTURE_MIN_FILTER;
-    }
-
     @Override
     public void glUniform1f(int location, float val) {
         GL33.glUniform1f(location, val);

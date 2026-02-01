@@ -15,7 +15,7 @@ public abstract class GeneralPlatformBridge {
 
     public abstract void glBindTexture(int texture, int location);
 
-    public abstract void glUniform1i(int textureLocation, int slot);
+    public abstract void glUniform1i(int location, int value);
 
     public abstract void glGenerateMipmap(int type);
 
@@ -76,10 +76,6 @@ public abstract class GeneralPlatformBridge {
             int renderbuffer
     );
 
-    public abstract int GL_RGBA16F();
-    public abstract int GL_RGBA();
-    public abstract int GL_TEXTURE_MAG_FILTER();
-    public abstract int GL_TEXTURE_MIN_FILTER();
     public abstract void glUniform1f(int location, float val);
 
 }

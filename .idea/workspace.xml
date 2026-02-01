@@ -5,21 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="image works">
-      <change afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/normal_map.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/normal_tex.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/vertex_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/vertex_shader_light.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/light/AmbientLight.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/light/AmbientLight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/light/DirectedLight.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/light/DirectedLight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/light/ExpouseSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/light/ExpouseSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/light/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/light/Material.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/light/PointLight.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/light/PointLight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/light/SourceLight.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/light/SourceLight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GeneralBridgeAndroid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/ShaderData.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/ShaderData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/frameBuffers/FrameBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/frameBuffers/FrameBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GeneralPlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GeneralPlatformBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" afterDir="false" />
     </list>
@@ -61,7 +52,7 @@
         <entry key="$PROJECT_DIR$" value="1-проблемы-с-pimage" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -229,7 +220,9 @@
       <workItem from="1769867456583" duration="215000" />
       <workItem from="1769868683086" duration="1724000" />
       <workItem from="1769883524307" duration="3248000" />
-      <workItem from="1769891642211" duration="1616000" />
+      <workItem from="1769891642211" duration="3811000" />
+      <workItem from="1769897472773" duration="1836000" />
+      <workItem from="1769927521665" duration="422000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />

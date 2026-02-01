@@ -39,11 +39,11 @@ public class FrameBuffer extends VRAMobject {
         gl.glBindTexture(glc.GL_TEXTURE_2D(), frameBufferTextures[0]);
         gl.glTexImage2D(glc.GL_TEXTURE_2D(), 0, glc.GL_RGBA16F(),
                 w, h, 0,
-                gl.GL_RGBA(), glc.GL_FLOAT(), null);
+                glc.GL_RGBA(), glc.GL_FLOAT(), null);
         gl.texParameterf(glc.GL_TEXTURE_2D(),
-                gl.GL_TEXTURE_MAG_FILTER(), glc.GL_LINEAR());
+                glc.GL_TEXTURE_MAG_FILTER(), glc.GL_LINEAR());
         gl.texParameterf(glc.GL_TEXTURE_2D(),
-                gl.GL_TEXTURE_MIN_FILTER(), glc.GL_LINEAR());
+                glc.GL_TEXTURE_MIN_FILTER(), glc.GL_LINEAR());
         gl.glBindFramebuffer(glc.GL_FRAMEBUFFER(), frameBuffers[0]);
         gl.framebufferTexture2D(glc.GL_FRAMEBUFFER(), glc.GL_COLOR_ATTACHMENT0(),
                 glc.GL_TEXTURE_2D(), frameBufferTextures[0], 0);
