@@ -5,6 +5,7 @@ import static java.lang.Float.parseFloat;
 import static java.lang.Thread.sleep;
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.main.animator.Animator;
 
 import java.util.Random;
 
@@ -328,6 +329,29 @@ public class Utils {
             return;
         }
         timeK = 120.0f / CoreRenderer.engine.fps;
+    }
+
+    public static Animator.Animation[] contactArray(Animator.Animation[] a, Animator.Animation[] b) {
+        if (a == null)
+            return b;
+        if (b == null)
+            return a;
+        Animator.Animation[] r = new Animator.Animation[a.length + b.length];
+        System.arraycopy(a, 0, r, 0, a.length);
+        System.arraycopy(b, 0, r, a.length, b.length);
+        return r;
+    }
+
+    public static Animator.Animation[] popFromArray(Animator.Animation[] a, Animator.Animation anim) {
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] == anim) {
+                Animator.Animation[] buffer = new Animator.Animation[a.length - 1];
+                System.arraycopy(a, 0, buffer, 0, i);
+                System.arraycopy(a, i + 1, buffer, i, a.length - i - 1);
+                return buffer;
+            }
+        }
+        return a;
     }
 
 }
