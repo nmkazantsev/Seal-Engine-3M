@@ -4,6 +4,7 @@ package com.nikitos.main.vertices;
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
+import com.nikitos.main.textures.NormalMap;
 import com.nikitos.main.textures.Texture;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
@@ -34,7 +35,7 @@ public class Shape implements VerticesSet {
     private boolean isVertexLoaded = false, globalLoaded = false;
 
     private final Texture texture;
-    private Texture normalTexture;
+    private NormalMap normalTexture;
     private final String textureFileName;
     private String normalMapFileName;
     private Obj object;
@@ -161,7 +162,7 @@ public class Shape implements VerticesSet {
     public void addNormalMap(String normalMapFileName) {
         this.normalMapFileName = normalMapFileName;
         normalImage = loadImage(normalMapFileName, contextClass);
-        normalTexture = new Texture(creator);
+        normalTexture = new NormalMap(creator);
     }
 
     private PImage loadTexture(Void v) {

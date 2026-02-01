@@ -3,6 +3,8 @@ package com.nikitos.platform;
 import com.nikitos.platformBridge.GLConstBridge;
 import org.lwjgl.opengl.GL33;
 
+import java.util.concurrent.RecursiveTask;
+
 public class GLConstBridgeDesktop extends GLConstBridge {
 
     // 1. Состояния
@@ -437,6 +439,11 @@ public class GLConstBridgeDesktop extends GLConstBridge {
     @Override
     public int GL_RGBA16F() {
         return GL33.GL_RGBA16F;
+    }
+
+    @Override
+    public int GL_SRGB() {
+        return GL33.GL_SRGB;
     }
 
 }

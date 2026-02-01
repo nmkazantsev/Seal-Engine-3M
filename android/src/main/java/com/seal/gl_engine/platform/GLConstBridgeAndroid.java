@@ -428,5 +428,9 @@ public class GLConstBridgeAndroid extends GLConstBridge {
         return GLES30.GL_RGBA16F;
     }
 
+    @Override
+    public int GL_SRGB() {
+        return GLES30.GL_SRGB;
+    }
 
 }

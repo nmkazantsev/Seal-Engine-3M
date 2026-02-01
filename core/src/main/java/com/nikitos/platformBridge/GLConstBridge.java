@@ -1,5 +1,7 @@
 package com.nikitos.platformBridge;
 
+import javax.swing.plaf.PanelUI;
+
 public abstract class GLConstBridge {
     // 1. Константы состояния и режимов
     public abstract int GL_DEPTH_TEST();
@@ -169,6 +171,6 @@ public abstract class GLConstBridge {
     public abstract int GL_COLOR_ATTACHMENT0();
     public abstract int GL_DEPTH_ATTACHMENT();
     public abstract int GL_DEPTH_COMPONENT16();
-
     public abstract int GL_RGBA16F();
+    public abstract int GL_SRGB();
 }
