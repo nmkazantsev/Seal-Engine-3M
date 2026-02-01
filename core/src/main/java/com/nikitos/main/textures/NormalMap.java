@@ -22,7 +22,7 @@ public class NormalMap extends Texture {
         gl.glBindTexture(glc.GL_TEXTURE_2D(), textureIds[0]);
 
         gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_MIN_FILTER(), glc.GL_LINEAR());
-        gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_MAG_FILTER(), glc.GL_LINEAR());
+        gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_MAG_FILTER(), glc.GL_TEXTURE1());
 
         gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_WRAP_S(), glc.GL_CLAMP_TO_EDGE());
         gl.glTexParameteri(glc.GL_TEXTURE_2D(), glc.GL_TEXTURE_WRAP_T(), glc.GL_CLAMP_TO_EDGE());

@@ -4,18 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="clean up android utils">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/textures/NormalMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix compability">
       <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/vertex_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/vertex_shader_light.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GLConstBridgeAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/GLConstBridgeAndroid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GLConstBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/GLConstBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GLConstBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GLConstBridgeDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/textures/NormalMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/textures/NormalMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,7 +219,7 @@
       <workItem from="1769883524307" duration="3248000" />
       <workItem from="1769891642211" duration="3811000" />
       <workItem from="1769897472773" duration="1836000" />
-      <workItem from="1769927521665" duration="2322000" />
+      <workItem from="1769927521665" duration="4151000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -363,7 +357,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769933749023</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="fix compability">
+      <option name="closed" value="true" />
+      <created>1769936219612</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1769936219612</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -410,6 +412,7 @@
     <MESSAGE value="new PImage" />
     <MESSAGE value="image works" />
     <MESSAGE value="clean up android utils" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up android utils" />
+    <MESSAGE value="fix compability" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix compability" />
   </component>
 </project>
