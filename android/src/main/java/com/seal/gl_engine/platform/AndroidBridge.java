@@ -13,7 +13,13 @@ import android.widget.Toast;
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.AbstractImage;
-import com.nikitos.platformBridge.*;
+import com.nikitos.platformBridge.GLConstBridge;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
+import com.nikitos.platformBridge.ImgBridge;
+import com.nikitos.platformBridge.MatrixPlatformBridge;
+import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.platformBridge.ShaderBridge;
+import com.nikitos.platformBridge.VertexBridge;
 import com.seal.gl_engine.OpenGLRenderer;
 import com.seal.gl_engine.engine.main.images.PImageAndroid;
 
@@ -23,45 +29,46 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import static android.opengl.GLES20.glUniformMatrix4fv;
-
 public class AndroidBridge extends PlatformBridge {
+    private static boolean launched = false;
     private Context context;
     private static GLSurfaceView glSurfaceView;
     protected static Function<Void, GamePageClass> startPage;
 
     GLSurfaceView launch(AndroidLauncherParams androidLauncherParams, Engine engine) {
-        startPage = androidLauncherParams.getStartPage();
-        this.context = androidLauncherParams.getContext();
-        ActivityManager activityManager = (ActivityManager) context
-                .getSystemService(Context.ACTIVITY_SERVICE);
-        ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-        Log.i("engine version ", Engine.getVersion());
-        Log.i("version", String.valueOf(Double.parseDouble(configurationInfo.getGlEsVersion())));
-        Log.i("version", String.valueOf(configurationInfo.reqGlEsVersion >= 0x30000));
-        Log.i("version", String.format("%X", configurationInfo.reqGlEsVersion));
-        Log.i("engine version", Engine.getVersion());
-        if (!supportES2()) {
-            Toast.makeText(context, "OpenGL ES 2.0 is not supported", Toast.LENGTH_LONG).show();
-            return null;
-        }
-        glSurfaceView = new GLSurfaceView(context);
-        glSurfaceView.setEGLContextClientVersion(3);
-        glSurfaceView.setEGLConfigChooser(new MyConfigChooser(androidLauncherParams.getMSAA() ? 4 : 1));
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        final DisplayMetrics displayMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(displayMetrics);
-        float widthPixels = displayMetrics.widthPixels;
-        float heightPixels = displayMetrics.heightPixels;
-        if (androidLauncherParams.isLandscape() && widthPixels < heightPixels) {
-            glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
-        } else if (!androidLauncherParams.isLandscape() && widthPixels > heightPixels) {
-            glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
-        } else {
-            glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
-        }
-        if (androidLauncherParams.isDebug()) {
-            //Debugger.debuggerInit();
+        if (!launched) {
+            launched = true;
+            startPage = androidLauncherParams.getStartPage();
+            this.context = androidLauncherParams.getContext();
+            ActivityManager activityManager = (ActivityManager) context
+                    .getSystemService(Context.ACTIVITY_SERVICE);
+            ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+            Log.i("engine version ", Engine.getVersion());
+            Log.i("version", String.valueOf(Double.parseDouble(configurationInfo.getGlEsVersion())));
+            Log.i("version", String.valueOf(configurationInfo.reqGlEsVersion >= 0x30000));
+            Log.i("version", String.format("%X", configurationInfo.reqGlEsVersion));
+            if (!supportES2()) {
+                Toast.makeText(context, "OpenGL ES 2.0 is not supported", Toast.LENGTH_LONG).show();
+                return null;
+            }
+            glSurfaceView = new GLSurfaceView(context);
+            glSurfaceView.setEGLContextClientVersion(3);
+            glSurfaceView.setEGLConfigChooser(new MyConfigChooser(androidLauncherParams.getMSAA() ? 4 : 1));
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(displayMetrics);
+            float widthPixels = displayMetrics.widthPixels;
+            float heightPixels = displayMetrics.heightPixels;
+            if (androidLauncherParams.isLandscape() && widthPixels < heightPixels) {
+                glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
+            } else if (!androidLauncherParams.isLandscape() && widthPixels > heightPixels) {
+                glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
+            } else {
+                glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
+            }
+            if (androidLauncherParams.isDebug()) {
+                //Debugger.debuggerInit();
+            }
         }
         return glSurfaceView;
     }

@@ -13,6 +13,7 @@ public class AndroidLauncher {
         androidBridge = new AndroidBridge();
         engine = new Engine(androidBridge, androidLauncherParams);
         this.androidLauncherParams = androidLauncherParams;
+
     }
 
     public Engine getEngine() {

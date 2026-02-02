@@ -56,7 +56,6 @@ public class CoreRenderer {
         Shader.updateAllLocations();
         VRAMobject.onRedraw();
         VerticesShapesManager.onRedrawSetup();
-        VerticesShapesManager.redrawAllSetup();
     }
 
 
