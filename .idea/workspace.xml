@@ -5,17 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="find problem in normal maps">
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/line_fragmant.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/line_vertex.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/CoreRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/CoreRenderer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -235,7 +226,8 @@
       <workItem from="1769927521665" duration="4898000" />
       <workItem from="1769983840127" duration="1428000" />
       <workItem from="1770016130990" duration="483000" />
-      <workItem from="1770017207615" duration="36000" />
+      <workItem from="1770017207615" duration="1466000" />
+      <workItem from="1770032845634" duration="346000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />

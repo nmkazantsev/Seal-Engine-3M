@@ -34,6 +34,9 @@ public class CoreRenderer {
             Utils.kx = Utils.x / 1280.0f;
             Utils.ky = Utils.y / 720.0f;
         }
+        pf.log_i("engine", "Utils x, y: "+Utils.x+" "+Utils.y);
+        pf.log_i("engine", "Utils kx, ky: "+Utils.kx+" "+Utils.ky);
+        graphicsSetup(); //not sure if necessary but formally we have updated opengl context
     }
 
     public void onSurfaceCreated() {

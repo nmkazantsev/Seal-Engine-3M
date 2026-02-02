@@ -5,13 +5,15 @@ import android.opengl.GLSurfaceView;
 import com.nikitos.Engine;
 
 public class AndroidLauncher {
-    private final Engine engine;
+    private static Engine engine;
     private final AndroidBridge androidBridge;
     private final AndroidLauncherParams androidLauncherParams;
 
     public AndroidLauncher(AndroidLauncherParams androidLauncherParams) {
         androidBridge = new AndroidBridge();
-        engine = new Engine(androidBridge, androidLauncherParams);
+        if (engine == null) {
+            engine = new Engine(androidBridge, androidLauncherParams);
+        }
         this.androidLauncherParams = androidLauncherParams;
 
     }
