@@ -33,7 +33,7 @@ public class OpenGLRenderer implements Renderer {
     @Override
     public void onSurfaceChanged(GL10 arg0, int width, int height) {
         glViewport(0, 0, width, height);
-        Log.i("engine", "surface changed resolution" + String.valueOf(width) + " " + String.valueOf(height));
+        Log.i("engine", "\n=========\n\nsurface changed, resolution " + String.valueOf(width) + " " + String.valueOf(height));
         coreRenderer = new CoreRenderer(width, height, engine);
         coreRenderer.onSurfaceCreated();
     }

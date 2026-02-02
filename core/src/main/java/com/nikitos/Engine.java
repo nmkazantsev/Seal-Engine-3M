@@ -24,6 +24,15 @@ public class Engine {
         this.platformBridge = platformBridge;
         this.launcherParams = launcherParams;
         Matrix.init(platformBridge);
+        Utils.programStartTime = System.currentTimeMillis();
+    }
+
+    public void onSurfaceChanged(int x, int y) {
+        if (gamePage == null) {
+            platformBridge.log_e("engine", "on surface changed called, but game page is null");
+            return;
+        }
+        gamePage.onSurfaceChanged(x, y);
     }
 
     public void calculateFps() {
@@ -34,10 +43,6 @@ public class Engine {
         }
         Utils.findTimeK();
         cadrs++;
-    }
-
-    protected void resetPrevPageChangeTime() {
-        prevPageChangeTime = Utils.millis();
     }
 
     public void onPause() {
@@ -57,11 +62,13 @@ public class Engine {
     }
 
     public void startNewPage(GamePageClass newPage) {
+        platformBridge.log_i("engine", "start new page");
         Utils.unfreezeMillis();
         gamePage = null;
         System.gc();
         gamePage = newPage;
         resetPageMillis();
+        newPage.onSurfaceChanged((int) Utils.x, (int) Utils.y);
         //VRAMobject.onPageChange();
         //Shader.onPageChange();
         //TouchProcessor.onPageChange();
@@ -71,14 +78,20 @@ public class Engine {
         if (launcherParams.getStartPage() == null) {
             throw new IllegalStateException("Start page can not be null!\nDeclare it in LaunchParams.");
         }
+        if (gamePage != null) {
+            platformBridge.log_i("engine", "asked to start default page, but it exists");
+            return;
+        }
         startNewPage(launcherParams.getStartPage().apply(null));
     }
 
     public void resetPageMillis() {
+        platformBridge.log_i("engine", "reset page millis");
         prevPageChangeTime = Utils.millis();
     }
 
     public long pageMillis() {
+        platformBridge.log_i("engine", "prev changed time "+prevPageChangeTime);
         return Utils.millis() - prevPageChangeTime;
     }
 
