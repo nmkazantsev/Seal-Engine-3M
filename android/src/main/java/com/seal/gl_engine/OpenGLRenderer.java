@@ -16,30 +16,32 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class OpenGLRenderer implements Renderer {
 
-    private final CoreRenderer coreRenderer;
+    private CoreRenderer coreRenderer;
+    private final Engine engine;
 
     public OpenGLRenderer(float width, float height, Engine engine) {
         coreRenderer = new CoreRenderer(width, height, engine);
-
+        this.engine = engine;
     }
 
     @Override
     public void onSurfaceCreated(GL10 arg0, EGLConfig arg1) {
         coreRenderer.onSurfaceCreated();
-
+        Log.i("engine", "surface created");
     }
 
     @Override
     public void onSurfaceChanged(GL10 arg0, int width, int height) {
         glViewport(0, 0, width, height);
-        Log.e("surface changed", String.valueOf(width));
+        Log.i("engine", "\n=========\n\nsurface changed, resolution " + String.valueOf(width) + " " + String.valueOf(height));
+        coreRenderer = new CoreRenderer(width, height, engine);
+        coreRenderer.onSurfaceCreated();
     }
 
 
     @Override
     public void onDrawFrame(GL10 arg0) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
         coreRenderer.draw();
     }
 }
