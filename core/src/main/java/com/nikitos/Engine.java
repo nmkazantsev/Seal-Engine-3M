@@ -91,7 +91,6 @@ public class Engine {
     }
 
     public long pageMillis() {
-        platformBridge.log_i("engine", "prev changed time "+prevPageChangeTime);
         return Utils.millis() - prevPageChangeTime;
     }
 

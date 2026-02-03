@@ -9,15 +9,9 @@ import java.util.function.Function;
  */
 public class LauncherParams {
     protected Function<Void, GamePageClass> startPage = null;
-    protected boolean landscape = false;
     protected boolean debug = false;
     protected boolean MSAA = false;
     protected boolean isDesktop = true;
-
-    public LauncherParams setLandscape(boolean landscape) {
-        this.landscape = landscape;
-        return this;
-    }
 
     public LauncherParams setDebug(boolean debug) {
         this.debug = debug;
@@ -41,10 +35,6 @@ public class LauncherParams {
 
     public Function<Void, GamePageClass> getStartPage() {
         return startPage;
-    }
-
-    public boolean isLandscape() {
-        return landscape;
     }
 
     public boolean isDebug() {

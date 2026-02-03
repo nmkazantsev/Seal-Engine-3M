@@ -18,10 +18,6 @@ public class AndroidLauncherParams extends LauncherParams {
     public Context getContext() {
         return context;
     }
-    public AndroidLauncherParams setLandscape(boolean landscape) {
-        this.landscape = landscape;
-        return this;
-    }
 
     public AndroidLauncherParams setDebug(boolean debug) {
         this.debug = debug;

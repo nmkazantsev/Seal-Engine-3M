@@ -3,14 +3,15 @@ package com.nikitos.platform;
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
 import com.nikitos.platformBridge.LauncherParams;
+import com.nikitos.utils.Utils;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -48,7 +49,7 @@ public class DesktopLauncher {
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     private void init() {
@@ -64,6 +65,9 @@ public class DesktopLauncher {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        if (launcherParams.getMSAA()) {
+            glfwWindowHint(GLFW_SAMPLES, 4);
+        }
 
         //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -72,6 +76,7 @@ public class DesktopLauncher {
         // Get the resolution of the primary monitor
         vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Create the window
+        assert vidmode != null;
         window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Hello World!", NULL, NULL);
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
@@ -80,6 +85,20 @@ public class DesktopLauncher {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+        });
+
+        glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
+            glViewport(0, 0, width, height);
+
+            Utils.x = width;
+            Utils.y = height;
+            Utils.ky = Utils.y / 1280.0f;
+            Utils.kx = Utils.x / 720.0f;
+            if (Utils.x > Utils.y) {
+                Utils.kx = Utils.x / 1280.0f;
+                Utils.ky = Utils.y / 720.0f;
+            }
+            engine.onSurfaceChanged(width, height);
         });
 
         // Get the thread stack and push a new frame
@@ -121,12 +140,11 @@ public class DesktopLauncher {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-
-            glfwSwapBuffers(window); // swap the color buffers
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             coreRenderer.draw();
             // Poll for window events. The key callback above will only be
             // invoked during this call.
+            glfwSwapBuffers(window); // swap the color buffers
             glfwPollEvents();
 
         }
