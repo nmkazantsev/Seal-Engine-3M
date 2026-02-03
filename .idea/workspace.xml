@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="find problem in normal maps">
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidLauncherParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidLauncherParams.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add adaptation on desktop">
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/LauncherParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/LauncherParams.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
     </list>
@@ -385,7 +383,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769938089001</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="add adaptation on desktop">
+      <option name="closed" value="true" />
+      <created>1770139981427</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1770139981427</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,6 +440,7 @@
     <MESSAGE value="clean up android utils" />
     <MESSAGE value="fix compability" />
     <MESSAGE value="find problem in normal maps" />
-    <option name="LAST_COMMIT_MESSAGE" value="find problem in normal maps" />
+    <MESSAGE value="add adaptation on desktop" />
+    <option name="LAST_COMMIT_MESSAGE" value="add adaptation on desktop" />
   </component>
 </project>

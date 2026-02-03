@@ -33,6 +33,8 @@ public class DesktopLauncher {
 
     private GLFWVidMode vidmode;
 
+    private boolean fullScreenOpened = false;
+
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
         engine = new Engine(new DesktopBridge(), launcherParams);
@@ -77,15 +79,83 @@ public class DesktopLauncher {
         vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Create the window
         assert vidmode != null;
-        window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Hello World!", NULL, NULL);
+
+        if (launcherParams.getFullScreen()) {
+            fullScreenOpened = true;
+            String osName = System.getProperty("os.name").toLowerCase();
+            if (osName.contains("mac")) {
+                System.out.println("engine: This is a Mac operating system. Using custom full screen. Press ESC to exit.");
+                glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+                glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+                window = glfwCreateWindow(
+                        vidmode.width(),
+                        vidmode.height(),
+                        launcherParams.getWindowTitle(),
+                        NULL,
+                        NULL);
+            } else {
+                System.out.println("engine: using general full screen mode. Press ESC to exit.");
+                window = glfwCreateWindow(
+                        vidmode.width(),
+                        vidmode.height(),
+                        launcherParams.getWindowTitle(),
+                        glfwGetPrimaryMonitor(),
+                        NULL);
+            }
+
+        } else {
+            window = glfwCreateWindow(
+                    vidmode.width(),
+                    vidmode.height(),
+                    launcherParams.getWindowTitle(),
+                    NULL,
+                    NULL);
+        }
+
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
-
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+            if (launcherParams.getFullScreen()) {
+                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                    if (fullScreenOpened) {
+                        fullScreenOpened = false;
+                        //переход в border less режим
+                        goBoardLessMode(window);
+
+                        //выход в оконный режим
+
+                        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
+                        glfwSetWindowSize(window, 800, 800);
+                        glfwSetWindowPos(window, 100, 100);
+
+                        //это костыль, который не дает схлопываться окну когда его берет юзер
+                        glfwHideWindow(window);
+                        glfwShowWindow(window);
+                    } else {
+                        fullScreenOpened = true;
+                        String osName = System.getProperty("os.name").toLowerCase();
+                        if (osName.contains("mac")) {
+                            System.out.println("engine: This is a Mac operating system. Using custom full screen. Press ESC to exit.");
+                            goBoardLessMode(window);
+                        } else {
+                            System.out.println("engine: using general full screen mode. Press ESC to exit.");
+                            GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
+                            assert vid != null;
+                            glfwSetWindowMonitor(
+                                    window,
+                                    glfwGetPrimaryMonitor(),
+                                    0, 0,
+                                    vid.width(),
+                                    vid.height(),
+                                    vid.refreshRate()
+                            );
+                        }
+                    }
+                }
+            }
         });
+
 
         glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
             glViewport(0, 0, width, height);
@@ -102,6 +172,29 @@ public class DesktopLauncher {
         });
 
         // Get the thread stack and push a new frame
+        setDisplayRes(window);
+
+        // Make the OpenGL context current
+        glfwMakeContextCurrent(window);
+        // Enable v-sync
+        glfwSwapInterval(1);
+
+        // Make the window visible
+        glfwShowWindow(window);
+    }
+
+    private void goBoardLessMode(long window) {
+        glfwSetWindowMonitor(window, NULL, 0, 0, 800, 600, 0);
+
+        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
+
+        GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        assert vid != null;
+        glfwSetWindowSize(window, vid.width(), vid.height());
+        glfwSetWindowPos(window, 0, 0);
+    }
+
+    private void setDisplayRes(long window) {
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
@@ -116,14 +209,6 @@ public class DesktopLauncher {
                     (vidmode.height() - pHeight.get(0)) / 2
             );
         } // the stack frame is popped automatically
-
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
-        // Enable v-sync
-        glfwSwapInterval(1);
-
-        // Make the window visible
-        glfwShowWindow(window);
     }
 
     private void loop() {

@@ -13,8 +13,22 @@ public class LauncherParams {
     protected boolean MSAA = false;
     protected boolean isDesktop = true;
 
+    protected boolean fullScreen = true;
+
+    protected String windowTitle = "Seal Engine 3-M";
+
     public LauncherParams setDebug(boolean debug) {
         this.debug = debug;
+        return this;
+    }
+
+    public LauncherParams setWindowTitle(String windowTitle) {
+        this.windowTitle = windowTitle;
+        return this;
+    }
+
+    public LauncherParams setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
         return this;
     }
 
@@ -47,6 +61,14 @@ public class LauncherParams {
 
     public boolean isDesktop() {
         return isDesktop;
+    }
+
+    public String getWindowTitle() {
+        return windowTitle;
+    }
+
+    public boolean getFullScreen() {
+        return fullScreen;
     }
 
 }
