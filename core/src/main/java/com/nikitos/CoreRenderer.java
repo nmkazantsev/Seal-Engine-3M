@@ -34,6 +34,10 @@ public class CoreRenderer {
             Utils.kx = Utils.x / 1280.0f;
             Utils.ky = Utils.y / 720.0f;
         }
+        pf.log_i("engine", "Utils x, y: " + Utils.x + " " + Utils.y);
+        pf.log_i("engine", "Utils kx, ky: " + Utils.kx + " " + Utils.ky);
+        graphicsSetup(); //not sure if necessary but formally we have updated opengl context
+        engine.onSurfaceChanged((int)width, (int)height);
     }
 
     public void onSurfaceCreated() {
@@ -41,14 +45,7 @@ public class CoreRenderer {
         //glClearColor(0f, 0f, 0f, 1f);
         gl.glEnable(glc.GL_DEPTH_TEST());
         if (firstStart) {
-            Utils.programStartTime = System.currentTimeMillis();
-            setup();
             firstStart = false;
-        }
-        if (Utils.millis() > 60 * 60 * 1000) {
-            //smth went wrong...
-            Utils.programStartTime = System.currentTimeMillis();
-            engine.resetPrevPageChangeTime();
         }
     }
 
@@ -56,13 +53,6 @@ public class CoreRenderer {
         Shader.updateAllLocations();
         VRAMobject.onRedraw();
         VerticesShapesManager.onRedrawSetup();
-        VerticesShapesManager.redrawAllSetup();
-    }
-
-
-    private void setup() {
-
-        engine.resetPrevPageChangeTime();
     }
 
     public void draw() {
