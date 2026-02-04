@@ -31,6 +31,7 @@ public class ImgBridgeDesktop extends ImgBridge {
             BufferedImage imBuff = ImageIO.read(stream);
             return new PImage(new PImageDesktop(imBuff));
         } catch (IOException e) {
+            System.err.println("Failed to load image " + e.getMessage());
             System.err.println("Failed to load image from " + stream);
             System.err.println(e.getMessage());
             throw new RuntimeException(e);
