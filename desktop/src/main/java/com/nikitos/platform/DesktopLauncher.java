@@ -110,6 +110,7 @@ public class DesktopLauncher {
                     launcherParams.getWindowTitle(),
                     NULL,
                     NULL);
+            glfwMaximizeWindow(window);
         }
 
         if (window == NULL)
@@ -130,8 +131,9 @@ public class DesktopLauncher {
                         glfwSetWindowPos(window, 100, 100);
 
                         //это костыль, который не дает схлопываться окну когда его берет юзер
-                        glfwHideWindow(window);
-                        glfwShowWindow(window);
+                       // glfwHideWindow(window);
+                       // glfwShowWindow(window);
+                        glfwMaximizeWindow(window);
                     } else {
                         fullScreenOpened = true;
                         String osName = System.getProperty("os.name").toLowerCase();
@@ -192,6 +194,7 @@ public class DesktopLauncher {
         assert vid != null;
         glfwSetWindowSize(window, vid.width(), vid.height());
         glfwSetWindowPos(window, 0, 0);
+        glfwMaximizeWindow(window);
     }
 
     private void setDisplayRes(long window) {
