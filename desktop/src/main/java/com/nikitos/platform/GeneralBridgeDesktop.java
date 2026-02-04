@@ -6,7 +6,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
@@ -19,6 +19,9 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public int glGetUniformLocation(int program, String name) {
+        /* if(loc == -1){
+            System.err.println("glGetUniformLocation: Program " + program + " uniform " + name);
+        }*/
         return GL30.glGetUniformLocation(program, name);
     }
 
@@ -226,6 +229,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
                 target, attachment, renderbuffertarget, renderbuffer
         );
     }
+
     @Override
     public void glUniform1f(int location, float val) {
         GL33.glUniform1f(location, val);
