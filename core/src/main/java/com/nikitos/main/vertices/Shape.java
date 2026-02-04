@@ -4,19 +4,17 @@ package com.nikitos.main.vertices;
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
+import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.textures.NormalMap;
 import com.nikitos.main.textures.Texture;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
+import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
-import com.nikitos.utils.Utils;
-import com.nikitos.main.shaders.Shader;
-import com.nikitos.main.vertex_bueffer.VertexBuffer;
-import com.nikitos.maths.PVector;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
 import de.javagl.obj.ObjUtils;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -145,11 +143,23 @@ public class Shape implements VerticesSet {
                                     object.getTexCoord(object.getFace(i).getTexCoordIndex(1)).getY()),
                             new PVector(object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getX(),
                                     object.getTexCoord(object.getFace(i).getTexCoordIndex(2)).getY())},
-                    new PVector(
-                            object.getNormal(object.getFace(i).getNormalIndex(0)).getX(),
-                            object.getNormal(object.getFace(i).getNormalIndex(0)).getY(),
-                            object.getNormal(object.getFace(i).getNormalIndex(0)).getZ()
-                    ));
+                    new PVector[]{
+                            new PVector(
+                                    object.getNormal(object.getFace(i).getNormalIndex(0)).getX(),
+                                    object.getNormal(object.getFace(i).getNormalIndex(0)).getY(),
+                                    object.getNormal(object.getFace(i).getNormalIndex(0)).getZ()
+                            ),
+                            new PVector(
+                                    object.getNormal(object.getFace(i).getNormalIndex(1)).getX(),
+                                    object.getNormal(object.getFace(i).getNormalIndex(1)).getY(),
+                                    object.getNormal(object.getFace(i).getNormalIndex(1)).getZ()
+                            ),
+                            new PVector(
+                                    object.getNormal(object.getFace(i).getNormalIndex(2)).getX(),
+                                    object.getNormal(object.getFace(i).getNormalIndex(2)).getY(),
+                                    object.getNormal(object.getFace(i).getNormalIndex(2)).getZ()
+                            )
+                    });
         }
     }
 
@@ -205,7 +215,7 @@ public class Shape implements VerticesSet {
         if (normalTexture != null) {
             gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
         } else {
-            gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0 );
+            gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
         }
         postToGlNeeded = false;
     }

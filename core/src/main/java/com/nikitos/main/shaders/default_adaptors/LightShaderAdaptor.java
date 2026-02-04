@@ -117,9 +117,9 @@ public class LightShaderAdaptor extends Adaptor {
             vertices = new float[faces.length * 3 * 3];//3 because 3 coords in normal
             for (int i = 0; i < faces.length; i++) {
                 for (int g = 0; g < 3; g++) {
-                    vertices[i * 9 + g * 3] = faces[i].normal.x;
-                    vertices[i * 9 + g * 3 + 1] = faces[i].normal.y;
-                    vertices[i * 9 + g * 3 + 2] = faces[i].normal.z;
+                    vertices[i * 9 + g * 3] = faces[i].normal[g].x;
+                    vertices[i * 9 + g * 3 + 1] = faces[i].normal[g].y;
+                    vertices[i * 9 + g * 3 + 2] = faces[i].normal[g].z;
                 }
             }
             loadDataToBuffer(vertices, 2, vertexBuffer);

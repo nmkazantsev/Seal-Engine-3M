@@ -3,11 +3,11 @@ package com.nikitos.main.vertices;
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
+import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.textures.Texture;
+import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
-import com.nikitos.main.shaders.Shader;
-import com.nikitos.maths.PVector;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.function.Function;
  */
 public class Polygon implements VerticesSet {
     private final GeneralPlatformBridge gl;
-    private final GLConstBridge  glConst;
+    private final GLConstBridge glConst;
     private Face face1;
     private Face face2;
     private final boolean saveMemory;
@@ -109,7 +109,9 @@ public class Polygon implements VerticesSet {
                         new PVector(textCoords[1][0], textCoords[1][1]),
                         new PVector(textCoords[2][0], textCoords[2][1]),
                 },
-                new PVector(0, 0, 1));
+                new PVector[]{
+                        new PVector(0, 0, 1), new PVector(0, 0, 1), new PVector(0, 0, 1)
+                });
         face2 = new Face(
                 new PVector[]{
                         new PVector(vertexes[1][0], vertexes[1][1], vertexes[1][2]),
@@ -121,7 +123,9 @@ public class Polygon implements VerticesSet {
                         new PVector(textCoords[2][0], textCoords[2][1]),
                         new PVector(textCoords[3][0], textCoords[3][1]),
                 },
-                new PVector(0, 0, 1));
+                new PVector[]{
+                        new PVector(0, 0, 1), new PVector(0, 0, 1), new PVector(0, 0, 1)
+                });
     }
 
     public void prepareData(PVector a, PVector b, PVector d, float texx, float texy, float texa, float texb) {
@@ -158,7 +162,9 @@ public class Polygon implements VerticesSet {
                         new PVector(textCoords[1][0], textCoords[1][1]),
                         new PVector(textCoords[2][0], textCoords[2][1]),
                 },
-                new PVector(0, 0, 1));
+                new PVector[]{
+                        new PVector(0, 0, 1), new PVector(0, 0, 1), new PVector(0, 0, 1)
+                });
         face2 = new Face(
                 new PVector[]{
                         new PVector(vertexes[1][0], vertexes[1][1], vertexes[1][2]),
@@ -170,7 +176,9 @@ public class Polygon implements VerticesSet {
                         new PVector(textCoords[2][0], textCoords[2][1]),
                         new PVector(textCoords[3][0], textCoords[3][1]),
                 },
-                new PVector(0, 0, 1));
+                new PVector[]{
+                        new PVector(0, 0, 1), new PVector(0, 0, 1), new PVector(0, 0, 1)
+                });
     }
 
     protected void prepareData(PVector A, PVector B, float texx, float texy, float texa, float texb) {
@@ -235,7 +243,7 @@ public class Polygon implements VerticesSet {
         if (saveMemory) {
             image.delete();
         }
-       // glBindTexture(GL_TEXTURE_2D, 0);
+        // glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public void prepareAndDraw(PVector a, PVector b, PVector c) {

@@ -1,12 +1,11 @@
 package com.nikitos.main.frameBuffers;
 
 
-
 import com.nikitos.CoreRenderer;
+import com.nikitos.GamePageClass;
 import com.nikitos.main.VRAMobject;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.vertices.Face;
-import com.nikitos.GamePageClass;
 import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
@@ -89,7 +88,11 @@ public class FrameBuffer extends VRAMobject {
                         new PVector(textCoords[1][0], textCoords[1][1]),
                         new PVector(textCoords[2][0], textCoords[2][1]),
                 },
-                new PVector(0, 0, 1));
+                new PVector[]{
+                        new PVector(0, 0, 1),
+                        new PVector(0, 0, 1),
+                        new PVector(0, 0, 1),
+                });
         Face face2 = new Face(
                 new PVector[]{
                         new PVector(vertices[1][0], vertices[1][1], vertices[1][2]),
@@ -101,7 +104,11 @@ public class FrameBuffer extends VRAMobject {
                         new PVector(textCoords[2][0], textCoords[2][1]),
                         new PVector(textCoords[3][0], textCoords[3][1]),
                 },
-                new PVector(0, 0, 1));
+                new PVector[]{
+                        new PVector(0, 0, 1),
+                        new PVector(0, 0, 1),
+                        new PVector(0, 0, 1),
+                });
         Shader.getActiveShader().getAdaptor().bindData(new Face[]{face1, face2});
         //place texture to target 2D of unit 0
         gl.glActiveTexture(glc.GL_TEXTURE0());
