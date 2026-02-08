@@ -46,8 +46,6 @@ public class Debugger {
     private static boolean redrawNeeded = true;
 
     public static void debuggerInit() {
-        fps_x = 100 * kx;
-        fps_y = 100 * ky;
         //open menu button
         //no need in blocking openMenu. because it will not be processed (all touches will be blocked by debugger)
         TouchProcessor openMenu = new TouchProcessor(
@@ -121,8 +119,6 @@ public class Debugger {
         );
         mainTP.block();
         enabled = true;
-        debuggerCamera = new Camera(x, y);
-        debuggerCamera.resetFor2d();
         debuggerPage = new SimplePolygon(drawMianPage, true, 0, null);
         FileUtils fileUtils = new FileUtils();
         shader = new Shader(
@@ -188,6 +184,13 @@ public class Debugger {
                 gl.glDisable(glc.GL_BLEND());
             }
         }
+    }
+
+    public static void onResChange(int x, int y) {
+        fps_x = 100 * kx;
+        fps_y = 100 * ky;
+        debuggerCamera = new Camera(x, y);
+        debuggerCamera.resetFor2d();
     }
 
     public static void setEnabled(boolean debuggerEnabled) {

@@ -1,6 +1,7 @@
 package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
+import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
@@ -35,6 +36,7 @@ public class Engine {
             platformBridge.log_e("engine", "on surface changed called, but game page is null");
             return;
         }
+        Debugger.onResChange(x, y);
         gamePage.onSurfaceChanged(x, y);
     }
 
@@ -72,6 +74,7 @@ public class Engine {
         gamePage = newPage;
         resetPageMillis();
         newPage.onSurfaceChanged((int) Utils.x, (int) Utils.y);
+        Debugger.onResChange((int) Utils.x, (int) Utils.y);
         VRAMobject.onPageChange();
         Shader.onPageChange();
         TouchProcessor.onPageChange();
