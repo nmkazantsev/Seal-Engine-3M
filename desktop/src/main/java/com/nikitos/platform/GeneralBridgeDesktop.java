@@ -2,13 +2,16 @@ package com.nikitos.platform;
 
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferInt;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
@@ -19,6 +22,9 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public int glGetUniformLocation(int program, String name) {
+        /* if(loc == -1){
+            System.err.println("glGetUniformLocation: Program " + program + " uniform " + name);
+        }*/
         return GL30.glGetUniformLocation(program, name);
     }
 
@@ -89,42 +95,52 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
-        //в результате костыля - преобразования все текстуры становятся с альфа каналом,
-        // если его нет - он добавляется как 0% прозрачности
-        GL33.glTexImage2D(target, level, GL33.GL_RGBA8,
-                (int) image.getWidth(), (int) image.getHeight(), border,
-                GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
+        BufferedImage src = (BufferedImage) image.getBitmap();
+        if (src.getType() == BufferedImage.TYPE_INT_ARGB) {
+            //в результате костыля - преобразования все текстуры становятся с альфа каналом,
+            GL33.glTexImage2D(target, level, GL33.GL_RGBA8,
+                    (int) image.getWidth(), (int) image.getHeight(), border,
+                    GL33.GL_BGRA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBufferWithAlpha((BufferedImage) image.getBitmap()));
+        } else {
+            GL33.glTexImage2D(target, level, GL33.GL_RGB8,
+                    (int) image.getWidth(), (int) image.getHeight(), border,
+                    GL33.GL_BGR, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
+        }
     }
 
     //костыль для конвертации нормального формата в уебщиный
     //спасибо разрабам lwgl
-    private ByteBuffer bufferedImageToByteBuffer(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        // Гарантируем нужный формат
-        BufferedImage argbImage = new BufferedImage(
-                width, height, BufferedImage.TYPE_INT_ARGB
-        );
-        argbImage.getGraphics().drawImage(image, 0, 0, null);
-
-        int[] pixels = new int[width * height];
-        argbImage.getRGB(0, 0, width, height, pixels, 0, width);
-
-        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-
-        // OpenGL ожидает RGBA
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int pixel = pixels[y * width + x];
-
-                buffer.put((byte) ((pixel >> 16) & 0xFF)); // R
-                buffer.put((byte) ((pixel >> 8) & 0xFF));  // G
-                buffer.put((byte) (pixel & 0xFF));         // B
-                buffer.put((byte) ((pixel >> 24) & 0xFF)); // A
-            }
+    private ByteBuffer bufferedImageToByteBufferWithAlpha(BufferedImage src) {
+        BufferedImage img;
+        if (src.getType() == BufferedImage.TYPE_INT_ARGB) {
+            img = src;
+        } else {
+            throw new IllegalArgumentException("Image type not supported: " + src.getType() + " expected RGBA8");
         }
 
+        int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(pixels.length * 4)
+                .order(ByteOrder.nativeOrder());
+
+        IntBuffer view = buffer.asIntBuffer();
+        view.put(pixels);
+
+        buffer.position(0);
+        return buffer;
+    }
+
+    private ByteBuffer bufferedImageToByteBuffer(BufferedImage img) {
+
+        byte[] data =
+                ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
+
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(data.length)
+                .order(ByteOrder.nativeOrder());
+
+        buffer.put(data);
         buffer.flip();
         return buffer;
     }
@@ -226,6 +242,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
                 target, attachment, renderbuffertarget, renderbuffer
         );
     }
+
     @Override
     public void glUniform1f(int location, float val) {
         GL33.glUniform1f(location, val);

@@ -9,18 +9,26 @@ import java.util.function.Function;
  */
 public class LauncherParams {
     protected Function<Void, GamePageClass> startPage = null;
-    protected boolean landscape = false;
     protected boolean debug = false;
     protected boolean MSAA = false;
     protected boolean isDesktop = true;
 
-    public LauncherParams setLandscape(boolean landscape) {
-        this.landscape = landscape;
-        return this;
-    }
+    protected boolean fullScreen = true;
+
+    protected String windowTitle = "Seal Engine 3-M";
 
     public LauncherParams setDebug(boolean debug) {
         this.debug = debug;
+        return this;
+    }
+
+    public LauncherParams setWindowTitle(String windowTitle) {
+        this.windowTitle = windowTitle;
+        return this;
+    }
+
+    public LauncherParams setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
         return this;
     }
 
@@ -43,10 +51,6 @@ public class LauncherParams {
         return startPage;
     }
 
-    public boolean isLandscape() {
-        return landscape;
-    }
-
     public boolean isDebug() {
         return debug;
     }
@@ -57,6 +61,14 @@ public class LauncherParams {
 
     public boolean isDesktop() {
         return isDesktop;
+    }
+
+    public String getWindowTitle() {
+        return windowTitle;
+    }
+
+    public boolean getFullScreen() {
+        return fullScreen;
     }
 
 }

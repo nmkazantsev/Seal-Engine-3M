@@ -1,13 +1,10 @@
 package com.nikitos.main.shaders.default_adaptors;
 
 
-
 import com.nikitos.main.shaders.Adaptor;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
-import com.nikitos.platformBridge.GLConstBridge;
-import com.nikitos.platformBridge.GeneralPlatformBridge;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -50,7 +47,7 @@ public class MainShaderAdaptor extends Adaptor {
 
         // координаты текстур
         vertexData.position(POSITION_COUNT);
-        gl.glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT,glConstBridge. GL_FLOAT(),
+        gl.glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT, glConstBridge.GL_FLOAT(),
                 false, STRIDE, vertexData);
         gl.glEnableVertexAttribArray(aTextureLocation);
 
@@ -104,11 +101,13 @@ public class MainShaderAdaptor extends Adaptor {
             loadDataToBuffer(vertices, 1, vertexBuffer);
 
             //set up normals
-            vertices = new float[faces.length * 3];//3 because 3 coords in normal
+            vertices = new float[faces.length * 3 * faces[0].vertices.length];//3 because 3 coords in normal in faces[0].vertices.length edges
             for (int i = 0; i < faces.length; i++) {
-                vertices[i * faces[i].vertices.length] = faces[i].normal.x;
-                vertices[i * faces[i].vertices.length + 1] = faces[i].normal.y;
-                vertices[i * faces[i].vertices.length + 2] = faces[i].normal.z;
+                for (int g = 0; g < faces[0].vertices.length; g++) {
+                    vertices[i * faces[i].vertices.length + g] = faces[i].normal[g].x;
+                    vertices[i * faces[i].vertices.length + 1 + g] = faces[i].normal[g].y;
+                    vertices[i * faces[i].vertices.length + 2 + g] = faces[i].normal[g].z;
+                }
 
             }
             loadDataToBuffer(vertices, 2, vertexBuffer);
@@ -129,7 +128,7 @@ public class MainShaderAdaptor extends Adaptor {
     }
 
     @Override
-    public void bindDataLine(PVector a, PVector b , PVector color) {
+    public void bindDataLine(PVector a, PVector b, PVector color) {
 
     }
 

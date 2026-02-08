@@ -5,14 +5,16 @@ import com.nikitos.maths.PVector;
 public class Face {
     public final PVector[] vertices;
     public final PVector[] textureCoordinates;
-    public final PVector normal;
+    public final PVector[] normal = new PVector[3];
     public PVector tangent, bitangent;//tangent, bitangent
     private final int SEGMENT_LENGTH = 14, SEGMENT_LENGTH_NO_TS = 14 - 6;
 
-    public Face(PVector[] vertices, PVector[] textureCoordinates, PVector normal) {
+    public Face(PVector[] vertices, PVector[] textureCoordinates, PVector[] normal) {
         this.vertices = vertices;
         this.textureCoordinates = textureCoordinates;
-        this.normal = normal;
+        this.normal[0] = normal[0];
+        this.normal[1] = normal[1];
+        this.normal[2] = normal[2];
         //calculate tangent space (https://learnopengl.com/Advanced-Lighting/Normal-Mapping)
         PVector edge1 = PVector.sub(vertices[1], vertices[0]);
         PVector edge2 = PVector.sub(vertices[2], vertices[0]);
@@ -40,9 +42,9 @@ public class Face {
             out[i * SEGMENT_LENGTH + 2] = vertices[i].z;
             out[i * SEGMENT_LENGTH + 3] = textureCoordinates[i].x;
             out[i * SEGMENT_LENGTH + 4] = 1 - textureCoordinates[i].y;
-            out[i * SEGMENT_LENGTH + 5] = normal.x;
-            out[i * SEGMENT_LENGTH + 6] = normal.y;
-            out[i * SEGMENT_LENGTH + 7] = normal.z;
+            out[i * SEGMENT_LENGTH + 5] = normal[i].x;
+            out[i * SEGMENT_LENGTH + 6] = normal[i].y;
+            out[i * SEGMENT_LENGTH + 7] = normal[i].z;
             out[i * SEGMENT_LENGTH + 8] = tangent.x;
             out[i * SEGMENT_LENGTH + 9] = tangent.y;
             out[i * SEGMENT_LENGTH + 10] = tangent.z;
@@ -72,9 +74,9 @@ public class Face {
             out[i * SEGMENT_LENGTH_NO_TS + 2] = vertices[i].z;
             out[i * SEGMENT_LENGTH_NO_TS + 3] = textureCoordinates[i].x;
             out[i * SEGMENT_LENGTH_NO_TS + 4] = textureCoordinates[i].y;
-            out[i * SEGMENT_LENGTH_NO_TS + 5] = normal.x;
-            out[i * SEGMENT_LENGTH_NO_TS + 6] = normal.y;
-            out[i * SEGMENT_LENGTH_NO_TS + 7] = normal.z;
+            out[i * SEGMENT_LENGTH_NO_TS + 5] = normal[i].x;
+            out[i * SEGMENT_LENGTH_NO_TS + 6] = normal[i].y;
+            out[i * SEGMENT_LENGTH_NO_TS + 7] = normal[i].z;
         }
         return out;
     }
