@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
+import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.platformBridge.*;
 import com.seal.gl_engine.OpenGLRenderer;
@@ -57,7 +58,7 @@ public class AndroidBridge extends PlatformBridge {
 
         glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
         if (androidLauncherParams.isDebug()) {
-            //Debugger.debuggerInit();
+            Debugger.debuggerInit();
         }
 
         return glSurfaceView;

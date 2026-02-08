@@ -2,6 +2,9 @@ package com.nikitos.platform;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
+import com.nikitos.main.debugger.Debugger;
+import com.nikitos.main.touch.MyMotionEvent;
+import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.utils.Utils;
 import org.lwjgl.Version;
@@ -9,6 +12,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import touch.DesktopMotionEventAdapter;
 
 import java.nio.IntBuffer;
 import java.util.Objects;
@@ -34,6 +38,11 @@ public class DesktopLauncher {
     private GLFWVidMode vidmode;
 
     private boolean fullScreenOpened = false;
+
+    //приколхохим сюда обработку мыши
+    private boolean mousePressed = false;
+    private double mouseX = 0;
+    private double mouseY = 0;
 
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
@@ -183,6 +192,41 @@ public class DesktopLauncher {
 
         // Make the window visible
         glfwShowWindow(window);
+
+        //снова обработка тача
+        //начало и конец тача
+        glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
+            if (button != GLFW_MOUSE_BUTTON_LEFT) return;
+
+            int motionAction;
+
+            if (action == GLFW_PRESS) {
+                mousePressed = true;
+                motionAction = MyMotionEvent.ACTION_DOWN;
+            } else if (action == GLFW_RELEASE) {
+                mousePressed = false;
+                motionAction = MyMotionEvent.ACTION_UP;
+            } else {
+                return;
+            }
+
+            DesktopMotionEventAdapter event =
+                    new DesktopMotionEventAdapter(motionAction, (float) mouseX, (float) mouseY);
+
+            TouchProcessor.onTouch(event);
+        });
+        //touchMoved
+        glfwSetCursorPosCallback(window, (w, x, y) -> {
+            mouseX = x;
+            mouseY = y;
+
+            if (!mousePressed) return;
+
+            DesktopMotionEventAdapter event =
+                    new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, (float) x, (float) y);
+
+            TouchProcessor.onTouch(event);
+        });
     }
 
     private void goBoardLessMode(long window) {
@@ -222,6 +266,9 @@ public class DesktopLauncher {
         // bindings available for use.
         GL.createCapabilities();
         coreRenderer.onSurfaceCreated();
+        if (launcherParams.isDebug()) {
+            Debugger.debuggerInit();
+        }
         // Set the clear color
         glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
 

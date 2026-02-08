@@ -54,4 +54,6 @@ public abstract class AbstractImage {
     }
 
     public abstract void createBitmap(int width, int height) ;
+
+    public abstract void textAlign(TextAlign align);
 }

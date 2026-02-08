@@ -149,6 +149,7 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     public void texParameterf(int target, int pname, float param) {
         GLES30.glTexParameterf(target, pname, param);
     }
+
     @Override
     public void bindTexture(int target, int texture) {
         GLES30.glBindTexture(target, texture);
@@ -159,6 +160,7 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     public void bindFramebuffer(int target, int framebuffer) {
         GLES30.glBindFramebuffer(target, framebuffer);
     }
+
     @Override
     public void framebufferTexture2D(
             int target, int attachment, int textarget, int texture, int level) {
@@ -172,14 +174,17 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
     public void genRenderbuffers(int n, int[] buffers, int offset) {
         GLES30.glGenRenderbuffers(n, buffers, offset);
     }
+
     @Override
     public void bindRenderbuffer(int target, int renderbuffer) {
         GLES30.glBindRenderbuffer(target, renderbuffer);
     }
+
     @Override
     public void renderbufferStorage(int target, int internalformat, int width, int height) {
         GLES30.glRenderbufferStorage(target, internalformat, width, height);
     }
+
     @Override
     public void framebufferRenderbuffer(
             int target, int attachment, int renderbuffertarget, int renderbuffer) {
@@ -187,9 +192,15 @@ public class GeneralBridgeAndroid extends GeneralPlatformBridge {
                 target, attachment, renderbuffertarget, renderbuffer
         );
     }
+
     @Override
     public void glUniform1f(int location, float val) {
         GLES30.glUniform1f(location, val);
+    }
+
+    @Override
+    public void glBlendFunc(int func1, int func2) {
+        GLES30.glBlendFunc(func1, func2);
     }
 
 

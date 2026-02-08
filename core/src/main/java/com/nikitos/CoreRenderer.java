@@ -1,7 +1,9 @@
 package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
+import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.main.vertices.VerticesShapesManager;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
@@ -65,9 +67,9 @@ public class CoreRenderer {
         VerticesShapesManager.onFrameBegin();
 
         engine.getGamePage().draw();
-        //Debugger.draw();
+        Debugger.draw();
 
         VerticesShapesManager.redrawAll();
-        //TouchProcessor.processMotions();
+        TouchProcessor.processMotions();
     }
 }

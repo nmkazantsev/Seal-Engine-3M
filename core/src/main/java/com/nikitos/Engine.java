@@ -1,5 +1,8 @@
 package com.nikitos;
 
+import com.nikitos.main.VRAMobject;
+import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.platformBridge.PlatformBridge;
@@ -69,9 +72,9 @@ public class Engine {
         gamePage = newPage;
         resetPageMillis();
         newPage.onSurfaceChanged((int) Utils.x, (int) Utils.y);
-        //VRAMobject.onPageChange();
-        //Shader.onPageChange();
-        //TouchProcessor.onPageChange();
+        VRAMobject.onPageChange();
+        Shader.onPageChange();
+        TouchProcessor.onPageChange();
     }
 
     void startDefaultPage() {

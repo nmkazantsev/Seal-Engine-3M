@@ -248,5 +248,10 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         GL33.glUniform1f(location, val);
     }
 
+    @Override
+    public void glBlendFunc(int func1, int func2) {
+        GL33.glBlendFunc(func1, func2);
+    }
+
 
 }

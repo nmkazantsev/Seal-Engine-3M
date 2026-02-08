@@ -1,6 +1,7 @@
 package main.images;
 
 import com.nikitos.main.images.AbstractImage;
+import com.nikitos.main.images.TextAlign;
 import com.nikitos.maths.Section;
 
 import java.awt.*;
@@ -12,8 +13,10 @@ public class PImageDesktop extends AbstractImage {
     private Graphics2D g;
     private boolean loaded = true;
     private float textSize;
+    private TextAlign textAlign = TextAlign.LEFT;
 
-    public PImageDesktop() {}
+    public PImageDesktop() {
+    }
 
     public PImageDesktop(BufferedImage image) {
         this.image = image;
@@ -45,6 +48,11 @@ public class PImageDesktop extends AbstractImage {
     }
 
     @Override
+    public void textAlign(TextAlign align) {
+        this.textAlign = align;
+    }
+
+    @Override
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
     }
@@ -53,7 +61,7 @@ public class PImageDesktop extends AbstractImage {
     public void background(int r, int g1, int b, int a) {
         g.setComposite(AlphaComposite.Src);
         g.setColor(new Color(r, g1, b, a));
-        g.fillRect(0, 0,  width,height);
+        g.fillRect(0, 0, width, height);
     }
 
     @Override
@@ -121,12 +129,28 @@ public class PImageDesktop extends AbstractImage {
 
     @Override
     public void text(String s, float x, float y, boolean upperText) {
+
+        FontMetrics fm = g.getFontMetrics();
         String[] lines = s.split("\n");
         float k = 1.3f;
+
         for (int i = 0; i < lines.length; i++) {
-            float dy = upperText ? i * textSize * k : (i + 1) * textSize * k;
-            g.drawString(lines[i], x, y + dy);
+            String line = lines[i];
+            int textWidth = fm.stringWidth(line);
+
+            float dx = switch (textAlign) {
+                case LEFT -> 0;
+                case CENTER -> -textWidth / 2f;
+                case RIGHT -> -textWidth;
+            };
+
+            float dy = upperText
+                    ? i * textSize * k
+                    : (i + 1) * textSize * k;
+
+            g.drawString(line, x + dx, y + dy);
         }
+
     }
 
     @Override
