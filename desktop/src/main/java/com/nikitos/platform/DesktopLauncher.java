@@ -213,10 +213,10 @@ public class DesktopLauncher {
             DesktopMotionEventAdapter event =
                     new DesktopMotionEventAdapter(motionAction, (float) mouseX, (float) mouseY);
 
-            TouchProcessor.onTouch(event);
+            // TouchProcessor.onTouch(event);
         });
         //touchMoved
-        glfwSetCursorPosCallback(window, (w, x, y) -> {
+       /* glfwSetCursorPosCallback(window, (w, x, y) -> {
             mouseX = x;
             mouseY = y;
 
@@ -226,7 +226,7 @@ public class DesktopLauncher {
                     new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, (float) x, (float) y);
 
             TouchProcessor.onTouch(event);
-        });
+        });*/
     }
 
     private void goBoardLessMode(long window) {

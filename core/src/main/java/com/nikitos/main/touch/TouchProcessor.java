@@ -138,7 +138,7 @@ public class TouchProcessor {
     }
 
     //**********STATIC METHODS********************
-    public static boolean onTouch(MyMotionEvent event) {
+    public static void onTouch(MyMotionEvent event) {
         synchronized (commandQueue) {
             TouchProcessor t = activeProcessors.getOrDefault(event.getPointerId(event.getActionIndex()), null);
             if (t != null && !t.blocked) {
@@ -154,7 +154,6 @@ public class TouchProcessor {
                 touchStarted(event);
             }
         }
-        return true; //a listener has reacted on event
     }
 
     public static void processMotions() {
