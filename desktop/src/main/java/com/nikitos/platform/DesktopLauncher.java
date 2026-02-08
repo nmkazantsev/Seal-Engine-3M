@@ -131,8 +131,8 @@ public class DesktopLauncher {
                         glfwSetWindowPos(window, 100, 100);
 
                         //это костыль, который не дает схлопываться окну когда его берет юзер
-                       // glfwHideWindow(window);
-                       // glfwShowWindow(window);
+                        glfwHideWindow(window);
+                        glfwShowWindow(window);
                         glfwMaximizeWindow(window);
                     } else {
                         fullScreenOpened = true;
