@@ -138,11 +138,13 @@ public class PImageDesktop extends AbstractImage {
             String line = lines[i];
             int textWidth = fm.stringWidth(line);
 
-            float dx = switch (textAlign) {
-                case LEFT -> 0;
-                case CENTER -> -textWidth / 2f;
-                case RIGHT -> -textWidth;
-            };
+            float dx = 0;
+            if (textAlign == TextAlign.CENTER) {
+                dx = textWidth / 2f;
+            }
+            if (textAlign == TextAlign.LEFT) {
+                dx = textWidth;
+            }
 
             float dy = upperText
                     ? i * textSize * k

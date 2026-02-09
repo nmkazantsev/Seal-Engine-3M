@@ -5,11 +5,7 @@ import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.debugger.Debugger;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.nikitos.utils.Utils.millis;
@@ -139,21 +135,21 @@ public class TouchProcessor {
 
     //**********STATIC METHODS********************
     public static void onTouch(MyMotionEvent event) {
-        synchronized (commandQueue) {
-            TouchProcessor t = activeProcessors.getOrDefault(event.getPointerId(event.getActionIndex()), null);
-            if (t != null && !t.blocked) {
-                if (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) {
-                    if (event.getActionMasked() == MyMotionEvent.ACTION_MOVE) {
-                        touchMoved(event);
-                    }
-                    if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_UP || event.getActionMasked() == MyMotionEvent.ACTION_UP) {
-                        touchEnded(event);
-                    }
+        //synchronized (commandQueue) {
+        TouchProcessor t = activeProcessors.getOrDefault(event.getPointerId(event.getActionIndex()), null);
+        if (t != null && !t.blocked) {
+            if (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) {
+                if (event.getActionMasked() == MyMotionEvent.ACTION_MOVE) {
+                    touchMoved(event);
                 }
-            } else if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_DOWN || event.getActionMasked() == MyMotionEvent.ACTION_DOWN) {
-                touchStarted(event);
+                if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_UP || event.getActionMasked() == MyMotionEvent.ACTION_UP) {
+                    touchEnded(event);
+                }
             }
+        } else if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_DOWN || event.getActionMasked() == MyMotionEvent.ACTION_DOWN) {
+            touchStarted(event);
         }
+        //}
     }
 
     public static void processMotions() {

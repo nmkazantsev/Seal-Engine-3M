@@ -195,7 +195,7 @@ public class DesktopLauncher {
 
         //снова обработка тача
         //начало и конец тача
-        glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
+       /* glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
             if (button != GLFW_MOUSE_BUTTON_LEFT) return;
 
             int motionAction;

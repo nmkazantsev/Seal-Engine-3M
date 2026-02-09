@@ -67,9 +67,9 @@ public class CoreRenderer {
         VerticesShapesManager.onFrameBegin();
 
         engine.getGamePage().draw();
-        Debugger.draw();
+        //Debugger.draw();
 
         VerticesShapesManager.redrawAll();
-        TouchProcessor.processMotions();
+        //TouchProcessor.processMotions();
     }
 }

@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add debuger on surface change">
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
@@ -75,6 +74,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "Gradle.Build Demo.executor": "Run",
     "Gradle.Build sealEngine_3M.executor": "Run",
     "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
@@ -187,9 +187,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
         <item itemvalue="Gradle.sealEngine_3M [jar]" />
-        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
         <item itemvalue="Gradle.sealEngine_3M [jar]" />
       </list>
@@ -237,6 +237,7 @@
       <workItem from="1770146126913" duration="2135000" />
       <workItem from="1770553832808" duration="32000" />
       <workItem from="1770579558575" duration="4764000" />
+      <workItem from="1770616486288" duration="878000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
