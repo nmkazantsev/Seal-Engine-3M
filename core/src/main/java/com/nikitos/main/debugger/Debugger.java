@@ -198,52 +198,53 @@ public class Debugger {
     }
 
     private static final Function<List<Object>, PImage> drawMianPage = objects -> {
-        PImage image = new PImage((int) x, (int) y);
+        float k = 0.25f;
+        PImage image = new PImage((int) (x * k), (int) (y * k));
         image.background(255, 255, 255, 140);
-        image.textSize(30 * kx);
+        image.textSize(30 * kx * k);
         image.textAlign(RIGHT);
         image.fill(50);
-        image.text("version: " + Engine.getVersion(), x - 10 * kx, 0 * ky);
-        image.textSize(26 * kx);
+        image.text("version: " + Engine.getVersion(), (x - 10 * kx) * k, 0 * ky * k);
+        image.textSize(26 * kx * k);
         image.fill(0);
         image.textAlign(LEFT);
-        image.text((int) CoreRenderer.engine.fps, 10, 10);
-        image.textSize(45 * kx);
+        image.text((int) CoreRenderer.engine.fps, 10 * k, 10 * k);
+        image.textSize(45 * kx * k);
         image.textAlign(CENTER);
         if (selectedValue == null) {
             for (int i = (int) max(0, (page - 1) * maxNum); i < min(page * maxNum, totalValues); i++) {
-                image.text(debugList.get(i).name + ": " + debugList.get(i).value, x / 2, shift + enter * (i - page + 1));
+                image.text(debugList.get(i).name + ": " + debugList.get(i).value, x / 2 * k, (shift + enter * (i - page + 1)) * k);
             }
         } else {
             image.textAlign(CENTER);
-            image.text(selectedValue.name + ":", x / 2, y / 3);
+            image.text(selectedValue.name + ":", x / 2 * k, y / 3 * k);
             image.noStroke();
             image.fill(255, 255, 255, 100);
-            image.roundRect(100 * kx, y / 2, x - 200 * kx, 50 * ky, 20 * kx, 25 * ky);
+            image.roundRect(100 * kx * k, y / 2 * k, (x - 200 * kx) * k, 50 * ky * k, 20 * kx * k, 25 * ky * k);
             image.fill(100, 100, 100, 255);
-            image.strokeWeight(4 * kx);
+            image.strokeWeight(4 * kx * k);
             image.stroke(0, 0, 0, 255);
-            image.roundRect(100 * kx, y / 2, x - map(selectedValue.value, selectedValue.max, selectedValue.min, 200 * kx, x - 40 * kx), 50 * ky, 20 * kx, 25 * ky);
+            image.roundRect(100 * kx * k, y / 2 * k, (x - map(selectedValue.value, selectedValue.max, selectedValue.min, 200 * kx, x - 40 * kx)) * k, 50 * ky * k, 20 * kx * k, 25 * ky * k);
             image.fill(0, 0, 0, 255);
             image.stroke(0, 0, 0, 255);
             image.textAlign(LEFT);
-            image.text(selectedValue.min, 20 * kx, y / 2 + 50 * ky);
+            image.text(selectedValue.min, 20 * kx * k, (y / 2 + 50 * ky) * k);
             image.textAlign(RIGHT);
-            image.text(selectedValue.max, x - 20 * kx, y / 2 + 50 * ky);
+            image.text(selectedValue.max, (x - 20 * kx) * k, (y / 2 + 50 * ky) * k);
             image.textAlign(CENTER);
-            image.text(selectedValue.value, x / 2, y / 2 - 70 * ky);
-            image.text("<< back", x / 2, y - 200 * ky);
+            image.text(selectedValue.value, x / 2 * k, (y / 2 - 70 * ky) * k);
+            image.text("<< back", x / 2 * k, (y - 200 * ky) * k);
         }
         //navigation
         image.textAlign(CENTER);
-        image.text("X quit", x / 2, y - 100 * ky);
+        image.text("X quit", x / 2 * k, (y - 100 * ky) * k);
         if (page > 1) {
             image.textAlign(LEFT);
-            image.text("<<", 20 * kx, y - 100 * ky);
+            image.text("<<", 20 * kx * k, (y - 100 * ky) * k);
         }
         if (page < totalValues / maxNum + (totalValues % maxNum > 0 ? 1 : 0)) {
             image.textAlign(RIGHT);
-            image.text(">>", x - 20 * kx, y - 100 * ky);
+            image.text(">>", (x - 20 * kx) * k, (y - 100 * ky) * k);
         }
         return image;
     };

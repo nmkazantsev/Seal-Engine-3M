@@ -195,7 +195,7 @@ public class DesktopLauncher {
 
         //снова обработка тача
         //начало и конец тача
-       /* glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
+        glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
             if (button != GLFW_MOUSE_BUTTON_LEFT) return;
 
             int motionAction;
@@ -212,21 +212,20 @@ public class DesktopLauncher {
 
             DesktopMotionEventAdapter event =
                     new DesktopMotionEventAdapter(motionAction, (float) mouseX, (float) mouseY);
-
-            // TouchProcessor.onTouch(event);
+            TouchProcessor.onTouch(event);
         });
         //touchMoved
-       /* glfwSetCursorPosCallback(window, (w, x, y) -> {
+        glfwSetCursorPosCallback(window, (w, x, y) -> {
             mouseX = x;
             mouseY = y;
 
-            if (!mousePressed) return;
+           /* if (!mousePressed) return;
 
             DesktopMotionEventAdapter event =
                     new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, (float) x, (float) y);
 
-            TouchProcessor.onTouch(event);
-        });*/
+            TouchProcessor.onTouch(event);*/
+        });
     }
 
     private void goBoardLessMode(long window) {

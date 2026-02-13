@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add debuger on surface change">
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix crash in PImage convert to texture on desktop">
+      <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/CoreRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/CoreRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid17719.jfr" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +55,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -74,10 +79,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Run",
+    "Application.Main.executor": "Profiler#1",
     "Gradle.Build Demo.executor": "Run",
     "Gradle.Build sealEngine_3M.executor": "Run",
     "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [dependencies].executor": "Run",
     "Gradle.Download Sources.executor": "Run",
     "Gradle.sealEngine_3M [jar].executor": "Run",
     "Gradle.sealEngine_3M [shadowJar].executor": "Run",
@@ -141,6 +147,28 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Demo [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../Demo" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="dependencies" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="sealEngine_3M [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -188,10 +216,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Gradle.Demo [dependencies]" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
         <item itemvalue="Gradle.sealEngine_3M [jar]" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
-        <item itemvalue="Gradle.sealEngine_3M [jar]" />
       </list>
     </recent_temporary>
   </component>
@@ -238,6 +266,9 @@
       <workItem from="1770553832808" duration="32000" />
       <workItem from="1770579558575" duration="4764000" />
       <workItem from="1770616486288" duration="878000" />
+      <workItem from="1770633376079" duration="5366000" />
+      <workItem from="1770920962502" duration="6186000" />
+      <workItem from="1770978435133" duration="3377000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -476,6 +507,7 @@
     <MESSAGE value="again fix fulscreeen exit" />
     <MESSAGE value="add debugger and cross - platform touch" />
     <MESSAGE value="add debuger on surface change" />
-    <option name="LAST_COMMIT_MESSAGE" value="add debuger on surface change" />
+    <MESSAGE value="fix crash in PImage convert to texture on desktop" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix crash in PImage convert to texture on desktop" />
   </component>
 </project>
