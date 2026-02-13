@@ -12,6 +12,7 @@ import com.nikitos.maths.Matrix;
 import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
+import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.FileUtils;
 
@@ -199,6 +200,9 @@ public class Debugger {
 
     private static final Function<List<Object>, PImage> drawMianPage = objects -> {
         float k = 0.25f;
+        if (CoreRenderer.engine.getPlatform() == Platform.MOBILE) {
+            k = 1;
+        }
         PImage image = new PImage((int) (x * k), (int) (y * k));
         image.background(255, 255, 255, 140);
         image.textSize(30 * kx * k);

@@ -1,4 +1,5 @@
 package com.seal.gl_engine.platform;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
@@ -24,7 +25,7 @@ import java.util.function.Function;
 public class AndroidBridge extends PlatformBridge {
     private Context context;
     private GLSurfaceView glSurfaceView;
-    protected  Function<Void, GamePageClass> startPage;
+    protected Function<Void, GamePageClass> startPage;
 
     GLSurfaceView launch(AndroidLauncherParams androidLauncherParams, Engine engine) {
         startPage = androidLauncherParams.getStartPage();
@@ -174,5 +175,10 @@ public class AndroidBridge extends PlatformBridge {
     @Override
     public void print(String text) {
         Log.i("print", text);
+    }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.MOBILE;
     }
 }

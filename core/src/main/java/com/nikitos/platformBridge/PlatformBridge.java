@@ -29,4 +29,6 @@ public abstract class PlatformBridge {
     public abstract void log_i(String tag, String message);
 
     public abstract void print(String text);
+
+    public abstract Platform getPlatform();
 }

@@ -6,6 +6,7 @@ import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
 import com.nikitos.platformBridge.LauncherParams;
+import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.Utils;
 
@@ -116,5 +117,9 @@ public class Engine {
         platformBridge.getGeneralPlatformBridge().glClear(
                 platformBridge.getGLConstBridge().GL_COLOR_BUFFER_BIT() | platformBridge.getGLConstBridge().GL_DEPTH_BUFFER_BIT()
         );
+    }
+
+    public Platform getPlatform(){
+        return PlatformBridge.getPlatform();
     }
 }
