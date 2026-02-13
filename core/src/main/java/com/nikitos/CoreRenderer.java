@@ -3,7 +3,6 @@ package com.nikitos;
 import com.nikitos.main.VRAMobject;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.shaders.Shader;
-import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.main.vertices.VerticesShapesManager;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
@@ -39,7 +38,7 @@ public class CoreRenderer {
         pf.log_i("engine", "Utils x, y: " + Utils.x + " " + Utils.y);
         pf.log_i("engine", "Utils kx, ky: " + Utils.kx + " " + Utils.ky);
         graphicsSetup(); //not sure if necessary but formally we have updated opengl context
-        engine.onSurfaceChanged((int)width, (int)height);
+        engine.onSurfaceChanged((int) width, (int) height);
     }
 
     public void onSurfaceCreated() {
@@ -67,9 +66,9 @@ public class CoreRenderer {
         VerticesShapesManager.onFrameBegin();
 
         engine.getGamePage().draw();
-        //Debugger.draw();
+        Debugger.draw();
 
         VerticesShapesManager.redrawAll();
-        //TouchProcessor.processMotions();
+        // TouchProcessor.processMotions();
     }
 }

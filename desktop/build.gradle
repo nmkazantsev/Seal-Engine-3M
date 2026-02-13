@@ -7,6 +7,20 @@ version = '1.0-SNAPSHOT'
 
 ext.lwjglVersion = "3.3.3"
 
+ext{
+    switch (org.gradle.internal.os.OperatingSystem.current()) {
+        case org.gradle.internal.os.OperatingSystem.WINDOWS:
+            lwjglNatives = "natives-windows"
+            break
+        case org.gradle.internal.os.OperatingSystem.LINUX:
+            lwjglNatives = "natives-linux"
+            break
+        case org.gradle.internal.os.OperatingSystem.MAC_OS:
+            lwjglNatives = "natives-macos"
+            break
+    }
+}
+
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -22,6 +36,13 @@ dependencies {
     implementation "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
     implementation "org.lwjgl:lwjgl-opengles:${lwjglVersion}"
 
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+
+    implementation "org.lwjgl:lwjgl-stb"
+
+    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
     // Нативные библиотеки для разных платформ
     runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"

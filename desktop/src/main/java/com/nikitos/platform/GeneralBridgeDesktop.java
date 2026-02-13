@@ -5,13 +5,13 @@ import com.nikitos.platformBridge.GeneralPlatformBridge;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.awt.image.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.util.Hashtable;
 
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
@@ -110,25 +110,39 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     //костыль для конвертации нормального формата в уебщиный
     //спасибо разрабам lwgl
-    private ByteBuffer bufferedImageToByteBufferWithAlpha(BufferedImage src) {
-        BufferedImage img;
-        if (src.getType() == BufferedImage.TYPE_INT_ARGB) {
-            img = src;
-        } else {
-            throw new IllegalArgumentException("Image type not supported: " + src.getType() + " expected RGBA8");
-        }
+    private ByteBuffer bufferedImageToByteBufferWithAlpha(BufferedImage bufferedImage) {
 
-        int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+        ByteBuffer imageBuffer;
+        WritableRaster raster;
+        BufferedImage texImage;
 
-        ByteBuffer buffer = ByteBuffer
-                .allocateDirect(pixels.length * 4)
-                .order(ByteOrder.nativeOrder());
+        ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace
+                .getInstance(ColorSpace.CS_sRGB), new int[]{8, 8, 8, 8},
+                true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 
-        IntBuffer view = buffer.asIntBuffer();
-        view.put(pixels);
+        raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
+                bufferedImage.getWidth(), bufferedImage.getHeight(), 4, null);
+        texImage = new BufferedImage(glAlphaColorModel, raster, true,
+                new Hashtable());
 
-        buffer.position(0);
-        return buffer;
+        // copy the source image into the produced image
+        Graphics g = texImage.getGraphics();
+        g.setColor(new Color(0f, 0f, 0f, 0f));
+        g.fillRect(0, 0, 256, 256);
+        g.drawImage(bufferedImage, 0, 0, null);
+
+        // build a byte buffer from the temporary image
+        // that be used by OpenGL to produce a texture.
+        byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer())
+                .getData();
+
+        imageBuffer = ByteBuffer.allocateDirect(data.length);
+        imageBuffer.order(ByteOrder.nativeOrder());
+        imageBuffer.put(data, 0, data.length);
+        imageBuffer.flip();
+
+        return imageBuffer;
+
     }
 
     private ByteBuffer bufferedImageToByteBuffer(BufferedImage img) {
