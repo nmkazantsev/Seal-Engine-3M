@@ -101,6 +101,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
             GL33.glTexImage2D(target, level, GL33.GL_RGBA8,
                     (int) image.getWidth(), (int) image.getHeight(), border,
                     GL33.GL_BGRA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBufferWithAlpha((BufferedImage) image.getBitmap()));
+            GL33.glFinish();
         } else {
             GL33.glTexImage2D(target, level, GL33.GL_RGB8,
                     (int) image.getWidth(), (int) image.getHeight(), border,

@@ -219,12 +219,12 @@ public class DesktopLauncher {
             mouseX = x;
             mouseY = y;
 
-           /* if (!mousePressed) return;
+            if (!mousePressed) return;
 
             DesktopMotionEventAdapter event =
                     new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, (float) x, (float) y);
 
-            TouchProcessor.onTouch(event);*/
+            TouchProcessor.onTouch(event);
         });
     }
 
