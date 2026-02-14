@@ -11,6 +11,7 @@ import java.awt.image.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.Hashtable;
 
 
@@ -94,14 +95,22 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     }
 
     @Override
+
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
         BufferedImage src = (BufferedImage) image.getBitmap();
         if (src.getType() == BufferedImage.TYPE_INT_ARGB) {
-            //в результате костыля - преобразования все текстуры становятся с альфа каналом,
-            GL33.glTexImage2D(target, level, GL33.GL_RGBA8,
-                    (int) image.getWidth(), (int) image.getHeight(), border,
-                    GL33.GL_BGRA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBufferWithAlpha((BufferedImage) image.getBitmap()));
-            GL33.glFinish();
+            DataBufferInt dbb = (DataBufferInt) ((BufferedImage)image.getBitmap()).getRaster().getDataBuffer();
+            int[] pixelData = dbb.getData();
+
+            // Создаем IntBuffer view поверх существующего массива
+            // Это НОЛЬ копирований!
+            IntBuffer intBuffer = IntBuffer.wrap(pixelData);
+
+            // OpenGL может читать напрямую из этого буфера
+            GL33.glTexImage2D(target, 0, GL33.GL_RGBA8,
+                    image.getWidth(), image.getHeight(), 0,
+                    GL33.GL_BGRA, GL33.GL_UNSIGNED_INT_8_8_8_8,
+                    intBuffer);
         } else {
             GL33.glTexImage2D(target, level, GL33.GL_RGB8,
                     (int) image.getWidth(), (int) image.getHeight(), border,
@@ -129,7 +138,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         // copy the source image into the produced image
         Graphics g = texImage.getGraphics();
         //g.setColor(new Color(0f, 0f, 0f, 0f));
-       // g.fillRect(0, 0, 256, 256);
+        // g.fillRect(0, 0, 256, 256);
         g.drawImage(bufferedImage, 0, 0, null);
 
         // build a byte buffer from the temporary image
@@ -141,7 +150,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         imageBuffer.order(ByteOrder.nativeOrder());
         imageBuffer.put(data, 0, data.length);
         imageBuffer.flip();
-
+        imageBuffer.position(0);
         return imageBuffer;
 
     }
@@ -157,6 +166,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
         buffer.put(data);
         buffer.flip();
+        buffer.position(0);
         return buffer;
     }
 

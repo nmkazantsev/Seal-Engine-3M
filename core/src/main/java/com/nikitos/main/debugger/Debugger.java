@@ -199,7 +199,7 @@ public class Debugger {
     }
 
     private static final Function<List<Object>, PImage> drawMianPage = objects -> {
-        float k = 0.25f;
+        float k = 1f;
         if (CoreRenderer.engine.getPlatform() == Platform.MOBILE) {
             k = 1;
         }
