@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="finish debugger">
-      <change beforePath="$PROJECT_DIR$/../Demo/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/build.gradle" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="update PImageDesktop">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -374,9 +369,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.sealEngine_3M [dependencies --configuration compileClasspath]" />
         <item itemvalue="Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath]" />
-        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
         <item itemvalue="Gradle.Demo [dependencies]" />
       </list>
@@ -431,7 +426,7 @@
       <workItem from="1771058771524" duration="3783000" />
       <workItem from="1771074493134" duration="1778000" />
       <workItem from="1771080800965" duration="3700000" />
-      <workItem from="1771084567416" duration="7522000" />
+      <workItem from="1771084567416" duration="12592000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -657,7 +652,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771062867722</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="update PImageDesktop">
+      <option name="closed" value="true" />
+      <created>1771096287990</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1771096287990</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -687,7 +690,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="on the way to refactor shaders - add consts" />
     <MESSAGE value="fix main shader adaptor" />
     <MESSAGE value="need PImage refactor" />
     <MESSAGE value="import obj lib" />
@@ -712,6 +714,7 @@
     <MESSAGE value="add get platform" />
     <MESSAGE value="fix get platform" />
     <MESSAGE value="finish debugger" />
-    <option name="LAST_COMMIT_MESSAGE" value="finish debugger" />
+    <MESSAGE value="update PImageDesktop" />
+    <option name="LAST_COMMIT_MESSAGE" value="update PImageDesktop" />
   </component>
 </project>

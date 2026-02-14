@@ -230,8 +230,7 @@ public class PImageDesktop extends AbstractImage {
 
     @Override
     public Object getBitmap() {
-        Image img = surface.makeImageSnapshot();
-        return img.peekPixels();
+        return surface;
     }
 
     @Override

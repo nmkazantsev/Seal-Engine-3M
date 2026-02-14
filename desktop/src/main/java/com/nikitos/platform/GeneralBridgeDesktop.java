@@ -2,17 +2,14 @@ package com.nikitos.platform;
 
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
+import io.github.humbleui.skija.Image;
+import io.github.humbleui.skija.Surface;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
-import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.awt.image.*;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.Hashtable;
+
 
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
@@ -94,33 +91,44 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         GL33.glDisable(mode);
     }
 
+    ByteBuffer buffer;
     @Override
-
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
-        BufferedImage src = (BufferedImage) image.getBitmap();
-        if (src.getType() == BufferedImage.TYPE_INT_ARGB) {
-            DataBufferInt dbb = (DataBufferInt) ((BufferedImage)image.getBitmap()).getRaster().getDataBuffer();
-            int[] pixelData = dbb.getData();
 
-            // Создаем IntBuffer view поверх существующего массива
-            // Это НОЛЬ копирований!
-            IntBuffer intBuffer = IntBuffer.wrap(pixelData);
+        // Получаем raster Surface из PImageDesktop
+        Surface surface = ((Surface) image.getBitmap());
 
-            // OpenGL может читать напрямую из этого буфера
-            GL33.glTexImage2D(target, 0, GL33.GL_RGBA8,
-                    image.getWidth(), image.getHeight(), 0,
-                    GL33.GL_BGRA, GL33.GL_UNSIGNED_INT_8_8_8_8,
-                    intBuffer);
-        } else {
-            GL33.glTexImage2D(target, level, GL33.GL_RGB8,
-                    (int) image.getWidth(), (int) image.getHeight(), border,
-                    GL33.GL_BGR, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
-        }
+        // Делаем snapshot immutable Image
+        Image snapshot = surface.makeImageSnapshot();
+
+        // Берём ByteBuffer с пикселями (RGBA, PREMUL)
+        ByteBuffer pixels = snapshot.peekPixels();
+        if (pixels == null) throw new RuntimeException("Failed to peek pixels");
+
+        // Создаём прямой буфер для OpenGL
+        buffer = ByteBuffer.allocateDirect(pixels.remaining());
+        buffer.put(pixels);
+        buffer.flip();
+
+        buffer.position(0);
+        System.out.println(buffer.limit());
+        // Загружаем в OpenGL
+        GL33.glTexImage2D(
+                target,
+                level,
+                GL33.GL_RGBA8,
+                snapshot.getWidth(),
+                snapshot.getHeight(),
+                border,
+                GL33.GL_RGBA,
+                GL33.GL_UNSIGNED_BYTE,
+                buffer
+        );
     }
 
     //костыль для конвертации нормального формата в уебщиный
     //спасибо разрабам lwgl
-    private ByteBuffer bufferedImageToByteBufferWithAlpha(BufferedImage bufferedImage) {
+    /*private ByteBuffer bufferedImageToByteBufferWithAlpha(BufferedImage bufferedImage) {
 
         ByteBuffer imageBuffer;
         WritableRaster raster;
@@ -168,7 +176,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         buffer.flip();
         buffer.position(0);
         return buffer;
-    }
+    }*/
 
     @Override
     public void glTexParameteri(int textureType, int filter, int interpolation) {
