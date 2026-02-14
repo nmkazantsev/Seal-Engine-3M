@@ -4,4 +4,5 @@ All features are suppoerted. Unified for all platforms (Android, Windows, Linux)
 
 See example apps:
 Desktop: https://github.com/nmkazantsev/Demo-launcher
+
 Android: https://github.com/nmkazantsev/Demo-app
