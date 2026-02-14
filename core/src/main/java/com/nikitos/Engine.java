@@ -120,6 +120,6 @@ public class Engine {
     }
 
     public Platform getPlatform(){
-        return PlatformBridge.getPlatform();
+        return platformBridge.getPlatform();
     }
 }
