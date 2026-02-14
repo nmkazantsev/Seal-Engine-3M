@@ -128,8 +128,8 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
         // copy the source image into the produced image
         Graphics g = texImage.getGraphics();
-        g.setColor(new Color(0f, 0f, 0f, 0f));
-        g.fillRect(0, 0, 256, 256);
+        //g.setColor(new Color(0f, 0f, 0f, 0f));
+       // g.fillRect(0, 0, 256, 256);
         g.drawImage(bufferedImage, 0, 0, null);
 
         // build a byte buffer from the temporary image
