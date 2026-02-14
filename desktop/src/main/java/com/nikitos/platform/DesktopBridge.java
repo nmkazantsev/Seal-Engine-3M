@@ -78,4 +78,9 @@ public class DesktopBridge extends PlatformBridge {
     public void print(String text) {
         System.out.println(text);
     }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.DESKTOP;
+    }
 }

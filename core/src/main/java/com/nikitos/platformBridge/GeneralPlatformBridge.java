@@ -42,22 +42,31 @@ public abstract class GeneralPlatformBridge {
     public abstract void glGenTextures(int number, int[] textureIds, int offset);
 
     public abstract void glDeleteTextures(int number, int[] ids, int offset);
+
     public abstract void texImage2D(int target, int level, PImage image, int border);
 
     public abstract void glDepthMask(boolean on);
-    public abstract void glDeleteFramebuffers(int number, int [] framebuffers, int offset);
-    public abstract void glDeleteRenderbuffers(int number, int [] buffers, int offset);
-    public abstract void glClear(int mask);
-    public abstract void glGenFramebuffers(int num, int [] buffers, int offset);
-    public abstract void glBindFramebuffer(int type, int id);
-    public abstract void glTexImage2D(int type, int level, int internalFormat, int width, int height, int border, int texType,int localDataType, FloatBuffer pixels);
 
-    public abstract  void texParameterf(int target, int pname, float param);
-    public abstract  void bindTexture(int target, int texture);
+    public abstract void glDeleteFramebuffers(int number, int[] framebuffers, int offset);
+
+    public abstract void glDeleteRenderbuffers(int number, int[] buffers, int offset);
+
+    public abstract void glClear(int mask);
+
+    public abstract void glGenFramebuffers(int num, int[] buffers, int offset);
+
+    public abstract void glBindFramebuffer(int type, int id);
+
+    public abstract void glTexImage2D(int type, int level, int internalFormat, int width, int height, int border, int texType, int localDataType, FloatBuffer pixels);
+
+    public abstract void texParameterf(int target, int pname, float param);
+
+    public abstract void bindTexture(int target, int texture);
 
     // --- framebuffer ---
-    public abstract  void bindFramebuffer(int target, int framebuffer);
-    public abstract  void framebufferTexture2D(
+    public abstract void bindFramebuffer(int target, int framebuffer);
+
+    public abstract void framebufferTexture2D(
             int target,
             int attachment,
             int textarget,
@@ -66,9 +75,12 @@ public abstract class GeneralPlatformBridge {
     );
 
     // --- renderbuffer ---
-    public abstract   void genRenderbuffers(int n, int[] buffers, int offset);
-    public abstract  void bindRenderbuffer(int target, int renderbuffer);
+    public abstract void genRenderbuffers(int n, int[] buffers, int offset);
+
+    public abstract void bindRenderbuffer(int target, int renderbuffer);
+
     public abstract void renderbufferStorage(int target, int internalformat, int width, int height);
+
     public abstract void framebufferRenderbuffer(
             int target,
             int attachment,
@@ -77,5 +89,7 @@ public abstract class GeneralPlatformBridge {
     );
 
     public abstract void glUniform1f(int location, float val);
+
+    public abstract void glBlendFunc(int func1, int func2);
 
 }

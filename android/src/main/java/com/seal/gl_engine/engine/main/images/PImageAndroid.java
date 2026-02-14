@@ -1,14 +1,8 @@
 package com.seal.gl_engine.engine.main.images;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Typeface;
-
+import android.graphics.*;
 import com.nikitos.main.images.AbstractImage;
+import com.nikitos.main.images.TextAlign;
 import com.nikitos.maths.Section;
 import com.seal.gl_engine.utils.Utils;
 
@@ -22,7 +16,9 @@ public class PImageAndroid extends AbstractImage {
 
     private float textSize;
 
-    public PImageAndroid() {}
+    public PImageAndroid() {
+    }
+
     public PImageAndroid(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
@@ -67,6 +63,17 @@ public class PImageAndroid extends AbstractImage {
     public void rect(float x, float y, float w, float h) {
         canvas.drawRect(x, y, x + w, y + h, stroke);
         canvas.drawRect(x, y, x + w, y + h, paint);
+    }
+
+    @Override
+    public void textAlign(TextAlign align) {
+        if (align == TextAlign.LEFT) {
+            paint.setTextAlign(Paint.Align.LEFT);
+        } else if (align == TextAlign.CENTER) {
+            paint.setTextAlign(Paint.Align.CENTER);
+        } else {
+            paint.setTextAlign(Paint.Align.RIGHT);
+        }
     }
 
     @Override
@@ -183,7 +190,7 @@ public class PImageAndroid extends AbstractImage {
     }
 
     @Override
-    public Object getBitmap(){
+    public Object getBitmap() {
         return bitmap;
     }
 }

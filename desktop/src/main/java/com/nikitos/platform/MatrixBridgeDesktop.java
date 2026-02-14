@@ -26,14 +26,14 @@ public class MatrixBridgeDesktop extends MatrixPlatformBridge {
         } else {
             orthoM(matrixArray, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
         }
-         glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),false, matrixArray);
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(), false, matrixArray);
     }
 
     @Override
     public void applyProjectionMatrix(ProjectionMatrixSettings p) {
         float[] matrixArray = new float[16];
         frustumM(matrixArray, 0, p.left, p.right, p.bottom, p.top, p.near, p.far);
-         glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(),false, matrixArray);
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getProjectionLocation(), false, matrixArray);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MatrixBridgeDesktop extends MatrixPlatformBridge {
                 cam.centerX, cam.centerY, cam.centerZ,
                 cam.upX, cam.upY, cam.upZ);
 
-        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getCameraLocation(),false, matrixArray);
+        glUniformMatrix4fv(Shader.getActiveShader().getAdaptor().getCameraLocation(), false, matrixArray);
         glUniform3f(Shader.getActiveShader().getAdaptor().getCameraPosLlocation(), cam.eyeX, cam.eyeY, cam.eyeZ);
     }
 
@@ -144,12 +144,12 @@ public class MatrixBridgeDesktop extends MatrixPlatformBridge {
     public void rotateM(float[] m, int mOffset,
                         float a, float x, float y, float z) {
         Matrix4f tempMatrix = new Matrix4f();
-        float length = (float) Math.pow(x*x+y*y+z*z,0.5);
+        float length = (float) Math.pow(x * x + y * y + z * z, 0.5);
         // Вращение матрицы на угол 'a' градусов вокруг оси (x, y, z)
         // JOML работает с радианами, поэтому конвертируем
         float angleRad = (float) Math.toRadians(a);
         tempMatrix.set(m, mOffset)
-                .rotate(angleRad, x/length, y/length, z/length)
+                .rotate(angleRad, x / length, y / length, z / length)
                 .get(m, mOffset);
     }
 

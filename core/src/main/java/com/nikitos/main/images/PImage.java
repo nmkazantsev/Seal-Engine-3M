@@ -5,6 +5,7 @@ import com.nikitos.CoreRenderer;
 import com.nikitos.maths.Section;
 
 public class PImage {
+    private TextAlign textAlign = TextAlign.LEFT;
     private boolean upperText = false;
     private final AbstractImage impl;
 
@@ -19,6 +20,24 @@ public class PImage {
     public PImage(int width, int height) {
         this.impl = CoreRenderer.engine.getPlatformBridge().getAbstractImage();
         impl.createBitmap(width, height);
+    }
+
+    public void fill(int color) {
+        fill(color, color, color, 255);
+    }
+
+    public void background(int color) {
+        background(color, color, color, 255);
+    }
+
+    public void text(float text, float x, float y) {
+        text(String.valueOf(text), x, y);
+    }
+
+
+    public void textAlign(TextAlign align) {
+        this.textAlign = align;
+        impl.textAlign(align);
     }
 
     public void setUpperText(boolean upperText) {
