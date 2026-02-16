@@ -241,7 +241,7 @@ public class Shape implements VerticesSet {
         if (globalLoaded) {
             bindData();
             vertexBuffer.bindVao();
-            gl.glEnable(glc.GL_CULL_FACE()); //i dont know what is it, it should be optimization
+            gl.glEnable(glc.GL_CULL_FACE());
             gl.glDrawArrays(glc.GL_TRIANGLES(), 0, object.getNumFaces() * 3);
             gl.glDisable(glc.GL_CULL_FACE());
             vertexBuffer.bindDefaultVao();

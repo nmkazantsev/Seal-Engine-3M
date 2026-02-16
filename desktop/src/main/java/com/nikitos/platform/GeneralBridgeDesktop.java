@@ -2,16 +2,14 @@ package com.nikitos.platform;
 
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
+import io.github.humbleui.skija.Image;
+import io.github.humbleui.skija.Surface;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
-import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.awt.image.*;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Hashtable;
+
 
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
@@ -93,71 +91,38 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         GL33.glDisable(mode);
     }
 
+    ByteBuffer buffer;
     @Override
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
-        BufferedImage src = (BufferedImage) image.getBitmap();
-        if (src.getType() == BufferedImage.TYPE_INT_ARGB) {
-            //в результате костыля - преобразования все текстуры становятся с альфа каналом,
-            GL33.glTexImage2D(target, level, GL33.GL_RGBA8,
-                    (int) image.getWidth(), (int) image.getHeight(), border,
-                    GL33.GL_BGRA, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBufferWithAlpha((BufferedImage) image.getBitmap()));
-            GL33.glFinish();
-        } else {
-            GL33.glTexImage2D(target, level, GL33.GL_RGB8,
-                    (int) image.getWidth(), (int) image.getHeight(), border,
-                    GL33.GL_BGR, GL33.GL_UNSIGNED_BYTE, bufferedImageToByteBuffer((BufferedImage) image.getBitmap()));
-        }
-    }
 
-    //костыль для конвертации нормального формата в уебщиный
-    //спасибо разрабам lwgl
-    private ByteBuffer bufferedImageToByteBufferWithAlpha(BufferedImage bufferedImage) {
+        // Получаем raster Surface из PImageDesktop
+        Surface surface = ((Surface) image.getBitmap());
 
-        ByteBuffer imageBuffer;
-        WritableRaster raster;
-        BufferedImage texImage;
+        // Делаем snapshot immutable Image
+        Image snapshot = surface.makeImageSnapshot();
 
-        ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace
-                .getInstance(ColorSpace.CS_sRGB), new int[]{8, 8, 8, 8},
-                true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+        // Берём ByteBuffer с пикселями (RGBA, PREMUL)
+        ByteBuffer pixels = snapshot.peekPixels();
+        if (pixels == null) throw new RuntimeException("Failed to peek pixels");
 
-        raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
-                bufferedImage.getWidth(), bufferedImage.getHeight(), 4, null);
-        texImage = new BufferedImage(glAlphaColorModel, raster, true,
-                new Hashtable());
-
-        // copy the source image into the produced image
-        Graphics g = texImage.getGraphics();
-        //g.setColor(new Color(0f, 0f, 0f, 0f));
-       // g.fillRect(0, 0, 256, 256);
-        g.drawImage(bufferedImage, 0, 0, null);
-
-        // build a byte buffer from the temporary image
-        // that be used by OpenGL to produce a texture.
-        byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer())
-                .getData();
-
-        imageBuffer = ByteBuffer.allocateDirect(data.length);
-        imageBuffer.order(ByteOrder.nativeOrder());
-        imageBuffer.put(data, 0, data.length);
-        imageBuffer.flip();
-
-        return imageBuffer;
-
-    }
-
-    private ByteBuffer bufferedImageToByteBuffer(BufferedImage img) {
-
-        byte[] data =
-                ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
-
-        ByteBuffer buffer = ByteBuffer
-                .allocateDirect(data.length)
-                .order(ByteOrder.nativeOrder());
-
-        buffer.put(data);
+        // Создаём прямой буфер для OpenGL
+        buffer = ByteBuffer.allocateDirect(pixels.remaining());
+        buffer.put(pixels);
         buffer.flip();
-        return buffer;
+
+        buffer.position(0);
+        // Загружаем в OpenGL
+       GL33.glTexImage2D(
+                target,
+                level,
+                GL33.GL_RGBA8,
+                snapshot.getWidth(),
+                snapshot.getHeight(),
+                border,
+                GL33.GL_RGBA,
+                GL33.GL_UNSIGNED_BYTE,
+                buffer
+        );
     }
 
     @Override

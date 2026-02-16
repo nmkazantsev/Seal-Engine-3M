@@ -135,21 +135,21 @@ public class TouchProcessor {
 
     //**********STATIC METHODS********************
     public static void onTouch(MyMotionEvent event) {
-        //synchronized (commandQueue) {
-        TouchProcessor t = activeProcessors.getOrDefault(event.getPointerId(event.getActionIndex()), null);
-        if (t != null && !t.blocked) {
-            if (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) {
-                if (event.getActionMasked() == MyMotionEvent.ACTION_MOVE) {
-                    touchMoved(event);
+        synchronized (commandQueue) {
+            TouchProcessor t = activeProcessors.getOrDefault(event.getPointerId(event.getActionIndex()), null);
+            if (t != null && !t.blocked) {
+                if (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) {
+                    if (event.getActionMasked() == MyMotionEvent.ACTION_MOVE) {
+                        touchMoved(event);
+                    }
+                    if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_UP || event.getActionMasked() == MyMotionEvent.ACTION_UP) {
+                        touchEnded(event);
+                    }
                 }
-                if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_UP || event.getActionMasked() == MyMotionEvent.ACTION_UP) {
-                    touchEnded(event);
-                }
+            } else if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_DOWN || event.getActionMasked() == MyMotionEvent.ACTION_DOWN) {
+                touchStarted(event);
             }
-        } else if (event.getActionMasked() == MyMotionEvent.ACTION_POINTER_DOWN || event.getActionMasked() == MyMotionEvent.ACTION_DOWN) {
-            touchStarted(event);
         }
-        //}
     }
 
     public static void processMotions() {

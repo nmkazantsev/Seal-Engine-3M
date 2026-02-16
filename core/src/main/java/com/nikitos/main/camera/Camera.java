@@ -71,4 +71,8 @@ public class Camera {
         platformBridge.applyCameraSettings(cameraSettings);
         platformBridge.applyProjectionMatrix(projectionMatrixSettings, perspectiveEnabled);
     }
+
+    public void setPerspectiveEnabled(boolean perspectiveEnabled) {
+        mode3d = perspectiveEnabled;
+    }
 }

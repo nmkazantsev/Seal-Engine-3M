@@ -1,7 +1,5 @@
 package com.nikitos.main.vertices;
 
-import static com.nikitos.utils.FileUtils.loadImage;
-
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
@@ -10,15 +8,16 @@ import com.nikitos.main.textures.CubeMap;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
-import de.javagl.obj.Obj;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
+import static com.nikitos.utils.FileUtils.loadImage;
 
 public class SkyBox implements VerticesSet {
     private final GeneralPlatformBridge gl;
@@ -138,7 +137,7 @@ public class SkyBox implements VerticesSet {
         if (!postToGlNeeded) {
             gl.glBindTexture(glc.GL_TEXTURE_CUBE_MAP(), texture.getId());
         }
-        if (postToGlNeeded && images[0].isLoaded()) {
+        if (postToGlNeeded) {
             postToGl();
             postToGlNeeded = false;
         }
