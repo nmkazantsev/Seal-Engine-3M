@@ -15,6 +15,7 @@ import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.FileUtils;
+import com.nikitos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,8 +40,8 @@ public class Debugger {
     private static final List<DebugValueFloat> debugList = new ArrayList<>();
     private static TouchProcessor mainTP;
     //menu rendering
-    private final static float shift = 300 * ky;
-    private final static float enter = 75 * ky;
+    private final static float shift = 300 * Utils.getKx();
+    private final static float enter = 75 * Utils.getKx();
     private final static int maxNum = 5;
     private static DebugValueFloat selectedValue = null;
     private static int totalValues = 0;
@@ -62,6 +63,10 @@ public class Debugger {
         mainTP = new TouchProcessor(
                 TouchPoint -> true,
                 TouchPoint -> {
+                    float x = Utils.getX();
+                    float y = Utils.getY();
+                    float kx = Utils.getKx();
+                    float ky = Utils.getKy();
                     redrawNeeded = true;
                     //shorter the code
                     float tx = TouchPoint.touchX;
@@ -131,6 +136,10 @@ public class Debugger {
     }
 
     private static void selectSlider(float tx) {
+        float x = Utils.getX();
+        float y = Utils.getY();
+        float kx = Utils.getKx();
+        float ky = Utils.getKy();
         //convert position to value and mean borders
         selectedValue.value = max(selectedValue.min, min(selectedValue.max, map(tx, 100 * kx, x - 100 * kx, selectedValue.min, selectedValue.max)));
     }
@@ -162,6 +171,10 @@ public class Debugger {
     }
 
     public static void draw() {
+        float x = Utils.getX();
+        float y = Utils.getY();
+        float kx = Utils.getKx();
+        float ky = Utils.getKy();
         PlatformBridge pf = CoreRenderer.engine.getPlatformBridge();
         GeneralPlatformBridge gl = pf.getGeneralPlatformBridge();
         GLConstBridge glc = pf.getGLConstBridge();
@@ -188,6 +201,8 @@ public class Debugger {
     }
 
     public static void onResChange(int x, int y) {
+        float kx = Utils.getKx();
+        float ky = Utils.getKy();
         fps_x = 100 * kx;
         fps_y = 100 * ky;
         debuggerCamera = new Camera(x, y);
@@ -203,6 +218,10 @@ public class Debugger {
         if (CoreRenderer.engine.getPlatform() == Platform.MOBILE) {
             k = 1;
         }
+        float x = Utils.getX();
+        float y = Utils.getY();
+        float kx = Utils.getKx();
+        float ky = Utils.getKy();
         PImage image = new PImage((int) (x * k), (int) (y * k));
         image.background(255, 255, 255, 140);
         image.textSize(30 * kx * k);

@@ -26,18 +26,22 @@ public class CoreRenderer {
         pf = engine.getPlatformBridge();
         gl = pf.getGeneralPlatformBridge();
         glc = pf.getGLConstBridge();
-
-        pf.print("init core renderer " + Utils.x + " " + Utils.y);
-        Utils.x = width;
-        Utils.y = height;
-        Utils.ky = Utils.y / 1280.0f;
-        Utils.kx = Utils.x / 720.0f;
-        if (Utils.x > Utils.y) {
-            Utils.kx = Utils.x / 1280.0f;
-            Utils.ky = Utils.y / 720.0f;
+        float x = Utils.getX();
+        float y = Utils.getY();
+        float kx;
+        float ky;
+        pf.print("init core renderer " + x + " " + y);
+        x = width;
+        y = height;
+        ky = y / 1280.0f;
+        kx = x / 720.0f;
+        if (x > y) {
+            kx = x / 1280.0f;
+            ky = y / 720.0f;
         }
-        pf.log_i("engine", "Utils x, y: " + Utils.x + " " + Utils.y);
-        pf.log_i("engine", "Utils kx, ky: " + Utils.kx + " " + Utils.ky);
+        Utils.setDim(x, y, kx, ky);
+        pf.log_i("engine", "x, y: " + x + " " + y);
+        pf.log_i("engine", "kx, ky: " + kx + " " + ky);
         graphicsSetup(); //not sure if necessary but formally we have updated opengl context
         engine.onSurfaceChanged((int) width, (int) height);
     }

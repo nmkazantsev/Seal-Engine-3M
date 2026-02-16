@@ -74,8 +74,8 @@ public class Engine {
         System.gc();
         gamePage = newPage;
         resetPageMillis();
-        newPage.onSurfaceChanged((int) Utils.x, (int) Utils.y);
-        Debugger.onResChange((int) Utils.x, (int) Utils.y);
+        newPage.onSurfaceChanged((int) Utils.getX(), (int) Utils.getY());
+        Debugger.onResChange((int) Utils.getX(), (int) Utils.getY());
         VRAMobject.onPageChange();
         Shader.onPageChange();
         TouchProcessor.onPageChange();

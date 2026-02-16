@@ -170,15 +170,15 @@ public class DesktopLauncher {
 
         glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
             glViewport(0, 0, width, height);
-
-            Utils.x = width;
-            Utils.y = height;
-            Utils.ky = Utils.y / 1280.0f;
-            Utils.kx = Utils.x / 720.0f;
-            if (Utils.x > Utils.y) {
-                Utils.kx = Utils.x / 1280.0f;
-                Utils.ky = Utils.y / 720.0f;
+            float x = width;
+            float y = height;
+            float ky = y / 1280.0f;
+            float kx = x / 720.0f;
+            if (x > y) {
+                kx = x / 1280.0f;
+                ky = y / 720.0f;
             }
+            Utils.setDim(x, y, kx, ky);
             engine.onSurfaceChanged(width, height);
         });
 
