@@ -125,58 +125,6 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         );
     }
 
-    //костыль для конвертации нормального формата в уебщиный
-    //спасибо разрабам lwgl
-    /*private ByteBuffer bufferedImageToByteBufferWithAlpha(BufferedImage bufferedImage) {
-
-        ByteBuffer imageBuffer;
-        WritableRaster raster;
-        BufferedImage texImage;
-
-        ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace
-                .getInstance(ColorSpace.CS_sRGB), new int[]{8, 8, 8, 8},
-                true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
-
-        raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
-                bufferedImage.getWidth(), bufferedImage.getHeight(), 4, null);
-        texImage = new BufferedImage(glAlphaColorModel, raster, true,
-                new Hashtable());
-
-        // copy the source image into the produced image
-        Graphics g = texImage.getGraphics();
-        //g.setColor(new Color(0f, 0f, 0f, 0f));
-        // g.fillRect(0, 0, 256, 256);
-        g.drawImage(bufferedImage, 0, 0, null);
-
-        // build a byte buffer from the temporary image
-        // that be used by OpenGL to produce a texture.
-        byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer())
-                .getData();
-
-        imageBuffer = ByteBuffer.allocateDirect(data.length);
-        imageBuffer.order(ByteOrder.nativeOrder());
-        imageBuffer.put(data, 0, data.length);
-        imageBuffer.flip();
-        imageBuffer.position(0);
-        return imageBuffer;
-
-    }
-
-    private ByteBuffer bufferedImageToByteBuffer(BufferedImage img) {
-
-        byte[] data =
-                ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
-
-        ByteBuffer buffer = ByteBuffer
-                .allocateDirect(data.length)
-                .order(ByteOrder.nativeOrder());
-
-        buffer.put(data);
-        buffer.flip();
-        buffer.position(0);
-        return buffer;
-    }*/
-
     @Override
     public void glTexParameteri(int textureType, int filter, int interpolation) {
         GL33.glTexParameteri(textureType, filter, interpolation);
