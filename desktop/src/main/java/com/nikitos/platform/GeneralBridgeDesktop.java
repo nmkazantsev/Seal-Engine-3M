@@ -111,9 +111,8 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         buffer.flip();
 
         buffer.position(0);
-        System.out.println(buffer.limit());
         // Загружаем в OpenGL
-        GL33.glTexImage2D(
+       GL33.glTexImage2D(
                 target,
                 level,
                 GL33.GL_RGBA8,
