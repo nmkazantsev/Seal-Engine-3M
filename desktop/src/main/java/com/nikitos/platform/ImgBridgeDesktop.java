@@ -27,7 +27,7 @@ public class ImgBridgeDesktop extends ImgBridge {
     @Override
     public PImage loadImage(InputStream stream) {
         try {
-            byte[] bytes = stream.readAllBytes();
+                byte[] bytes = stream.readAllBytes();
             Image image = Image.makeFromEncoded(bytes);
             if (image == null) {
                 throw new RuntimeException("Failed to decode image");

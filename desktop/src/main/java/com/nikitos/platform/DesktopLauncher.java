@@ -249,11 +249,11 @@ public class DesktopLauncher {
             glfwGetWindowSize(window, pWidth, pHeight);
 
             // Center the window
-            glfwSetWindowPos(
+            /*glfwSetWindowPos(
                     window,
                     (vidmode.width() - pWidth.get(0)) / 2,
                     (vidmode.height() - pHeight.get(0)) / 2
-            );
+            );*/
         } // the stack frame is popped automatically
     }
 
