@@ -5,20 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="update utils for touch adaptation">
-      <change afterPath="$PROJECT_DIR$/../Demo/.idea/kotlinNotebook.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Demo/publish/publish.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ImgBridgeDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/GeneralBridgeDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,42 +78,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [shadowJar].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;image__refactor&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/java/com/nikitos/main/shaders/default_adaptors&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.49679077&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.deploy.options&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Gradle.Build Demo.executor": "Run",
+    "Gradle.Build sealEngine_3M.executor": "Run",
+    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [dependencies].executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.Load Gradle Dependencies.executor": "Run",
+    "Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [clean].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies].executor": "Run",
+    "Gradle.sealEngine_3M [jar].executor": "Run",
+    "Gradle.sealEngine_3M [shadowJar].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck",
+    "git-widget-placeholder": "image__refactor",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/java/com/nikitos/main/shaders/default_adaptors",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.49679077",
+    "settings.editor.selected.configurable": "reference.settings.deploy.options",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.nikitos.platform" />
@@ -535,7 +525,8 @@
       <workItem from="1771767335705" duration="986000" />
       <workItem from="1771841879110" duration="2502000" />
       <workItem from="1772265032062" duration="7338000" />
-      <workItem from="1772351105465" duration="613000" />
+      <workItem from="1772351105465" duration="1202000" />
+      <workItem from="1772568325763" duration="436000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />

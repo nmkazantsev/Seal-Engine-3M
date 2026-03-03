@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 
-
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     @Override
     public void glDrawArrays(int type, int offest, int count) {
@@ -28,6 +27,9 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public void glUniform3f(int location, float x, float y, float z) {
+        if (location == -1) {
+            return;
+        }
         GL30.glUniform3f(location, x, y, z);
     }
 
@@ -38,11 +40,17 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public void glBindTexture(int texture, int location) {
+        if (location == -1) {
+            return;
+        }
         GL30.glBindTexture(texture, location);
     }
 
     @Override
     public void glUniform1i(int location, int value) {
+        if (location == -1) {
+            return;
+        }
         GL30.glUniform1i(location, value);
     }
 
@@ -53,21 +61,33 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized, int size, FloatBuffer vertexData) {
+        if (aPositionLocation == -1) {
+            return;
+        }
         GL33.glVertexAttribPointer(aPositionLocation, step, type, normalized, size, vertexData);
     }
 
     @Override
     public void glVertexAttribPointer(int aPositionLocation, int step, int type, boolean normalized, int size, int vertexData) {
+        if (aPositionLocation == -1) {
+            return;
+        }
         GL33.glVertexAttribPointer(aPositionLocation, step, type, false, size, vertexData);
     }
 
     @Override
     public void glEnableVertexAttribArray(int aPositionLocation) {
+        if (aPositionLocation == -1) {
+            return;
+        }
         GL33.glEnableVertexAttribArray(aPositionLocation);
     }
 
     @Override
     public int glGetAttribLocation(int programId, String name) {
+        if (programId == -1) {
+            return -1;
+        }
         return GL33.glGetAttribLocation(programId, name);
     }
 
@@ -78,6 +98,9 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public void glBindBuffer(int type, int address) {
+        if (address == -1) {
+            return;
+        }
         GL33.glBindBuffer(type, address);
     }
 
@@ -92,6 +115,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     }
 
     ByteBuffer buffer;
+
     @Override
     public void texImage2D(int target, int level, int internalFormat, PImage image, int type, int border) {
 
@@ -112,7 +136,7 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
         buffer.position(0);
         // Загружаем в OpenGL
-       GL33.glTexImage2D(
+        GL33.glTexImage2D(
                 target,
                 level,
                 GL33.GL_RGBA8,
@@ -225,6 +249,9 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
 
     @Override
     public void glUniform1f(int location, float val) {
+        if (location == -1) {
+            return;
+        }
         GL33.glUniform1f(location, val);
     }
 
