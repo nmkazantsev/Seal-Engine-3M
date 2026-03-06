@@ -2,8 +2,8 @@ package com.nikitos.main.shaders;
 
 
 import com.nikitos.CoreRenderer;
-import com.nikitos.platformBridge.ShaderBridge;
 import com.nikitos.GamePageClass;
+import com.nikitos.platformBridge.ShaderBridge;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -97,9 +97,11 @@ public class Shader { //means shader program
         shaderUtils.applyShader(s.link);
         activeShader = s;
         s.adaptor.programId = s.link;
+
         s.adaptor.updateLocations();
         Adaptor.updateShaderDataLocations();
         Adaptor.forwardData();
+
     }
 
 

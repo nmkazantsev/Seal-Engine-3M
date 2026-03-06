@@ -83,4 +83,9 @@ public class DesktopBridge extends PlatformBridge {
     public Platform getPlatform() {
         return Platform.DESKTOP;
     }
+
+    @Override
+    public ErrorPrinter getErrorPrinter() {
+        return new ErrorPrinterDesktop();
+    }
 }

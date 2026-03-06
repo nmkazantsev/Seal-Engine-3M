@@ -31,4 +31,6 @@ public abstract class PlatformBridge {
     public abstract void print(String text);
 
     public abstract Platform getPlatform();
+
+    public abstract ErrorPrinter getErrorPrinter();
 }

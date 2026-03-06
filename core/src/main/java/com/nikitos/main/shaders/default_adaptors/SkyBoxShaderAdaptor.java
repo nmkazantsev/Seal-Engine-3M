@@ -39,11 +39,9 @@ public class SkyBoxShaderAdaptor extends Adaptor {
 
     @Override
     public int bindData(Face[] faces) {
-        float[] vertices = new float[12 * 3 * 3];
-        int vertexesNumber = 0;
+        float[] vertices = new float[12 * 9]; //12 triangles and 9 floats per triangle (3 per vertex)
         for (int i = 0; i < 12; i++) {
             System.arraycopy(faces[i].getArrayRepresentationVertexes(), 0, vertices, i * 9, 9);
-            vertexesNumber++;
         }
         FloatBuffer vertexData = ByteBuffer
                 .allocateDirect(vertices.length * 4)
@@ -56,7 +54,7 @@ public class SkyBoxShaderAdaptor extends Adaptor {
                 false, STRIDE, vertexData);
 
        gl.glEnableVertexAttribArray(aPositionLocation);
-        return vertexesNumber;
+        return 12*3; //vertexNumber
     }
 
     @Override
@@ -110,7 +108,7 @@ public class SkyBoxShaderAdaptor extends Adaptor {
 
     @Override
     public int getCameraPosLlocation() {
-        return viewMatrixLocation;
+        return -1;
     }
 }
 
