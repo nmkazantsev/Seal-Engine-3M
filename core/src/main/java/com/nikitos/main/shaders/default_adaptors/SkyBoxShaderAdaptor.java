@@ -37,26 +37,6 @@ public class SkyBoxShaderAdaptor extends Adaptor {
         glc = pf.getGLConstBridge();
     }
 
-    @Override
-    public int bindData(Face[] faces) {
-        float[] vertices = new float[12 * 9]; //12 triangles and 9 floats per triangle (3 per vertex)
-        for (int i = 0; i < 12; i++) {
-            System.arraycopy(faces[i].getArrayRepresentationVertexes(), 0, vertices, i * 9, 9);
-        }
-        FloatBuffer vertexData = ByteBuffer
-                .allocateDirect(vertices.length * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        vertexData.put(vertices);//4 байта на флоат
-        // координаты вершин
-        vertexData.position(0);
-        gl.glVertexAttribPointer(aPositionLocation, POSITION_COUNT, glc.GL_FLOAT(),
-                false, STRIDE, vertexData);
-
-        gl.glEnableVertexAttribArray(aPositionLocation);
-        return 12 * 3; //vertexNumber
-    }
-
     private void loadDataToBuffer(float[] vertices, int bufferIndex, VertexBuffer vertexBuffer) {
         FloatBuffer vertexData = ByteBuffer
                 .allocateDirect(vertices.length * 4)

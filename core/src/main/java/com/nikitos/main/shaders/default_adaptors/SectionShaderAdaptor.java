@@ -16,11 +16,6 @@ public class SectionShaderAdaptor extends Adaptor {
     private int modelMtrixLocation;
 
     @Override
-    public int bindData(Face[] faces) {
-        return 0;
-    }
-
-    @Override
     public int bindData(Face[] faces, VertexBuffer vertexBuffer, boolean vboLoaded) {
         return 0;
     }

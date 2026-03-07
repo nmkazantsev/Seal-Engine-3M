@@ -57,8 +57,6 @@ public abstract class Adaptor {
         return this.programId;
     }
 
-    public abstract int bindData(Face[] faces);
-
     public abstract int bindData(Face[] faces, VertexBuffer vertexBuffer, boolean vboLoaded);
 
     public abstract void bindDataLine(PVector a, PVector b, PVector color);
