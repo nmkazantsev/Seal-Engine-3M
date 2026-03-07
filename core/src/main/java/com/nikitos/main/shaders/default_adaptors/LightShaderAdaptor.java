@@ -80,7 +80,7 @@ public class LightShaderAdaptor extends Adaptor {
         vertexData.put(vertices);//4 байта на флоат
         vertexBuffer.bindVbo(bufferIndex);//vertex coords
         vertexData.position(0);
-        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
+        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, vertexBuffer.getDynamicDraw() ? glConstBridge.GL_STATIC_DRAW() : glConstBridge.GL_DYNAMIC_DRAW());
     }
 
     @Override
@@ -131,7 +131,6 @@ public class LightShaderAdaptor extends Adaptor {
                     vertices[i * 9 + g * 3 + 1] = faces[i].tangent.y;
                     vertices[i * 9 + g * 3 + 2] = faces[i].tangent.z;
                 }
-
             }
             loadDataToBuffer(vertices, 3, vertexBuffer);
 

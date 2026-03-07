@@ -20,7 +20,7 @@ public class FrameBuffer extends VRAMobject {
     private final GeneralPlatformBridge gl;
     private final GLConstBridge glc;
 
-    private boolean vboLoaded = false;
+    private boolean vboCreated = false;
     private VertexBuffer vertexBuffer;
 
     // https://www.programcreek.com/java-api-examples/?class=android.opengl.glc.method=glBindFramebuffer
@@ -34,7 +34,7 @@ public class FrameBuffer extends VRAMobject {
     }
 
     public void onRedrawSetup() {
-        vboLoaded = false;
+        vboCreated = false;
         int[] frameBuffers = new int[1];
         int[] frameBufferTextures = new int[1];
         gl.glGenFramebuffers(1, frameBuffers, 0);
@@ -114,11 +114,12 @@ public class FrameBuffer extends VRAMobject {
                         new PVector(0, 0, 1),
                         new PVector(0, 0, 1),
                 });
-        if (!vboLoaded) {
+        if (!vboCreated) {
             vertexBuffer = new VertexBuffer(5, gamePageClass); //5 because 5 types of coordinates so we need 5 buffers
+            vertexBuffer.setDynamicDraw(true);
         }
-        Shader.getActiveShader().getAdaptor().bindData(new Face[]{face1, face2}, vertexBuffer, vboLoaded);
-        vboLoaded = true;
+        Shader.getActiveShader().getAdaptor().bindData(new Face[]{face1, face2}, vertexBuffer, false);
+        vboCreated = true;
         //place texture to target 2D of unit 0
         gl.glActiveTexture(glc.GL_TEXTURE0());
         gl.glBindTexture(glc.GL_TEXTURE_2D(), texture);

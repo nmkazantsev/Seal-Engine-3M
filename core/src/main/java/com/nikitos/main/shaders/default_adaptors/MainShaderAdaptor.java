@@ -67,7 +67,7 @@ public class MainShaderAdaptor extends Adaptor {
         vertexBuffer.bindVao();
         vertexBuffer.bindVbo(bufferIndex);//vertex coords
         vertexData.position(0);
-        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
+        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, vertexBuffer.getDynamicDraw() ? glConstBridge.GL_STATIC_DRAW() : glConstBridge.GL_DYNAMIC_DRAW());
     }
 
     @Override
