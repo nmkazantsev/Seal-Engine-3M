@@ -53,14 +53,50 @@ public class SkyBoxShaderAdaptor extends Adaptor {
         gl.glVertexAttribPointer(aPositionLocation, POSITION_COUNT, glc.GL_FLOAT(),
                 false, STRIDE, vertexData);
 
-       gl.glEnableVertexAttribArray(aPositionLocation);
-        return 12*3; //vertexNumber
+        gl.glEnableVertexAttribArray(aPositionLocation);
+        return 12 * 3; //vertexNumber
+    }
+
+    private void loadDataToBuffer(float[] vertices, int bufferIndex, VertexBuffer vertexBuffer) {
+        FloatBuffer vertexData = ByteBuffer
+                .allocateDirect(vertices.length * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+        vertexData.put(vertices);//4 байта на флоат
+        vertexBuffer.bindVao();
+        vertexBuffer.bindVbo(bufferIndex);//vertex coords
+        vertexData.position(0);
+        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), 12 * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
     }
 
     @Override
     public int bindData(Face[] faces, VertexBuffer vertexBuffer, boolean vboLoaded) {
-        //todo here
+        if (!vboLoaded) {
+            //set up positions
+            float[] vertices = new float[12 * 3 * 3];//3 because 3angle
+            for (int i = 0; i < 12; i++) {
+                vertices[i * 9] = faces[i].vertices[0].x;
+                vertices[i * 9 + 1] = faces[i].vertices[0].y;
+                vertices[i * 9 + 2] = faces[i].vertices[0].z;
+                vertices[i * 9 + 3] = faces[i].vertices[1].x;
+                vertices[i * 9 + 4] = faces[i].vertices[1].y;
+                vertices[i * 9 + 5] = faces[i].vertices[1].z;
+                vertices[i * 9 + 6] = faces[i].vertices[2].x;
+                vertices[i * 9 + 7] = faces[i].vertices[2].y;
+                vertices[i * 9 + 8] = faces[i].vertices[2].z;
+            }
+            loadDataToBuffer(vertices, 0, vertexBuffer);
+
+        }
+        vertexBuffer.bindVao();
+        gl.glEnableVertexAttribArray(aPositionLocation);
+
+        gl.glBindBuffer(glConstBridge.GL_ARRAY_BUFFER(), vertexBuffer.getVboAdress(0));
+        gl.glVertexAttribPointer(aPositionLocation, 3, glConstBridge.GL_FLOAT(), false, 0, 0);
+        vertexBuffer.bindDefaultVbo();//vertex coords
+        vertexBuffer.bindDefaultVao();
         return 0;
+
     }
 
     @Override

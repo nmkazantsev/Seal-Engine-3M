@@ -5,6 +5,7 @@ import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.textures.CubeMap;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
@@ -33,6 +34,7 @@ public class SkyBox implements VerticesSet {
     private final Function<Void, PImage> redrawFunction;
 
     private final Class<?> context;
+    private final GamePageClass gamePageClass;
     private final String[] names = new String[]{"right", "left", "bottom", "top", "front", "back"};
     private PlatformBridge pf;
 
@@ -42,6 +44,7 @@ public class SkyBox implements VerticesSet {
         glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
 
         this.res = res;
+        this.gamePageClass = page;
         this.context = page.getClass();
         this.redrawFunction = this::loadTexture;
         this.textureFileName = textureFileName;
@@ -127,10 +130,16 @@ public class SkyBox implements VerticesSet {
         return null;
     }
 
+    private boolean vboLoaded = false;
+    private VertexBuffer vertexBuffer;
 
     public void bindData() {
 
-        Shader.getActiveShader().getAdaptor().bindData(faces);
+        if (!vboLoaded) {
+            vertexBuffer = new VertexBuffer(1, gamePageClass); //1 because 1 types of coordinates so we need 1 buffers
+        }
+        Shader.getActiveShader().getAdaptor().bindData(faces, vertexBuffer, vboLoaded);
+        vboLoaded = true;
 
         // помещаем текстуру в target 2D юнита 0
         gl.glActiveTexture(glc.GL_TEXTURE0());
@@ -171,9 +180,11 @@ public class SkyBox implements VerticesSet {
 
     public void prepareAndDraw() {
         bindData();
+        vertexBuffer.bindVao();
         gl.glDepthMask(false);
         gl.glDrawArrays(glc.GL_TRIANGLES(), 0, 12 * 3);
         gl.glDepthMask(true);
+        vertexBuffer.bindDefaultVao();
     }
 
     @Override
@@ -185,6 +196,7 @@ public class SkyBox implements VerticesSet {
     public void setRedrawNeeded(boolean redrawNeeded) {
         this.redrawNeeded = redrawNeeded;
         postToGlNeeded = true;
+        vboLoaded=false;
         if (redrawNeeded) {
             VerticesShapesManager.allShapesToRedraw.add(new java.lang.ref.WeakReference<>(this));//добавить ссылку на Poligon
         }

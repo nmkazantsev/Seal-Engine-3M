@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add location checks for safety with different drivers on desktop">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/ErrorPrinter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/ErrorPrinterDesktop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix bugs in skybox shader adaptor">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/Shader.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/Shader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/SkyBoxShaderAdaptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/SkyBoxShaderAdaptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +79,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Run",
+    "Application.Main.executor": "Profiler#1",
     "Gradle.Build Demo.executor": "Run",
     "Gradle.Build sealEngine_3M.executor": "Run",
     "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
@@ -459,11 +453,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
         <item itemvalue="Gradle.sealEngine_3M [dependencies]" />
         <item itemvalue="Gradle.sealEngine_3M [clean]" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -535,7 +529,9 @@
       <workItem from="1772265032062" duration="7338000" />
       <workItem from="1772351105465" duration="1202000" />
       <workItem from="1772568325763" duration="2126000" />
-      <workItem from="1772824465001" duration="1678000" />
+      <workItem from="1772824465001" duration="2993000" />
+      <workItem from="1772833616974" duration="1559000" />
+      <workItem from="1772877578685" duration="1586000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -817,7 +813,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772568798095</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="fix bugs in skybox shader adaptor">
+      <option name="closed" value="true" />
+      <created>1772827454536</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1772827454536</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -847,7 +851,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix skybox" />
     <MESSAGE value="fix polygon" />
     <MESSAGE value="fix shaders" />
     <MESSAGE value="it starts&#10;found problems in file system, found problems with PImage" />
@@ -872,6 +875,7 @@
     <MESSAGE value="clean up" />
     <MESSAGE value="update utils for touch adaptation" />
     <MESSAGE value="add location checks for safety with different drivers on desktop" />
-    <option name="LAST_COMMIT_MESSAGE" value="add location checks for safety with different drivers on desktop" />
+    <MESSAGE value="fix bugs in skybox shader adaptor" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bugs in skybox shader adaptor" />
   </component>
 </project>
