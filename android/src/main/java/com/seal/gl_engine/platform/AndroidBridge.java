@@ -181,4 +181,9 @@ public class AndroidBridge extends PlatformBridge {
     public Platform getPlatform() {
         return Platform.MOBILE;
     }
+
+    @Override
+    public ErrorPrinter getErrorPrinter() {
+        return new ErrorPrinterAndroid();
+    }
 }

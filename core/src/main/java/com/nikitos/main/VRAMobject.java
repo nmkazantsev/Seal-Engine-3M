@@ -16,12 +16,14 @@ import java.util.List;
 public abstract class VRAMobject {
     protected final GeneralPlatformBridge gl;
     protected final GLConstBridge glc;
-    private final Class<?> creator;
+    protected final Class<?> creator;
+    protected final GamePageClass gamePageClass;
     private static final List<VRAMobject> allObjects = new ArrayList<>();//links to all objects
 
     public VRAMobject(GamePageClass creator) {
         gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
         glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
+        gamePageClass = creator;
         if (creator != null) {
             this.creator = creator.getClass();
         } else {

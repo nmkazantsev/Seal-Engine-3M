@@ -1,6 +1,8 @@
 package com.nikitos.main.vertices;
 
 
+import static com.nikitos.utils.FileUtils.loadImage;
+
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
@@ -11,17 +13,17 @@ import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
+import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
-import de.javagl.obj.Obj;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.function.Function;
 
-import static com.nikitos.utils.FileUtils.loadImage;
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
 
 
 public class Shape implements VerticesSet {
@@ -49,6 +51,7 @@ public class Shape implements VerticesSet {
     private VertexBuffer vertexBuffer;
 
     private boolean vboLoaded = false;
+    private int numFaces = 0;
 
     public Shape(PreLoadedMesh preLoadedMesh, String textureFileName, GamePageClass page) {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
@@ -96,7 +99,6 @@ public class Shape implements VerticesSet {
     }
 
     //тут оправдан статик чтобы не городить еще класс на preloader
-    //и нужен свой platform bridge
     public static void loadFacesAsync(String fileName, Function<PreLoadedMesh, Void> callback, Class<?> cls) {
         PlatformBridge platformBridge = CoreRenderer.engine.getPlatformBridge();
         new Thread(() -> {
@@ -186,8 +188,18 @@ public class Shape implements VerticesSet {
     public void bindData() {
         if (!vboLoaded) {
             vertexBuffer = new VertexBuffer(5, creator); //5 because 5 types of coordinates so we need 5 buffers
+            if (numFaces == 0) {
+                numFaces = object.getNumFaces();
+            }
         }
         Shader.getActiveShader().getAdaptor().bindData(faces, vertexBuffer, vboLoaded);
+        if (!vboLoaded) {
+            object = null;
+            if (CoreRenderer.engine.getPlatform() == Platform.DESKTOP) { //on mobile, we may need to reload to gpu faces
+                faces = null;
+            }
+            System.gc();
+        }
         vboLoaded = true;
         // place texture in target 2D unit 0
         gl.glActiveTexture(glc.GL_TEXTURE0());
@@ -242,7 +254,7 @@ public class Shape implements VerticesSet {
             bindData();
             vertexBuffer.bindVao();
             gl.glEnable(glc.GL_CULL_FACE());
-            gl.glDrawArrays(glc.GL_TRIANGLES(), 0, object.getNumFaces() * 3);
+            gl.glDrawArrays(glc.GL_TRIANGLES(), 0, numFaces * 3);
             gl.glDisable(glc.GL_CULL_FACE());
             vertexBuffer.bindDefaultVao();
         }

@@ -26,38 +26,6 @@ public class MainShaderAdaptor extends Adaptor {
     private static final int STRIDE = (POSITION_COUNT
             + TEXTURE_COUNT + NORMAL_COUNT) * 4;
 
-    @Override
-    public int bindData(Face[] faces) {
-        float[] vertices = new float[faces.length * faces[0].verticesNumber()];
-        int vertexesNumber = 0;
-        for (int i = 0; i < faces.length; i++) {
-            System.arraycopy(faces[i].getArrayRepresentation(), 0, vertices, i * faces[i].verticesNumber(), faces[i].verticesNumber());
-            vertexesNumber++;
-        }
-        FloatBuffer vertexData = ByteBuffer
-                .allocateDirect(vertices.length * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        vertexData.put(vertices);//4 байта на флоат
-        // координаты вершин
-        vertexData.position(0);
-        gl.glVertexAttribPointer(aPositionLocation, POSITION_COUNT, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(aPositionLocation);
-
-        // координаты текстур
-        vertexData.position(POSITION_COUNT);
-        gl.glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(aTextureLocation);
-
-        vertexData.position(POSITION_COUNT + TEXTURE_COUNT);
-        gl.glVertexAttribPointer(normalLocation, NORMAL_COUNT, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(normalLocation);
-        return vertexesNumber;
-    }
-
     private void loadDataToBuffer(float[] vertices, int bufferIndex, VertexBuffer vertexBuffer) {
         FloatBuffer vertexData = ByteBuffer
                 .allocateDirect(vertices.length * 4)
@@ -67,7 +35,7 @@ public class MainShaderAdaptor extends Adaptor {
         vertexBuffer.bindVao();
         vertexBuffer.bindVbo(bufferIndex);//vertex coords
         vertexData.position(0);
-        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
+        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, vertexBuffer.getDynamicDraw() ? glConstBridge.GL_STATIC_DRAW() : glConstBridge.GL_DYNAMIC_DRAW());
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.VRAMobject;
 import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
@@ -19,6 +20,9 @@ public class FrameBuffer extends VRAMobject {
     private final GeneralPlatformBridge gl;
     private final GLConstBridge glc;
 
+    private boolean vboCreated = false;
+    private VertexBuffer vertexBuffer;
+
     // https://www.programcreek.com/java-api-examples/?class=android.opengl.glc.method=glBindFramebuffer
     public FrameBuffer(int width, int height, GamePageClass page) {
         super(page);
@@ -30,6 +34,7 @@ public class FrameBuffer extends VRAMobject {
     }
 
     public void onRedrawSetup() {
+        vboCreated = false;
         int[] frameBuffers = new int[1];
         int[] frameBufferTextures = new int[1];
         gl.glGenFramebuffers(1, frameBuffers, 0);
@@ -72,10 +77,10 @@ public class FrameBuffer extends VRAMobject {
         };
 
         float[][] textCoords = new float[][]{
-                {1, 1},
-                {1, 0},
-                {0, 1},
                 {0, 0},
+                {0, 1},
+                {1, 0},
+                {1, 1},
         };
         Face face1 = new Face(
                 new PVector[]{
@@ -109,11 +114,18 @@ public class FrameBuffer extends VRAMobject {
                         new PVector(0, 0, 1),
                         new PVector(0, 0, 1),
                 });
-        Shader.getActiveShader().getAdaptor().bindData(new Face[]{face1, face2});
+        if (!vboCreated) {
+            vertexBuffer = new VertexBuffer(5, gamePageClass); //5 because 5 types of coordinates so we need 5 buffers
+            vertexBuffer.setDynamicDraw(true);
+        }
+        Shader.getActiveShader().getAdaptor().bindData(new Face[]{face1, face2}, vertexBuffer, false);
+        vboCreated = true;
         //place texture to target 2D of unit 0
         gl.glActiveTexture(glc.GL_TEXTURE0());
         gl.glBindTexture(glc.GL_TEXTURE_2D(), texture);
+        vertexBuffer.bindVao();
         gl.glDrawArrays(glc.GL_TRIANGLES(), 0, 6);
+        vertexBuffer.bindDefaultVao();
     }
 
     public int getFrameBuffer() {

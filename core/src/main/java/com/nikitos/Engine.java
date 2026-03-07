@@ -30,6 +30,8 @@ public class Engine {
         this.launcherParams = launcherParams;
         Matrix.init(platformBridge);
         Utils.programStartTime = System.currentTimeMillis();
+            String version = System.getProperty("java.version");
+            platformBridge.log_i("engine", "engine is running at java "+version);
     }
 
     public void onSurfaceChanged(int x, int y) {
@@ -74,8 +76,8 @@ public class Engine {
         System.gc();
         gamePage = newPage;
         resetPageMillis();
-        newPage.onSurfaceChanged((int) Utils.x, (int) Utils.y);
-        Debugger.onResChange((int) Utils.x, (int) Utils.y);
+        newPage.onSurfaceChanged((int) Utils.getX(), (int) Utils.getY());
+        Debugger.onResChange((int) Utils.getX(), (int) Utils.getY());
         VRAMobject.onPageChange();
         Shader.onPageChange();
         TouchProcessor.onPageChange();

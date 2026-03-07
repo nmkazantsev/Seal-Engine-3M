@@ -6,8 +6,6 @@ import com.nikitos.platformBridge.MatrixPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.Utils;
 
-import static com.nikitos.utils.Utils.x;
-import static com.nikitos.utils.Utils.y;
 
 /**
  * Just a container with public CameraSettings and ProjectionMatrixSettings
@@ -23,6 +21,8 @@ public class Camera {
      * Takes x and y dimensions equal to screen size.
      */
     public Camera() {
+        float x = Utils.getX();
+        float y = Utils.getY();
         platformBridge = CoreRenderer.engine.getPlatformBridge().getMatrixPlatformBridge();
         cameraSettings = new CameraSettings(x, y);
         projectionMatrixSettings = new ProjectionMatrixSettings(x, y);

@@ -1,19 +1,41 @@
 package com.nikitos.utils;
 
 
-import static java.lang.Float.parseFloat;
-import static java.lang.Thread.sleep;
-
 import com.nikitos.CoreRenderer;
 import com.nikitos.main.animator.Animator;
 
 import java.util.Random;
 
+import static java.lang.Float.parseFloat;
+import static java.lang.Thread.sleep;
+
 public class Utils {
 
     public static long programStartTime;
-    public static float kx, ky, x, y;
+    private static float kx, ky, x, y;
 
+    public static float getX() {
+        return x;
+    }
+
+    public static float getY() {
+        return y;
+    }
+
+    public static float getKx() {
+        return kx;
+    }
+
+    public static float getKy() {
+        return ky;
+    }
+
+    public static void setDim(float x, float y, float kx, float ky) {
+        Utils.x = x;
+        Utils.y = y;
+        Utils.kx = kx;
+        Utils.ky = ky;
+    }
 
     private static long stopTime;
 

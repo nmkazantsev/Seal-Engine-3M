@@ -14,6 +14,8 @@ public class VertexBuffer extends VRAMobject {
     private final int vboNum;
     private final VertexBridge vertexBridge;
 
+    private boolean dynamicDraw = false;
+
     public VertexBuffer(int vboNum, GamePageClass creator) {
         super(creator);
         this.vertexBridge = CoreRenderer.engine.getPlatformBridge().getVertexBridge();
@@ -25,6 +27,14 @@ public class VertexBuffer extends VRAMobject {
         int[] x = new int[1];
         vertexBridge.glGenVertexArrays(1, x, 0);
         vao = x[0];
+    }
+
+    public void setDynamicDraw(boolean dynamicDraw) {
+        this.dynamicDraw = dynamicDraw;
+    }
+
+    public boolean getDynamicDraw() {
+        return dynamicDraw;
     }
 
     public void bindVbo(int vboInd) {

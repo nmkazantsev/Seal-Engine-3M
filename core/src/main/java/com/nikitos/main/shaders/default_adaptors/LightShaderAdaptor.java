@@ -29,49 +29,6 @@ public class LightShaderAdaptor extends Adaptor {
     private static final int STRIDE = (POSITION_COUNT
             + TEXTURE_COUNT + NORMAL_COUNT + TANGENT_VEC + BITANGENT_VEC) * 4;
 
-    @Override
-    public int bindData(Face[] faces) {
-        float[] vertices = new float[faces.length * (faces[0].verticesNumberTangentSpace())];
-        int vertexesNumber = 0;
-        for (int i = 0; i < faces.length; i++) {
-            System.arraycopy(faces[i].getArrayRepresentationTangentSpace(), 0, vertices, i * (faces[i].verticesNumberTangentSpace()), faces[i].verticesNumberTangentSpace());
-            vertexesNumber++;
-        }
-        FloatBuffer vertexData = ByteBuffer
-                .allocateDirect(vertices.length * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        vertexData.put(vertices);//4 байта на флоат
-        // координаты вершин
-        vertexData.position(0);
-        gl.glVertexAttribPointer(aPositionLocation, POSITION_COUNT, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(aPositionLocation);
-
-        // координаты текстур
-        vertexData.position(POSITION_COUNT);
-        gl.glVertexAttribPointer(aTextureLocation, TEXTURE_COUNT, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(aTextureLocation);
-
-        vertexData.position(POSITION_COUNT + TEXTURE_COUNT);
-        gl.glVertexAttribPointer(normalLocation, NORMAL_COUNT, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(normalLocation);
-
-        vertexData.position(POSITION_COUNT + TEXTURE_COUNT + NORMAL_COUNT);
-        gl.glVertexAttribPointer(tangetntLocation, TANGENT_VEC, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(tangetntLocation);
-
-        vertexData.position(POSITION_COUNT + TEXTURE_COUNT + NORMAL_COUNT + TANGENT_VEC);
-        gl.glVertexAttribPointer(bitangentLocation, BITANGENT_VEC, glConstBridge.GL_FLOAT(),
-                false, STRIDE, vertexData);
-        gl.glEnableVertexAttribArray(bitangentLocation);
-
-        return vertexesNumber;
-    }
-
     private void loadDataToBuffer(float[] vertices, int bufferIndex, VertexBuffer vertexBuffer) {
         FloatBuffer vertexData = ByteBuffer
                 .allocateDirect(vertices.length * 4)
@@ -80,7 +37,7 @@ public class LightShaderAdaptor extends Adaptor {
         vertexData.put(vertices);//4 байта на флоат
         vertexBuffer.bindVbo(bufferIndex);//vertex coords
         vertexData.position(0);
-        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
+        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), vertices.length * 4, vertexData, vertexBuffer.getDynamicDraw() ? glConstBridge.GL_STATIC_DRAW() : glConstBridge.GL_DYNAMIC_DRAW());
     }
 
     @Override
@@ -131,7 +88,6 @@ public class LightShaderAdaptor extends Adaptor {
                     vertices[i * 9 + g * 3 + 1] = faces[i].tangent.y;
                     vertices[i * 9 + g * 3 + 2] = faces[i].tangent.z;
                 }
-
             }
             loadDataToBuffer(vertices, 3, vertexBuffer);
 
