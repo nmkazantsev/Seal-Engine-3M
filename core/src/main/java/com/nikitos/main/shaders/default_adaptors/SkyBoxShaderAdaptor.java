@@ -46,7 +46,7 @@ public class SkyBoxShaderAdaptor extends Adaptor {
         vertexBuffer.bindVao();
         vertexBuffer.bindVbo(bufferIndex);//vertex coords
         vertexData.position(0);
-        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), 12 * 4, vertexData, glConstBridge.GL_STATIC_DRAW());
+        gl.glBufferData(glConstBridge.GL_ARRAY_BUFFER(), 12 * 4 * 9, vertexData, glConstBridge.GL_STATIC_DRAW());
     }
 
     @Override
