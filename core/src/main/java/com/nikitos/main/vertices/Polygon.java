@@ -283,6 +283,7 @@ public class Polygon implements VerticesSet {
     public void setRedrawNeeded(boolean redrawNeeded) {
         this.redrawNeeded = redrawNeeded;
         postToGlNeeded = true;
+        VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
     }
 
     @Override

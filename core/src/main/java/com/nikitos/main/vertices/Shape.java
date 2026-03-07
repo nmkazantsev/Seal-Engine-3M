@@ -274,8 +274,8 @@ public class Shape implements VerticesSet {
             VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
             vboLoaded = false;
             postToGlNeeded = true;
-            VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
-            vboLoaded = false;
+            //  VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
+            //vboLoaded = false;
         }
     }
 

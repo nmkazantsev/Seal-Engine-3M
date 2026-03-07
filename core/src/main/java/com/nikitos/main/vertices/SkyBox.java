@@ -124,7 +124,6 @@
         }
 
         private PImage loadTexture(Void v) {
-            pf.log_e("skybox", "reload");
             for (int i = 0; i < images.length; i++) {
                 images[i] = loadImage(textureFileName + names[i] + "." + res, context);
             }

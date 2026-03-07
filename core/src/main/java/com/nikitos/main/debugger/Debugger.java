@@ -1,5 +1,13 @@
 package com.nikitos.main.debugger;
 
+import static com.nikitos.main.images.TextAlign.CENTER;
+import static com.nikitos.main.images.TextAlign.LEFT;
+import static com.nikitos.main.images.TextAlign.RIGHT;
+import static com.nikitos.maths.Matrix.resetTranslateMatrix;
+import static com.nikitos.utils.Utils.map;
+import static com.nikitos.utils.Utils.max;
+import static com.nikitos.utils.Utils.min;
+
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
 import com.nikitos.main.camera.Camera;
@@ -22,10 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.nikitos.main.images.TextAlign.*;
-import static com.nikitos.maths.Matrix.resetTranslateMatrix;
-import static com.nikitos.utils.Utils.*;
-
 public class Debugger {
     private static boolean enabled = false;
     private static Camera debuggerCamera;
@@ -46,8 +50,13 @@ public class Debugger {
     private static DebugValueFloat selectedValue = null;
     private static int totalValues = 0;
     private static boolean redrawNeeded = true;
+    private static boolean inited = false;
 
     public static void debuggerInit() {
+        if (inited) {
+            return;
+        }
+        inited = true;
         //open menu button
         //no need in blocking openMenu. because it will not be processed (all touches will be blocked by debugger)
         TouchProcessor openMenu = new TouchProcessor(
