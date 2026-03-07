@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="fix bugs in skybox shader adaptor">
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="move skybox to buffers (solve crash)">
+      <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/SkyBoxShaderAdaptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors/SkyBoxShaderAdaptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/VRAMobject.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/VRAMobject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/frameBuffers/FrameBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/frameBuffers/FrameBuffer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +71,9 @@
     &quot;accountId&quot;: &quot;d859ab1d-2752-4ae9-85c9-3c434f70ff45&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/core/src/main/java/com/nikitos/main/frameBuffers/FrameBuffer.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -77,42 +82,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Profiler#1",
-    "Gradle.Build Demo.executor": "Run",
-    "Gradle.Build sealEngine_3M.executor": "Run",
-    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
-    "Gradle.Demo [dependencies].executor": "Run",
-    "Gradle.Download Sources.executor": "Run",
-    "Gradle.Load Gradle Dependencies.executor": "Run",
-    "Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor": "Run",
-    "Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor": "Run",
-    "Gradle.sealEngine_3M [clean].executor": "Run",
-    "Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor": "Run",
-    "Gradle.sealEngine_3M [dependencies].executor": "Run",
-    "Gradle.sealEngine_3M [jar].executor": "Run",
-    "Gradle.sealEngine_3M [shadowJar].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHELLCHECK.PATH": "/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck",
-    "git-widget-placeholder": "image__refactor",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/java/com/nikitos/main/shaders/default_adaptors",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Problems",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.49679077",
-    "settings.editor.selected.configurable": "reference.settings.deploy.options",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Profiler#1&quot;,
+    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [jar].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [shadowJar].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;image__refactor&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/java/com/nikitos/main/shaders/default_adaptors&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.49679077&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.deploy.options&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.nikitos.platform" />
@@ -531,7 +536,8 @@
       <workItem from="1772568325763" duration="2126000" />
       <workItem from="1772824465001" duration="2993000" />
       <workItem from="1772833616974" duration="1559000" />
-      <workItem from="1772877578685" duration="1586000" />
+      <workItem from="1772877578685" duration="3133000" />
+      <workItem from="1772880739592" duration="47000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -821,7 +827,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772827454536</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="move skybox to buffers (solve crash)">
+      <option name="closed" value="true" />
+      <created>1772879304079</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1772879304079</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -851,7 +865,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix polygon" />
     <MESSAGE value="fix shaders" />
     <MESSAGE value="it starts&#10;found problems in file system, found problems with PImage" />
     <MESSAGE value="new PImage" />
@@ -876,6 +889,7 @@
     <MESSAGE value="update utils for touch adaptation" />
     <MESSAGE value="add location checks for safety with different drivers on desktop" />
     <MESSAGE value="fix bugs in skybox shader adaptor" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix bugs in skybox shader adaptor" />
+    <MESSAGE value="move skybox to buffers (solve crash)" />
+    <option name="LAST_COMMIT_MESSAGE" value="move skybox to buffers (solve crash)" />
   </component>
 </project>
