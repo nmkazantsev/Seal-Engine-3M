@@ -124,6 +124,7 @@ public class SkyBox implements VerticesSet {
     }
 
     private PImage loadTexture(Void v) {
+        pf.log_e("skybox", "reload");
         for (int i = 0; i < images.length; i++) {
             images[i] = loadImage(textureFileName + names[i] + "." + res, context);
         }
@@ -156,6 +157,10 @@ public class SkyBox implements VerticesSet {
     }
 
     private void postToGl() {
+        if(redrawNeeded){
+            redrawNow();
+            redrawNeeded=false;
+        }
         gl.glActiveTexture(glc.GL_TEXTURE0());
         gl.glBindTexture(glc.GL_TEXTURE_CUBE_MAP(), texture.getId());
         gl.glTexParameteri(glc.GL_TEXTURE_CUBE_MAP(), glc.GL_TEXTURE_MIN_FILTER(), glc.GL_LINEAR());
