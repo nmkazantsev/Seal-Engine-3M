@@ -32,11 +32,6 @@ public class ImgBridgeDesktop extends ImgBridge {
             if (image == null) {
                 throw new RuntimeException("Failed to decode image");
             }
-
-            int width = image.getWidth();
-            int height = image.getHeight();
-
-            // 4. Создаём твой PImage
             PImage result = new PImage(new PImageDesktop(image));
             image.close();
             return  result;

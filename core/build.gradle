@@ -5,6 +5,10 @@ plugins {
 group = 'com.nikitos'
 version = '1.0-SNAPSHOT'
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 
 dependencies {
     implementation files('libs/obj-0.4.0.jar')
