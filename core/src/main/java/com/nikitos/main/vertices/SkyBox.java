@@ -217,6 +217,7 @@
         public void onRedraw() {
             redrawFunction.apply(null);
             redrawNeeded = false;
+            this.vboLoaded = false;
         }
 
 

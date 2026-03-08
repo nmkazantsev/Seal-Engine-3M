@@ -296,6 +296,7 @@ public class Polygon implements VerticesSet {
         if (image != null) {
             image.delete();
         }
+        this.vboCreated = false;
         this.image = redrawFunction.apply(redrawParams);
         image.setLoaded(true);
         setRedrawNeeded(false);
