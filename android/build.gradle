@@ -14,6 +14,10 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+    aaptOptions {
+        noCompress "mp3"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
