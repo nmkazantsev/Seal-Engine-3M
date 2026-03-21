@@ -2,11 +2,15 @@ package com.seal.gl_engine.platform;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
+
 import com.nikitos.platformBridge.SealAssetManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class AndroidSealAssetManager implements SealAssetManager {
 
@@ -18,12 +22,15 @@ public class AndroidSealAssetManager implements SealAssetManager {
 
     @Override
     public InputStream load(String path) {
-        try {
-            return assets.open(path);
-        } catch (IOException e) {
-            e.printStackTrace();
+        InputStream is = Objects.requireNonNull(getClass()
+                        .getClassLoader())
+                .getResourceAsStream(path);
+
+        if (is == null) {
+            throw new RuntimeException("Asset not found: " + path);
         }
-        return null;
+
+        return is;
     }
 
     @Override
@@ -38,10 +45,13 @@ public class AndroidSealAssetManager implements SealAssetManager {
                 result.write(buffer, 0, length);
             }
 
-            return result.toString("UTF-8");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                return result.toString(StandardCharsets.UTF_8);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     @Override
