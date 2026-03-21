@@ -50,7 +50,7 @@ public class AndroidAudioPLayer implements AudioPlayer {
             musicPlayer.setLooping(loop);
             musicPlayer.setVolume(1f, 1f);
 
-          /*  // Асинхронная подготовка — ключевое исправление!
+            // Асинхронная подготовка — ключевое исправление!
             musicPlayer.setOnPreparedListener(mp -> {
                 Log.e("player", "Prepared, starting playback");
                 mp.start();
@@ -79,7 +79,7 @@ public class AndroidAudioPLayer implements AudioPlayer {
 
             musicPlayer.setOnCompletionListener(mp -> {
                 Log.e("Audio", "Playback completed (or stopped)");
-            });*/
+            });
             // --- КОНЕЦ ДИАГНОСТИКИ ---
             musicPlayer.prepareAsync(); // вместо prepare()
         } catch (IOException e) {
