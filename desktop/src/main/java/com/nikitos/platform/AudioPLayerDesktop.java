@@ -5,13 +5,13 @@ import com.nikitos.platformBridge.AudioPlayer;
 import mp3.SimpleMp3Player;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class AudioPLayerDesktop implements AudioPlayer {
     private SimpleMp3Player musicPlayer = new SimpleMp3Player();
 
     private static List<AudioPLayerDesktop> players = new ArrayList<>();
+
     public AudioPLayerDesktop() {
         players.add(this);
     }
@@ -24,14 +24,17 @@ public class AudioPLayerDesktop implements AudioPlayer {
         if (loop) {
             new Thread(() -> {
                 while (musicPlayer.isPlaying()) {
-                    try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ignored) {
+                    }
                 }
                 musicPlayer.play(path);
             }).start();
         }
     }
 
-    public static void stopAll(){
+    public static void stopAll() {
         // Проходим по элементам
         for (AudioPLayerDesktop element : players) {
             element.stopMusic();
@@ -46,6 +49,11 @@ public class AudioPLayerDesktop implements AudioPlayer {
     @Override
     public void pauseMusic() {
         musicPlayer.pause();
+    }
+
+    @Override
+    public void start() {
+        musicPlayer.resume();
     }
 
     @Override

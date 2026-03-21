@@ -9,6 +9,8 @@ public interface AudioPlayer {
 
     void pauseMusic();
 
+    void start();
+
     void playSound(String path);
 
     // когда-нибудь сделаю

@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.util.Log;
 
-import com.nikitos.CoreRenderer;
 import com.nikitos.maths.Vec3;
 import com.nikitos.platformBridge.AudioPlayer;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +23,7 @@ public class AndroidAudioPLayer implements AudioPlayer {
 
     public AndroidAudioPLayer(Context context) {
         this.context = context.getApplicationContext();
-
+        musicPlayer = new MediaPlayer();
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(10)
                 .build();
@@ -34,47 +31,61 @@ public class AndroidAudioPLayer implements AudioPlayer {
 
     // 🎵 MUSIC
 
+    //@OptIn(markerClass = UnstableApi.class)
     @Override
     public void playMusic(String path, boolean loop) {
-        stopMusic();
-        try {
-            // Пытаемся загрузить из assets (куда скопировали ресурсы)
-            AssetFileDescriptor afd = context.getAssets().openFd(path);
-            musicPlayer = new MediaPlayer();
-            musicPlayer.setDataSource(
-                    afd.getFileDescriptor(),
-                    afd.getStartOffset(),
-                    afd.getLength()
-            );
-            // ... остальное
-        } catch (IOException e) {
-            // fallback: если нет в assets, пробуем загрузить из classpath через временный файл
-            InputStream is = CoreRenderer.engine.getPlatformBridge().getAssetManager().load(path);
-            if (is == null) throw new RuntimeException("Audio not found: " + path);
-
-            File tempFile = null;
-            try {
-                tempFile = File.createTempFile("audio", ".mp3", context.getCacheDir());
-                tempFile.deleteOnExit();
-                try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                    byte[] buffer = new byte[8192];
-                    int len;
-                    while ((len = is.read(buffer)) != -1) {
-                        fos.write(buffer, 0, len);
-                    }
-                }
-                musicPlayer.setDataSource(tempFile.getAbsolutePath());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            musicPlayer.setLooping(loop);
-            try {
-                musicPlayer.prepare();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            musicPlayer.start();
+        Log.e("player", "play");
+        if (musicPlayer.isPlaying()) {
+            musicPlayer.stop();
         }
+        AssetFileDescriptor afd = null;
+        try {
+            afd = context.getAssets().openFd(path);
+
+            musicPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            Log.d("Audio", "File size: " + afd.getLength()); // Убедимся, что файл не пустой
+
+            afd.close();
+
+            musicPlayer.setLooping(loop);
+            musicPlayer.setVolume(1f, 1f);
+
+          /*  // Асинхронная подготовка — ключевое исправление!
+            musicPlayer.setOnPreparedListener(mp -> {
+                Log.e("player", "Prepared, starting playback");
+                mp.start();
+            });
+
+            musicPlayer.setOnErrorListener((mp, what, extra) -> {
+                Log.e("player", "MediaPlayer error: what=" + what + ", extra=" + extra);
+                return true;
+            });
+
+            // --- ДИАГНОСТИКА ---
+            musicPlayer.setOnErrorListener((mp, what, extra) -> {
+                Log.e("Audio", "MediaPlayer Error: what=" + what + ", extra=" + extra);
+                return true;
+            });
+
+            musicPlayer.setOnInfoListener((mp, what, extra) -> {
+                Log.e("Audio", "MediaPlayer Info: what=" + what + ", extra=" + extra);
+                return false;
+            });
+
+            musicPlayer.setOnPreparedListener(mp -> {
+                Log.e("Audio", "Prepared, duration: " + mp.getDuration() + " ms");
+                mp.start();
+            });
+
+            musicPlayer.setOnCompletionListener(mp -> {
+                Log.e("Audio", "Playback completed (or stopped)");
+            });*/
+            // --- КОНЕЦ ДИАГНОСТИКИ ---
+            musicPlayer.prepareAsync(); // вместо prepare()
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 
@@ -92,6 +103,11 @@ public class AndroidAudioPLayer implements AudioPlayer {
         if (musicPlayer != null && musicPlayer.isPlaying()) {
             musicPlayer.pause();
         }
+    }
+
+    @Override
+    public void start() {
+        musicPlayer.start();
     }
 
 // 🔊 SOUND
