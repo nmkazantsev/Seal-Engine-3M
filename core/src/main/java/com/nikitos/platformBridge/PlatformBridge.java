@@ -33,4 +33,7 @@ public abstract class PlatformBridge {
     public abstract Platform getPlatform();
 
     public abstract ErrorPrinter getErrorPrinter();
+
+    public abstract  SealAssetManager getAssetManager();
+    // public abstract AudioPlayer getAudioPlayer();
 }

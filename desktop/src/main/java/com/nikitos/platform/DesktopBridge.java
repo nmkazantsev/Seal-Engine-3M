@@ -88,4 +88,9 @@ public class DesktopBridge extends PlatformBridge {
     public ErrorPrinter getErrorPrinter() {
         return new ErrorPrinterDesktop();
     }
+
+    @Override
+    public SealAssetManager getAssetManager() {
+        return new DesktopSealAssetManager();
+    }
 }

@@ -18,13 +18,11 @@ import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.main.vertices.SimplePolygon;
 import com.nikitos.maths.Matrix;
 import com.nikitos.maths.PVector;
-import com.nikitos.platformBridge.GLConstBridge;
-import com.nikitos.platformBridge.GeneralPlatformBridge;
-import com.nikitos.platformBridge.Platform;
-import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.platformBridge.*;
 import com.nikitos.utils.FileUtils;
 import com.nikitos.utils.Utils;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,8 +135,8 @@ public class Debugger {
         debuggerPage = new SimplePolygon(drawMianPage, true, 0, null);
         FileUtils fileUtils = new FileUtils();
         shader = new Shader(
-                fileUtils.readFileFromAssets(Debugger.class, "/vertex_shader.glsl"),
-                fileUtils.readFileFromAssets(Debugger.class, "/fragment_shader.glsl"),
+             "vertex_shader_engine.glsl",
+               "fragment_shader_engine.glsl",
                 null, new MainShaderAdaptor());
         fpsPolygon = new SimplePolygon(redrawFps, true, 0, null);
         matrix = resetTranslateMatrix(matrix);

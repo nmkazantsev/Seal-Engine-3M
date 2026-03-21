@@ -3,6 +3,8 @@ package com.nikitos.main.shaders;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.platformBridge.SealAssetManager;
 import com.nikitos.platformBridge.ShaderBridge;
 
 import java.util.ArrayList;
@@ -25,9 +27,11 @@ public class Shader { //means shader program
 
     public Shader(String vertex, String fragment, GamePageClass page, Adaptor adaptor) {
         shaderUtils = new ShaderUtils();
-        link = shaderUtils.createShaderProgram(vertex, fragment);
-        this.vertex = vertex;
-        this.fragment = fragment;
+        PlatformBridge platformBridge = CoreRenderer.engine.getPlatformBridge();
+        SealAssetManager assetManager = platformBridge.getAssetManager();
+        this.vertex = assetManager.loadText(vertex);
+        this.fragment = assetManager.loadText(fragment);
+        link = shaderUtils.createShaderProgram(this.vertex, this.fragment);
         if (page != null) {
             this.page = page.getClass();
         }
@@ -39,10 +43,12 @@ public class Shader { //means shader program
 
     public Shader(String vertex, String fragment, String geom, GamePageClass page, Adaptor adaptor) {
         shaderUtils = new ShaderUtils();
-        link = shaderUtils.createShaderProgram(vertex, fragment, geom);
-        this.vertex = vertex;
-        this.fragment = fragment;
-        this.geom = geom;
+        PlatformBridge platformBridge = CoreRenderer.engine.getPlatformBridge();
+        SealAssetManager assetManager = platformBridge.getAssetManager();
+        this.vertex = assetManager.loadText(vertex);
+        this.fragment = assetManager.loadText(fragment);
+        this.geom = assetManager.loadText(geom);
+        link = shaderUtils.createShaderProgram(this.vertex, this.fragment, this.geom);
         if (page != null) {
             this.page = page.getClass();
         }

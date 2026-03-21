@@ -33,19 +33,16 @@
 
         private final Function<Void, PImage> redrawFunction;
 
-        private final Class<?> context;
         private final GamePageClass gamePageClass;
         private final String[] names = new String[]{"right", "left", "bottom", "top", "front", "back"};
-        private PlatformBridge pf;
 
         public SkyBox(String textureFileName, String res, GamePageClass page) {
-            pf = CoreRenderer.engine.getPlatformBridge();
+            PlatformBridge pf = CoreRenderer.engine.getPlatformBridge();
             gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
             glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
 
             this.res = res;
             this.gamePageClass = page;
-            this.context = page.getClass();
             this.redrawFunction = this::loadTexture;
             this.textureFileName = textureFileName;
             VerticesShapesManager.allShapes.add(new java.lang.ref.WeakReference<>(this));//добавить ссылку на Poligon
@@ -125,7 +122,7 @@
 
         private PImage loadTexture(Void v) {
             for (int i = 0; i < images.length; i++) {
-                images[i] = loadImage(textureFileName + names[i] + "." + res, context);
+                images[i] = loadImage(textureFileName + names[i] + "." + res);
             }
             return null;
         }
