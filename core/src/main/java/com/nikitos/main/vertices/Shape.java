@@ -31,7 +31,6 @@ public class Shape implements VerticesSet {
     private final GLConstBridge glc;
     private final PlatformBridge platformBridge;
 
-    private final Class<?> contextClass;
     private boolean isVertexLoaded = false, globalLoaded = false;
 
     private final Texture texture;
@@ -57,7 +56,6 @@ public class Shape implements VerticesSet {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
         gl = platformBridge.getGeneralPlatformBridge();
         glc = platformBridge.getGLConstBridge();
-        contextClass = page.getClass();
 
         creator = page;
         this.redrawFunction = this::loadTexture;
@@ -72,11 +70,10 @@ public class Shape implements VerticesSet {
         redrawNow();
     }
 
-    public Shape(String fileName, String textureFileName, GamePageClass page, Class<?> context) {
+    public Shape(String fileName, String textureFileName, GamePageClass page) {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
         gl = platformBridge.getGeneralPlatformBridge();
         glc = platformBridge.getGLConstBridge();
-        contextClass = page.getClass();
 
         creator = page;
         this.redrawFunction = this::loadTexture;
@@ -88,7 +85,7 @@ public class Shape implements VerticesSet {
             faces = facesAndObject.facesArr;
             object = (Obj) facesAndObject.object;
             return null;
-        }, context);
+        });
         onRedrawSetup();
         redrawNow();
     }
@@ -99,14 +96,14 @@ public class Shape implements VerticesSet {
     }
 
     //тут оправдан статик чтобы не городить еще класс на preloader
-    public static void loadFacesAsync(String fileName, Function<PreLoadedMesh, Void> callback, Class<?> cls) {
+    public static void loadFacesAsync(String fileName, Function<PreLoadedMesh, Void> callback) {
         PlatformBridge platformBridge = CoreRenderer.engine.getPlatformBridge();
         new Thread(() -> {
             Face[] faces1;
             InputStream inputStream;
             Obj object = null;
             try {
-                inputStream = cls.getResourceAsStream(fileName);
+                inputStream = CoreRenderer.engine.getPlatformBridge().getAssetManager().load(fileName);
                 assert inputStream != null;
                 object = ObjUtils.convertToRenderable(
                         ObjReader.read(inputStream));
@@ -173,15 +170,15 @@ public class Shape implements VerticesSet {
 
     public void addNormalMap(String normalMapFileName) {
         this.normalMapFileName = normalMapFileName;
-        normalImage = loadImage(normalMapFileName, contextClass);
+        normalImage = loadImage(normalMapFileName);
         normalTexture = new NormalMap(creator);
     }
 
     private PImage loadTexture(Void v) {
         if (normalMapFileName != null) {
-            normalImage = loadImage(normalMapFileName, contextClass);
+            normalImage = loadImage(normalMapFileName);
         }
-        return loadImage(textureFileName, contextClass);
+        return loadImage(textureFileName);
     }
 
 

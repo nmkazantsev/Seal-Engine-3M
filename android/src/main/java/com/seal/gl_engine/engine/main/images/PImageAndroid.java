@@ -1,9 +1,12 @@
 package com.seal.gl_engine.engine.main.images;
 
 import android.graphics.*;
+
+import com.nikitos.CoreRenderer;
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.main.images.TextAlign;
 import com.nikitos.maths.Section;
+import com.seal.gl_engine.platform.AndroidBridge;
 import com.seal.gl_engine.utils.Utils;
 
 public class PImageAndroid extends AbstractImage {
@@ -145,7 +148,7 @@ public class PImageAndroid extends AbstractImage {
 
     @Override
     public void setFont(String font) {
-        paint.setTypeface(Typeface.createFromAsset(Utils.context.getAssets(), font));
+        paint.setTypeface(Typeface.createFromAsset(((AndroidBridge)CoreRenderer.engine.getPlatformBridge()).getContext().getAssets(), font));
     }
 
     @Override

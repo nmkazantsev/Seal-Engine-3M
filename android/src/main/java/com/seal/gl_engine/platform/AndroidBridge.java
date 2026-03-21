@@ -14,8 +14,10 @@ import com.nikitos.GamePageClass;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.platformBridge.*;
+import com.nikitos.utils.Utils;
 import com.seal.gl_engine.OpenGLRenderer;
 import com.seal.gl_engine.engine.main.images.PImageAndroid;
+import com.seal.gl_engine.mp3.AndroidAudioPLayer;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -185,5 +187,19 @@ public class AndroidBridge extends PlatformBridge {
     @Override
     public ErrorPrinter getErrorPrinter() {
         return new ErrorPrinterAndroid();
+    }
+
+    @Override
+    public SealAssetManager getAssetManager() {
+        return new AndroidSealAssetManager(context);
+    }
+
+    @Override
+    public AudioPlayer getAudioPlayer() {
+        return new AndroidAudioPLayer(context);
+    }
+
+    public Context getContext(){
+        return context;
     }
 }

@@ -170,15 +170,13 @@ public class DesktopLauncher {
 
         glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
             glViewport(0, 0, width, height);
-            float x = width;
-            float y = height;
-            float ky = y / 1280.0f;
-            float kx = x / 720.0f;
-            if (x > y) {
-                kx = x / 1280.0f;
-                ky = y / 720.0f;
+            float ky = (float) height / 1280.0f;
+            float kx = (float) width / 720.0f;
+            if ((float) width > (float) height) {
+                kx = (float) width / 1280.0f;
+                ky = (float) height / 720.0f;
             }
-            Utils.setDim(x, y, kx, ky);
+            Utils.setDim((float) width, (float) height, kx, ky);
             engine.onSurfaceChanged(width, height);
         });
 
@@ -282,5 +280,6 @@ public class DesktopLauncher {
             glfwPollEvents();
 
         }
+        AudioPLayerDesktop.stopAll();
     }
 }

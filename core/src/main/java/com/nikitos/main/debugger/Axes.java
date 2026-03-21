@@ -20,8 +20,8 @@ public class Axes {
         FileUtils fileUtils = new FileUtils();
         line = new SectionPolygon(gamePageClass);
         shader = new Shader(
-                fileUtils.readFileFromAssets(this.getClass(), "/line_vertex.glsl"),
-                fileUtils.readFileFromAssets(this.getClass(), "/line_fragment.glsl"),
+              "line_vertex_engine.glsl",
+                "line_fragment_engine.glsl",
                 gamePageClass,
                 new SectionShaderAdaptor()); //compile only once
 

@@ -2,6 +2,7 @@ plugins {
     id 'java'
 }
 
+
 group = 'com.nikitos'
 version = '1.0-SNAPSHOT'
 
@@ -27,6 +28,16 @@ java {
 }
 
 dependencies {
+    implementation 'org.slf4j:slf4j-nop:2.0.17'
+    // BasicPlayer — основная библиотека
+    implementation 'com.googlecode.soundlibs:basicplayer:3.0.0.0'
+
+    // JLayer для декодирования MP3
+    implementation 'com.googlecode.soundlibs:jlayer:1.0.1.4'
+
+    // MP3SPI для JavaSound поддержки (необязательно, но помогает)
+    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.3'
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -53,6 +64,8 @@ dependencies {
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
     implementation "org.lwjgl:lwjgl-stb"
+
+
 
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"

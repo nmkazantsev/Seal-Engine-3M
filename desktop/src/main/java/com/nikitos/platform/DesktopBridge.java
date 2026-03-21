@@ -88,4 +88,14 @@ public class DesktopBridge extends PlatformBridge {
     public ErrorPrinter getErrorPrinter() {
         return new ErrorPrinterDesktop();
     }
+
+    @Override
+    public SealAssetManager getAssetManager() {
+        return new DesktopSealAssetManager();
+    }
+
+    @Override
+    public AudioPlayer getAudioPlayer() {
+        return new AudioPLayerDesktop();
+    }
 }

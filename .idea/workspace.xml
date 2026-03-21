@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="remove debug">
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add android player">
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +42,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -52,7 +53,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="11-адаптация-тача" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -73,6 +74,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/core/src/main/java/com/nikitos/main/frameBuffers/FrameBuffer.java" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -81,55 +85,57 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Profiler#1&quot;,
-    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [shadowJar].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/java/com/nikitos/main/shaders/default_adaptors&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.49679077&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.deploy.options&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Profiler#1",
+    "Gradle.Build Demo.executor": "Run",
+    "Gradle.Build sealEngine_3M.executor": "Run",
+    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [dependencies].executor": "Run",
+    "Gradle.Demo [runWithJavaFX].executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.Load Gradle Dependencies.executor": "Run",
+    "Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [build].executor": "Run",
+    "Gradle.sealEngine_3M [clean].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies].executor": "Run",
+    "Gradle.sealEngine_3M [jar].executor": "Run",
+    "Gradle.sealEngine_3M [run].executor": "Run",
+    "Gradle.sealEngine_3M [shadowJar].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "15-добавить-assests-менеджеры-и-плеер",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/Demo/game/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.49679077",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.nikitos.platform" />
       <recent name="com.seal.gl_engine.platform" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../Demo/game/src/main/resources" />
+      <recent name="$PROJECT_DIR$/../Demo/game/src/main/assets" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch" />
-      <recent name="$PROJECT_DIR$/core/src/main/resources" />
-      <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/../Demo" />
@@ -155,9 +161,23 @@
       <command value="gradle  :desktop:dependencies --configuration runtimeClasspath" />
       <command value="gradle clean" />
       <command value="gradle build" />
+      <command value="gradle run" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.sealEngine_3M [build]">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
+      <module name="Demo.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nikitos.platform.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
       <module name="Demo.main" />
@@ -219,6 +239,28 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="Demo [runWithJavaFX]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../Demo" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="runWithJavaFX" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -233,6 +275,52 @@
             <option value=":desktop:dependencies" />
             <option value="--configuration" />
             <option value="runtimeClasspath" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":desktop:dependencies" />
+            <option value="--configuration" />
+            <option value="runtimeClasspath" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="sealEngine_3M [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -333,6 +421,28 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="sealEngine_3M [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="sealEngine_3M [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -380,20 +490,22 @@
     <list>
       <item itemvalue="Application.Main" />
       <item itemvalue="Gradle.Demo [dependencies]" />
+      <item itemvalue="Gradle.sealEngine_3M [clean]" />
       <item itemvalue="Gradle.sealEngine_3M [dependencies --configuration compileClasspath]" />
+      <item itemvalue="Gradle.sealEngine_3M [dependencies]" />
       <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
+      <item itemvalue="Gradle.Demo [runWithJavaFX]" />
+      <item itemvalue="Gradle.sealEngine_3M [run]" />
       <item itemvalue="Gradle.sealEngine_3M [build]" />
       <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
-      <item itemvalue="Gradle.sealEngine_3M [clean]" />
-      <item itemvalue="Gradle.sealEngine_3M [dependencies]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.sealEngine_3M [run]" />
+        <item itemvalue="Gradle.Demo [runWithJavaFX]" />
         <item itemvalue="Gradle.sealEngine_3M [build]" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
-        <item itemvalue="Gradle.sealEngine_3M [dependencies]" />
-        <item itemvalue="Gradle.sealEngine_3M [clean]" />
       </list>
     </recent_temporary>
   </component>
@@ -472,6 +584,13 @@
       <workItem from="1772912086064" duration="1748000" />
       <workItem from="1772951099028" duration="606000" />
       <workItem from="1772959346476" duration="1327000" />
+      <workItem from="1773066906152" duration="1069000" />
+      <workItem from="1774004316691" duration="1934000" />
+      <workItem from="1774009317975" duration="1005000" />
+      <workItem from="1774097980006" duration="2910000" />
+      <workItem from="1774106061304" duration="3841000" />
+      <workItem from="1774109920859" duration="3628000" />
+      <workItem from="1774121653300" duration="1026000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -801,7 +920,63 @@
       <option name="project" value="LOCAL" />
       <updated>1772889001288</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="MOVE everything to classPath loader">
+      <option name="closed" value="true" />
+      <created>1774099439153</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1774099439153</updated>
+    </task>
+    <task id="LOCAL-00043" summary="MOVE everything to classPath loader in android">
+      <option name="closed" value="true" />
+      <created>1774099794146</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1774099794146</updated>
+    </task>
+    <task id="LOCAL-00044" summary="add java fx">
+      <option name="closed" value="true" />
+      <created>1774108459731</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1774108459731</updated>
+    </task>
+    <task id="LOCAL-00045" summary="works sound on desktop">
+      <option name="closed" value="true" />
+      <created>1774110341171</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1774110341171</updated>
+    </task>
+    <task id="LOCAL-00046" summary="add stop all to audio player">
+      <option name="closed" value="true" />
+      <created>1774111161417</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1774111161417</updated>
+    </task>
+    <task id="LOCAL-00047" summary="clean-up">
+      <option name="closed" value="true" />
+      <created>1774111185109</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1774111185109</updated>
+    </task>
+    <task id="LOCAL-00048" summary="add android player">
+      <option name="closed" value="true" />
+      <created>1774121770097</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1774121770097</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -831,13 +1006,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="clean up android utils" />
-    <MESSAGE value="fix compability" />
-    <MESSAGE value="find problem in normal maps" />
-    <MESSAGE value="add adaptation on desktop" />
-    <MESSAGE value="again fix fulscreeen exit" />
-    <MESSAGE value="add debugger and cross - platform touch" />
-    <MESSAGE value="add debuger on surface change" />
     <MESSAGE value="fix crash in PImage convert to texture on desktop" />
     <MESSAGE value="optimize debugger" />
     <MESSAGE value="add get platform" />
@@ -856,14 +1024,21 @@
     <MESSAGE value="move polygon and fb to vertex buffers" />
     <MESSAGE value="remove old bind data" />
     <MESSAGE value="remove debug" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove debug" />
+    <MESSAGE value="MOVE everything to classPath loader" />
+    <MESSAGE value="MOVE everything to classPath loader in android" />
+    <MESSAGE value="add java fx" />
+    <MESSAGE value="works sound on desktop" />
+    <MESSAGE value="add stop all to audio player" />
+    <MESSAGE value="clean-up" />
+    <MESSAGE value="add android player" />
+    <option name="LAST_COMMIT_MESSAGE" value="add android player" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java</url>
-          <line>83</line>
+          <line>81</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

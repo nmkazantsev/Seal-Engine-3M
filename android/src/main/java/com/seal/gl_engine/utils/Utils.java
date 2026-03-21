@@ -9,18 +9,17 @@ import android.util.Log;
 import com.nikitos.CoreRenderer;
 import com.nikitos.platformBridge.ImgBridge;
 import com.seal.gl_engine.engine.main.images.PImageAndroid;
+import com.seal.gl_engine.platform.AndroidBridge;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Function;
 
 public class Utils {
-    public static Context context;
-
     public static PImageAndroid loadImage(String name) {
         try {
             ImgBridge imgBridge = CoreRenderer.engine.getPlatformBridge().getImgBridge();
-            PImageAndroid img = new PImageAndroid(getBitmapFromAssets(name, context));
+            PImageAndroid img = new PImageAndroid(getBitmapFromAssets(name, ((AndroidBridge)CoreRenderer.engine.getPlatformBridge()).getContext()));
             //this will write width and height to corresponding fileds
             img.getWidth();
             img.getHeight();

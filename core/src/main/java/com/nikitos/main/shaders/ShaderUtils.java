@@ -74,7 +74,7 @@ public class ShaderUtils {
         final int[] compileStatus = new int[1];
         shaderBridge.glGetShaderiv(shaderId, glc.GL_COMPILE_STATUS(), compileStatus, 0);
         if (compileStatus[0] == 0) {
-            platformBridge.log_e("Load Shader Failed" + shaderText, "Compilation\n" + shaderBridge.glGetShaderInfoLog(shaderId));
+            platformBridge.log_e("Load Shader Failed: " + shaderText, "Compilation\n" + shaderBridge.glGetShaderInfoLog(shaderId));
             shaderBridge.glDeleteShader(shaderId);
             return 0;
         }
