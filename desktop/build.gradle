@@ -1,12 +1,5 @@
 plugins {
     id 'java'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
-
-}
-
-javafx {
-    version = "21"                  // используйте актуальную версию
-    modules = [ 'javafx.controls', 'javafx.media' ]   // добавляем media
 }
 
 
@@ -35,6 +28,15 @@ java {
 }
 
 dependencies {
+    // BasicPlayer — основная библиотека
+    implementation 'com.googlecode.soundlibs:basicplayer:3.0.0.0'
+
+    // JLayer для декодирования MP3
+    implementation 'com.googlecode.soundlibs:jlayer:1.0.1.4'
+
+    // MP3SPI для JavaSound поддержки (необязательно, но помогает)
+    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.3'
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
