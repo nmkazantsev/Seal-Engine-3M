@@ -93,4 +93,9 @@ public class DesktopBridge extends PlatformBridge {
     public SealAssetManager getAssetManager() {
         return new DesktopSealAssetManager();
     }
+
+    @Override
+    public AudioPlayer getAudioPlayer() {
+        return new AudioPLayerDesktop();
+    }
 }

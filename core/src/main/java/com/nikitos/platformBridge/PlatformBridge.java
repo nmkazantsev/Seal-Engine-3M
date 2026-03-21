@@ -17,15 +17,19 @@ public abstract class PlatformBridge {
     public abstract VertexBridge getVertexBridge();
 
     public abstract GeneralPlatformBridge getGeneralPlatformBridge();
+
     public abstract GLConstBridge getGLConstBridge();
 
     public abstract ImgBridge getImgBridge();
+
     public abstract AbstractImage getAbstractImage();
+
     public abstract void glClearColor(float r, float g, float b, float a);
 
     public abstract int glGetError();
 
     public abstract void log_e(String tag, String message);
+
     public abstract void log_i(String tag, String message);
 
     public abstract void print(String text);
@@ -34,6 +38,7 @@ public abstract class PlatformBridge {
 
     public abstract ErrorPrinter getErrorPrinter();
 
-    public abstract  SealAssetManager getAssetManager();
-    // public abstract AudioPlayer getAudioPlayer();
+    public abstract SealAssetManager getAssetManager();
+
+    public abstract AudioPlayer getAudioPlayer();
 }
