@@ -5,6 +5,7 @@ import com.nikitos.platformBridge.SealAssetManager;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class DesktopSealAssetManager implements SealAssetManager {
     @Override
@@ -32,7 +33,7 @@ public class DesktopSealAssetManager implements SealAssetManager {
                 result.write(buffer, 0, length);
             }
 
-            return result.toString("UTF-8");
+            return result.toString(StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

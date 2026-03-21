@@ -4,24 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="remove debug">
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidSealAssetManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/SealAssetManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopSealAssetManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Axes.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Axes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/Debugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/Shader.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/Shader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/SkyBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/resources/fragment_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/fragment_shader_engine.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/resources/line_fragment.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/line_fragment_engine.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/resources/line_vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/line_vertex_engine.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/resources/vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/vertex_shader_engine.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="MOVE everything to classPath loader">
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/utils/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopSealAssetManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopSealAssetManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -663,7 +649,7 @@
       <workItem from="1773066906152" duration="1069000" />
       <workItem from="1774004316691" duration="1934000" />
       <workItem from="1774009317975" duration="1005000" />
-      <workItem from="1774097980006" duration="1291000" />
+      <workItem from="1774097980006" duration="1804000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -993,7 +979,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772889001288</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="MOVE everything to classPath loader">
+      <option name="closed" value="true" />
+      <created>1774099439153</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1774099439153</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1023,7 +1017,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="clean up android utils" />
     <MESSAGE value="fix compability" />
     <MESSAGE value="find problem in normal maps" />
     <MESSAGE value="add adaptation on desktop" />
@@ -1048,7 +1041,8 @@
     <MESSAGE value="move polygon and fb to vertex buffers" />
     <MESSAGE value="remove old bind data" />
     <MESSAGE value="remove debug" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove debug" />
+    <MESSAGE value="MOVE everything to classPath loader" />
+    <option name="LAST_COMMIT_MESSAGE" value="MOVE everything to classPath loader" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

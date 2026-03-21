@@ -14,6 +14,7 @@ import com.nikitos.GamePageClass;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.platformBridge.*;
+import com.nikitos.utils.Utils;
 import com.seal.gl_engine.OpenGLRenderer;
 import com.seal.gl_engine.engine.main.images.PImageAndroid;
 
@@ -185,5 +186,14 @@ public class AndroidBridge extends PlatformBridge {
     @Override
     public ErrorPrinter getErrorPrinter() {
         return new ErrorPrinterAndroid();
+    }
+
+    @Override
+    public SealAssetManager getAssetManager() {
+        return new AndroidSealAssetManager(context);
+    }
+
+    public Context getContext(){
+        return context;
     }
 }
