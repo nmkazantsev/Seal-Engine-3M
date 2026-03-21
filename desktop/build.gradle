@@ -28,6 +28,7 @@ java {
 }
 
 dependencies {
+    implementation 'org.slf4j:slf4j-nop:2.0.17'
     // BasicPlayer — основная библиотека
     implementation 'com.googlecode.soundlibs:basicplayer:3.0.0.0'
 

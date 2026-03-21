@@ -4,8 +4,17 @@ import com.nikitos.maths.Vec3;
 import com.nikitos.platformBridge.AudioPlayer;
 import mp3.SimpleMp3Player;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class AudioPLayerDesktop implements AudioPlayer {
     private SimpleMp3Player musicPlayer = new SimpleMp3Player();
+
+    private static List<AudioPLayerDesktop> players = new ArrayList<>();
+    public AudioPLayerDesktop() {
+        players.add(this);
+    }
 
     @Override
     public void playMusic(String path, boolean loop) {
@@ -19,6 +28,13 @@ public class AudioPLayerDesktop implements AudioPlayer {
                 }
                 musicPlayer.play(path);
             }).start();
+        }
+    }
+
+    public static void stopAll(){
+        // Проходим по элементам
+        for (AudioPLayerDesktop element : players) {
+            element.stopMusic();
         }
     }
 

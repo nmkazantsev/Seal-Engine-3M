@@ -282,5 +282,6 @@ public class DesktopLauncher {
             glfwPollEvents();
 
         }
+        AudioPLayerDesktop.stopAll();
     }
 }

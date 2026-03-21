@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add java fx">
-      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="works sound on desktop">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPLayerDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPLayerDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -592,7 +592,7 @@
       <workItem from="1774009317975" duration="1005000" />
       <workItem from="1774097980006" duration="2910000" />
       <workItem from="1774106061304" duration="3841000" />
-      <workItem from="1774109920859" duration="117000" />
+      <workItem from="1774109920859" duration="1227000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -946,7 +946,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774108459731</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="works sound on desktop">
+      <option name="closed" value="true" />
+      <created>1774110341171</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1774110341171</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -976,7 +984,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add adaptation on desktop" />
     <MESSAGE value="again fix fulscreeen exit" />
     <MESSAGE value="add debugger and cross - platform touch" />
     <MESSAGE value="add debuger on surface change" />
@@ -1001,7 +1008,8 @@
     <MESSAGE value="MOVE everything to classPath loader" />
     <MESSAGE value="MOVE everything to classPath loader in android" />
     <MESSAGE value="add java fx" />
-    <option name="LAST_COMMIT_MESSAGE" value="add java fx" />
+    <MESSAGE value="works sound on desktop" />
+    <option name="LAST_COMMIT_MESSAGE" value="works sound on desktop" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
