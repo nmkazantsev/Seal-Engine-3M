@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="clean-up">
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add android player">
       <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +109,6 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHELLCHECK.PATH": "/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck",
-    "android.gradle.sync.needed": "true",
     "extract.method.default.visibility": "private",
     "git-widget-placeholder": "15-добавить-assests-менеджеры-и-плеер",
     "kotlin-language-version-configured": "true",
@@ -595,7 +590,7 @@
       <workItem from="1774097980006" duration="2910000" />
       <workItem from="1774106061304" duration="3841000" />
       <workItem from="1774109920859" duration="3628000" />
-      <workItem from="1774121653300" duration="56000" />
+      <workItem from="1774121653300" duration="1026000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -973,7 +968,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774111185109</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="add android player">
+      <option name="closed" value="true" />
+      <created>1774121770097</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1774121770097</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1003,7 +1006,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add debuger on surface change" />
     <MESSAGE value="fix crash in PImage convert to texture on desktop" />
     <MESSAGE value="optimize debugger" />
     <MESSAGE value="add get platform" />
@@ -1028,7 +1030,8 @@
     <MESSAGE value="works sound on desktop" />
     <MESSAGE value="add stop all to audio player" />
     <MESSAGE value="clean-up" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean-up" />
+    <MESSAGE value="add android player" />
+    <option name="LAST_COMMIT_MESSAGE" value="add android player" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
