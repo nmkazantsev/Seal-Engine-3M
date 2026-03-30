@@ -86,6 +86,31 @@ public class PImageDesktop extends AbstractImage {
     }
 
     @Override
+    public float getTextWidth(String s) {
+        float max = 0;
+        for (String line : s.split("\n")) {
+            max = Math.max(max, font.measureTextWidth(line));
+        }
+        return max;
+    }
+
+    @Override
+    public float getTextHeight(String s) {
+        String[] lines = s.split("\n");
+
+        FontMetrics metrics = font.getMetrics();
+        float lineHeight = metrics.getDescent() - metrics.getAscent();
+
+        return lineHeight * lines.length;
+    }
+
+    @Override
+    public void setAntiAlias(boolean b) {
+        fillPaint.setAntiAlias(b);
+        strokePaint.setAntiAlias(b);
+    }
+
+    @Override
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
     }

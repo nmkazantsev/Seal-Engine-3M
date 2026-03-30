@@ -56,4 +56,9 @@ public abstract class AbstractImage {
     public abstract void createBitmap(int width, int height) ;
 
     public abstract void textAlign(TextAlign align);
+
+    public abstract float getTextWidth(String s);
+    public abstract float getTextHeight(String s);
+
+    public abstract void setAntiAlias(boolean b);
 }
