@@ -312,26 +312,17 @@ public class PImageDesktop extends AbstractImage {
 
     @Override
     public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle) {
-        // Создаем путь для сектора
-        Path path = new Path();
+        // Прямоугольник, ограничивающий круг
+        float left = cx - radius;
+        float top = cy - radius;
+        float right = cx + radius;
+        float bottom = cy + radius;
 
-        // Добавляем центральную точку
-        path.moveTo(cx, cy);
-
-        // Добавляем дугу
-        RectF rect = new RectF(cx - radius, cy - radius, cx + radius, cy + radius);
-        path.arcTo(rect, startAngle, sweepAngle, false);
-
-        // Закрываем путь (соединяем с центром)
-        path.close();
-
-        // Рисуем путь
-        canvas.drawPath(path, fillPaint);
-
+        // Рисуем заливку
+        canvas.drawArc(left, top, right, bottom, startAngle, sweepAngle, true, fillPaint);
+        // Рисуем обводку, если включена
         if (useStroke) {
-            canvas.drawPath(path, strokePaint);
+            canvas.drawArc(left, top, right, bottom, startAngle, sweepAngle, true, strokePaint);
         }
     }
-
-
 }
