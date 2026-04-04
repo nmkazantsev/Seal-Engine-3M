@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="VIP add base functions">
-      <change afterPath="$PROJECT_DIR$/architecture.md" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add architecture">
+      <change afterPath="$PROJECT_DIR$/docs/structure.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPLayerDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPLayerDesktop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,6 +111,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHELLCHECK.PATH&quot;: &quot;/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck&quot;,
+    &quot;android.gradle.sync.needed&quot;: &quot;true&quot;,
     &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
     &quot;git-widget-placeholder&quot;: &quot;17-версия-3-2-1&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
@@ -145,11 +141,11 @@
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/../Demo" />
       <recent name="$PROJECT_DIR$/../Demo/game/src/main/shaders" />
       <recent name="$PROJECT_DIR$/../Demo/game/src/main/resources" />
       <recent name="$PROJECT_DIR$/core" />
-      <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
@@ -495,15 +491,9 @@
       <workItem from="1774871719471" duration="49000" />
       <workItem from="1775295019633" duration="2266000" />
       <workItem from="1775297590645" duration="3537000" />
-      <workItem from="1775301800857" duration="837000" />
-    </task>
-    <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
-      <option name="closed" value="true" />
-      <created>1769591672780</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1769591672780</updated>
+      <workItem from="1775301800857" duration="2625000" />
+      <workItem from="1775312808839" duration="2060000" />
+      <workItem from="1775315332834" duration="44000" />
     </task>
     <task id="LOCAL-00002" summary="delete unused module">
       <option name="closed" value="true" />
@@ -889,7 +879,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774871749330</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="add architecture">
+      <option name="closed" value="true" />
+      <created>1775302643539</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1775302643540</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -934,7 +932,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="optimize debugger" />
     <MESSAGE value="add get platform" />
     <MESSAGE value="fix get platform" />
     <MESSAGE value="finish debugger" />
@@ -959,7 +956,8 @@
     <MESSAGE value="clean-up" />
     <MESSAGE value="add android player" />
     <MESSAGE value="VIP add base functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="VIP add base functions" />
+    <MESSAGE value="add architecture" />
+    <option name="LAST_COMMIT_MESSAGE" value="add architecture" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -971,5 +969,27 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.gk646.codestats.settings.Save">
+    <option name="commitTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1775302643779" />
+          <option name="linesCode" value="15894" />
+          <option name="totalLines" value="29543" />
+          <option name="info" value="add architecture" />
+        </TimePoint>
+      </list>
+    </option>
+    <option name="genericTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1775302643779" />
+          <option name="linesCode" value="15894" />
+          <option name="totalLines" value="29543" />
+          <option name="info" value="4 Apr 2026" />
+        </TimePoint>
+      </list>
+    </option>
   </component>
 </project>
