@@ -1,6 +1,7 @@
 package main.images;
 
 import com.nikitos.main.images.AbstractImage;
+import com.nikitos.main.images.PFont;
 import com.nikitos.main.images.TextAlign;
 import com.nikitos.maths.Section;
 import io.github.humbleui.skija.*;
@@ -329,5 +330,17 @@ public class PImageDesktop extends AbstractImage {
     @Override
     public void clear() {
         canvas.clear(0);
+    }
+
+    @Override
+    public void setFont(PFont font) {
+        Object platformFont = font.getPlatformFont();
+        if (platformFont instanceof Font) {
+            this.font = (Font) platformFont;
+            // Также обновляем размер, если textSize уже была установлена
+            this.font.setSize(textSize > 0 ? textSize : 16f);
+        } else {
+            throw new IllegalArgumentException("Unsupported font type for Desktop");
+        }
     }
 }

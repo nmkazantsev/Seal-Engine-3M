@@ -66,4 +66,5 @@ public abstract class AbstractImage {
 
     public abstract void clear();
 
+    public abstract void setFont(PFont font);
 }

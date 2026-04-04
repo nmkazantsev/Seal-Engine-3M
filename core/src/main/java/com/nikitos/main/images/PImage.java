@@ -183,4 +183,8 @@ public class PImage {
         impl.clear();
     }
 
+    public void setFont(PFont font) {
+        impl.setFont(font);
+    }
+
 }

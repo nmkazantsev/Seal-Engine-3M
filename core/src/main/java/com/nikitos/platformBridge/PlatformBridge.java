@@ -41,4 +41,6 @@ public abstract class PlatformBridge {
     public abstract SealAssetManager getAssetManager();
 
     public abstract AudioPlayer getAudioPlayer();
+
+    public abstract FontBridge getFontBridge();
 }
