@@ -20,14 +20,6 @@ public class PFont {
         impl.loadFromAsset(assetPath);
     }
 
-    public void loadFile(String filePath) {
-        impl.loadFromFile(filePath);
-    }
-
-    public void loadBytes(byte[] data) {
-        impl.loadFromBytes(data);
-    }
-
     public void close() {
         impl.close();
     }
@@ -47,9 +39,4 @@ public class PFont {
         return font;
     }
 
-    public static PFont fromFile(String filePath) {
-        PFont font = new PFont();
-        font.loadFile(filePath);
-        return font;
-    }
 }

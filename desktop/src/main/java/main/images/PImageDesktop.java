@@ -183,13 +183,17 @@ public class PImageDesktop extends AbstractImage {
     // --- TEXT SIZE ---
     @Override
     public void textSize(float size) {
-        textSize = size;
-
-        if (typeface == null) {
-            typeface = fontMgr.matchFamilyStyle(null, FontStyle.NORMAL);
+        this.textSize = size;
+        if (this.font != null) {
+            // Просто меняем размер существующего шрифта
+            this.font.setSize(size);
+        } else {
+            // Если шрифт ещё не создан (редкий случай), создаём дефолтный
+            if (typeface == null) {
+                typeface = fontMgr.matchFamilyStyle(null, FontStyle.NORMAL);
+            }
+            this.font = new Font(typeface, size);
         }
-
-        font = new Font(typeface, textSize);
     }
 
     @Override

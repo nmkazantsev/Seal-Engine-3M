@@ -9,6 +9,8 @@ import io.github.humbleui.skija.Typeface;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 
 public class FontDesktop extends AbstractFont {
     private Typeface typeface;
@@ -17,12 +19,32 @@ public class FontDesktop extends AbstractFont {
 
     @Override
     public void loadFromAsset(String assetPath) {
-        // Используем FontMgr — стандартный способ загрузки шрифтов в Skija
-        FontMgr fontMgr = FontMgr.getDefault();
-        this.typeface = fontMgr.makeFromFile(assetPath);
+        String resourcePath = assetPath.startsWith("/") ? assetPath.substring(1) : assetPath;
+        URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
+        if (resourceUrl == null) {
+            throw new RuntimeException("Resource not found: " + resourcePath);
+        }
 
+        String filePath;
+        try (InputStream is = resourceUrl.openStream()) {
+            File tempFile = File.createTempFile("font_", ".ttf");
+            tempFile.deleteOnExit();
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[8192];
+                int len;
+                while ((len = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+            }
+            filePath = tempFile.getAbsolutePath();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to extract font from JAR: " + assetPath, e);
+        }
+
+        FontMgr fontMgr = FontMgr.getDefault();
+        this.typeface = fontMgr.makeFromFile(filePath);
         if (this.typeface == null) {
-            throw new RuntimeException("Failed to load font from file: " + assetPath);
+            throw new RuntimeException("Failed to load font from file: " + filePath);
         }
         this.font = new Font(this.typeface, this.defaultSize);
         this.loaded = true;
