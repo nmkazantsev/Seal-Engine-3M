@@ -74,4 +74,12 @@ public class SimpleMp3Player {
             return false;
         }
     }
+
+    public void setVolume(float volume) {
+        try {
+            player.setGain(volume);
+        } catch (BasicPlayerException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AudioPLayerDesktop implements AudioPlayer {
+    private float volume = 1.0f;
     private SimpleMp3Player musicPlayer = new SimpleMp3Player();
 
     private static List<AudioPLayerDesktop> players = new ArrayList<>();
@@ -39,6 +40,17 @@ public class AudioPLayerDesktop implements AudioPlayer {
         for (AudioPLayerDesktop element : players) {
             element.stopMusic();
         }
+    }
+
+    @Override
+    public void setVolume(float volume) {
+        this.volume = volume;
+        musicPlayer.setVolume(volume);
+    }
+
+    @Override
+    public float getVolume() {
+        return volume;
     }
 
     @Override

@@ -309,4 +309,29 @@ public class PImageDesktop extends AbstractImage {
         canvas.restore();
         skImage.close();
     }
+
+    @Override
+    public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle) {
+        // Создаем путь для сектора
+        Path path = new Path();
+
+        // Добавляем центральную точку
+        path.moveTo(cx, cy);
+
+        // Добавляем дугу
+        RectF rect = new RectF(cx - radius, cy - radius, cx + radius, cy + radius);
+        path.arcTo(rect, startAngle, sweepAngle, false);
+
+        // Закрываем путь (соединяем с центром)
+        path.close();
+
+        // Рисуем путь
+        canvas.drawPath(path, fillPaint);
+
+        if (useStroke) {
+            canvas.drawPath(path, strokePaint);
+        }
+    }
+
+
 }

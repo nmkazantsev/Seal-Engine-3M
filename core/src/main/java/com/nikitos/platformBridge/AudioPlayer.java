@@ -18,4 +18,6 @@ public interface AudioPlayer {
 
     void setSourcePosition(int soundId, Vec3 position);
 
+    public abstract void setVolume(float volume);
+    public abstract float getVolume();
 }

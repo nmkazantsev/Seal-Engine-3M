@@ -4,15 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add android player">
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="VIP add base functions">
+      <change afterPath="$PROJECT_DIR$/architecture.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImageAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImageAndroid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPLayerDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPLayerDesktop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +128,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.49679077&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -401,11 +401,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
-        <item itemvalue="Gradle.sealEngine_3M [build]" />
-        <item itemvalue="Gradle.sealEngine_3M [run]" />
-        <item itemvalue="Gradle.Demo [runWithJavaFX]" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
+        <item itemvalue="Gradle.sealEngine_3M [run]" />
+        <item itemvalue="Gradle.sealEngine_3M [build]" />
+        <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
+        <item itemvalue="Gradle.Demo [runWithJavaFX]" />
       </list>
     </recent_temporary>
   </component>
@@ -492,6 +492,10 @@
       <workItem from="1774109920859" duration="3628000" />
       <workItem from="1774121653300" duration="1026000" />
       <workItem from="1774858490725" duration="904000" />
+      <workItem from="1774871719471" duration="49000" />
+      <workItem from="1775295019633" duration="2266000" />
+      <workItem from="1775297590645" duration="3537000" />
+      <workItem from="1775301800857" duration="837000" />
     </task>
     <task id="LOCAL-00001" summary="refactor android matrix platform bridge">
       <option name="closed" value="true" />
@@ -877,7 +881,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774121770097</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="VIP add base functions">
+      <option name="closed" value="true" />
+      <created>1774871749330</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1774871749330</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -922,7 +934,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix crash in PImage convert to texture on desktop" />
     <MESSAGE value="optimize debugger" />
     <MESSAGE value="add get platform" />
     <MESSAGE value="fix get platform" />
@@ -947,7 +958,8 @@
     <MESSAGE value="add stop all to audio player" />
     <MESSAGE value="clean-up" />
     <MESSAGE value="add android player" />
-    <option name="LAST_COMMIT_MESSAGE" value="add android player" />
+    <MESSAGE value="VIP add base functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="VIP add base functions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AndroidAudioPLayer implements AudioPlayer {
-
+    private float volume = 1.0f;
     private MediaPlayer musicPlayer;
     private final SoundPool soundPool;
     private final Map<String, Integer> soundCache = new HashMap<>();
@@ -29,6 +29,17 @@ public class AndroidAudioPLayer implements AudioPlayer {
                 .build();
     }
 
+    @Override
+    public void setVolume(float volume) {
+        this.volume = volume;
+        musicPlayer.setVolume(volume, volume);
+    }
+
+    @Override
+    public float getVolume() {
+        musicPlayer.setVolume(volume, volume);
+        return volume;
+    }
     // 🎵 MUSIC
 
     //@OptIn(markerClass = UnstableApi.class)
