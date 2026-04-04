@@ -62,6 +62,8 @@ public abstract class AbstractImage {
 
     public abstract void setAntiAlias(boolean b);
 
-    public abstract void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle);
+    public abstract void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean fill);
+
+    public abstract void clear();
 
 }

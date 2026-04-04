@@ -160,16 +160,27 @@ public class PImage {
         return impl.getBitmap();
     }
 
-    public float getTextWidth(String s){
+    public float getTextWidth(String s) {
         return impl.getTextWidth(s);
     }
 
-    public float getTextHeight(String s){
+    public float getTextHeight(String s) {
         return impl.getTextHeight(s);
     }
 
     public void setAntiAlias(boolean b) {
         impl.setAntiAlias(b);
+    }
+
+    public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean fill) {
+        impl.drawSector(cx, cy, radius, startAngle, sweepAngle, fill);
+    }
+
+    public void stroke(float r, float b, float g) {
+        impl.stroke((int) (r), (int) (g), (int) (b), (int) (g));
+    }
+    public void clear(){
+        impl.clear();
     }
 
 }

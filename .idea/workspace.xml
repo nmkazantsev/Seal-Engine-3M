@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add architecture">
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add draw acr and other methods">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/utils/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -492,14 +496,6 @@
       <workItem from="1775312808839" duration="2060000" />
       <workItem from="1775315332834" duration="44000" />
     </task>
-    <task id="LOCAL-00002" summary="delete unused module">
-      <option name="closed" value="true" />
-      <created>1769593499723</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1769593499723</updated>
-    </task>
     <task id="LOCAL-00003" summary="refactor shaders">
       <option name="closed" value="true" />
       <created>1769614832852</created>
@@ -884,7 +880,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775302643540</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="add draw acr and other methods">
+      <option name="closed" value="true" />
+      <created>1775324261634</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1775324261634</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -929,7 +933,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add get platform" />
     <MESSAGE value="fix get platform" />
     <MESSAGE value="finish debugger" />
     <MESSAGE value="update PImageDesktop" />
@@ -954,7 +957,8 @@
     <MESSAGE value="add android player" />
     <MESSAGE value="VIP add base functions" />
     <MESSAGE value="add architecture" />
-    <option name="LAST_COMMIT_MESSAGE" value="add architecture" />
+    <MESSAGE value="add draw acr and other methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="add draw acr and other methods" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -976,14 +980,20 @@
           <option name="totalLines" value="29543" />
           <option name="info" value="add architecture" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1775324261751" />
+          <option name="linesCode" value="16256" />
+          <option name="totalLines" value="30102" />
+          <option name="info" value="add draw acr and other methods" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
       <list>
         <TimePoint>
-          <option name="timestamp" value="1775302643779" />
-          <option name="linesCode" value="15894" />
-          <option name="totalLines" value="29543" />
+          <option name="timestamp" value="1775324261751" />
+          <option name="linesCode" value="16256" />
+          <option name="totalLines" value="30102" />
           <option name="info" value="4 Apr 2026" />
         </TimePoint>
       </list>

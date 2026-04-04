@@ -311,7 +311,7 @@ public class PImageDesktop extends AbstractImage {
     }
 
     @Override
-    public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle) {
+    public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean useStroke) {
         // Прямоугольник, ограничивающий круг
         float left = cx - radius;
         float top = cy - radius;
@@ -324,5 +324,10 @@ public class PImageDesktop extends AbstractImage {
         if (useStroke) {
             canvas.drawArc(left, top, right, bottom, startAngle, sweepAngle, true, strokePaint);
         }
+    }
+
+    @Override
+    public void clear() {
+        canvas.clear(0);
     }
 }
