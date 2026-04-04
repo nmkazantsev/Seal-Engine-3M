@@ -66,6 +66,7 @@ public class PImageDesktop extends AbstractImage {
         font = new Font(typeface, textSize);
 
         loaded = true;
+        clear();
     }
 
     @Override
@@ -333,7 +334,7 @@ public class PImageDesktop extends AbstractImage {
 
     @Override
     public void clear() {
-        canvas.clear(0);
+        canvas.clear(Color.TRANSPARENT);
     }
 
     @Override

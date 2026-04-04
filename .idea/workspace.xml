@@ -4,21 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add everything except font">
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/FontAndroid.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/FontBridgeAndroid.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractFont.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PFont.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/FontBridge.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/FontBridgeDesktop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/FontDesktop.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add fonts">
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImageAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/engine/main/images/PImageAndroid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/AbstractImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -70,7 +58,7 @@
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -99,46 +87,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Profiler#1&quot;,
-    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [runWithJavaFX].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [run].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [shadowJar].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;17-версия-3-2-1&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/Demo/game/src/main/resources&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.49679077&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Profiler#1",
+    "Gradle.Build Demo.executor": "Run",
+    "Gradle.Build sealEngine_3M.executor": "Run",
+    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [dependencies].executor": "Run",
+    "Gradle.Demo [runWithJavaFX].executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.Load Gradle Dependencies.executor": "Run",
+    "Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [build].executor": "Run",
+    "Gradle.sealEngine_3M [clean].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies].executor": "Run",
+    "Gradle.sealEngine_3M [jar].executor": "Run",
+    "Gradle.sealEngine_3M [run].executor": "Run",
+    "Gradle.sealEngine_3M [shadowJar].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/Demo/game/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.49679077",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.nikitos.platform" />
@@ -505,22 +493,7 @@
       <workItem from="1775301800857" duration="2625000" />
       <workItem from="1775312808839" duration="2060000" />
       <workItem from="1775315332834" duration="44000" />
-    </task>
-    <task id="LOCAL-00004" summary="on the way to refactor shaders - add consts">
-      <option name="closed" value="true" />
-      <created>1769630532009</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1769630532009</updated>
-    </task>
-    <task id="LOCAL-00005" summary="fix main shader adaptor">
-      <option name="closed" value="true" />
-      <created>1769676724181</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1769676724181</updated>
+      <workItem from="1775329565876" duration="2307000" />
     </task>
     <task id="LOCAL-00006" summary="need PImage refactor">
       <option name="closed" value="true" />
@@ -898,7 +871,23 @@
       <option name="project" value="LOCAL" />
       <updated>1775326064008</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="add fonts">
+      <option name="closed" value="true" />
+      <created>1775329597778</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1775329597793</updated>
+    </task>
+    <task id="LOCAL-00054" summary="add fonts">
+      <option name="closed" value="true" />
+      <created>1775330700781</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1775330700781</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -943,7 +932,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="finish debugger" />
     <MESSAGE value="update PImageDesktop" />
     <MESSAGE value="skija version of upload (crashes)" />
     <MESSAGE value="problem was in gpu" />
@@ -968,7 +956,8 @@
     <MESSAGE value="add architecture" />
     <MESSAGE value="add draw acr and other methods" />
     <MESSAGE value="add everything except font" />
-    <option name="LAST_COMMIT_MESSAGE" value="add everything except font" />
+    <MESSAGE value="add fonts" />
+    <option name="LAST_COMMIT_MESSAGE" value="add fonts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -996,14 +985,26 @@
           <option name="totalLines" value="30102" />
           <option name="info" value="add draw acr and other methods" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1775329599267" />
+          <option name="linesCode" value="16454" />
+          <option name="totalLines" value="30560" />
+          <option name="info" value="add fonts" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1775330701035" />
+          <option name="linesCode" value="16467" />
+          <option name="totalLines" value="30737" />
+          <option name="info" value="add fonts" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
       <list>
         <TimePoint>
-          <option name="timestamp" value="1775324261751" />
-          <option name="linesCode" value="16256" />
-          <option name="totalLines" value="30102" />
+          <option name="timestamp" value="1775330726925" />
+          <option name="linesCode" value="16467" />
+          <option name="totalLines" value="30737" />
           <option name="info" value="4 Apr 2026" />
         </TimePoint>
       </list>
