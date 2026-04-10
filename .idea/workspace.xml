@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add fonts">
       <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/main/images/PImageDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +89,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Profiler#1",
+    "Application.Main.executor": "Run",
     "Gradle.Build Demo.executor": "Run",
     "Gradle.Build sealEngine_3M.executor": "Run",
     "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
@@ -388,19 +388,19 @@
     </configuration>
     <list>
       <item itemvalue="Application.Main" />
-      <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
       <item itemvalue="Gradle.Demo [runWithJavaFX]" />
-      <item itemvalue="Gradle.sealEngine_3M [run]" />
-      <item itemvalue="Gradle.sealEngine_3M [build]" />
       <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
+      <item itemvalue="Gradle.sealEngine_3M [build]" />
+      <item itemvalue="Gradle.sealEngine_3M [run]" />
+      <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
         <item itemvalue="Gradle.sealEngine_3M [run]" />
         <item itemvalue="Gradle.sealEngine_3M [build]" />
         <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
-        <item itemvalue="Gradle.Demo [runWithJavaFX]" />
       </list>
     </recent_temporary>
   </component>
@@ -494,6 +494,19 @@
       <workItem from="1775312808839" duration="2060000" />
       <workItem from="1775315332834" duration="44000" />
       <workItem from="1775329565876" duration="2307000" />
+      <workItem from="1775388489187" duration="4484000" />
+      <workItem from="1775400429245" duration="6000" />
+      <workItem from="1775400446185" duration="601000" />
+      <workItem from="1775401093642" duration="32000" />
+      <workItem from="1775404820414" duration="318000" />
+      <workItem from="1775448847260" duration="7000" />
+      <workItem from="1775484476434" duration="317000" />
+      <workItem from="1775505352477" duration="97000" />
+      <workItem from="1775506194498" duration="39000" />
+      <workItem from="1775587762053" duration="1462000" />
+      <workItem from="1775624120133" duration="599000" />
+      <workItem from="1775815893128" duration="1000000" />
+      <workItem from="1775827752338" duration="46000" />
     </task>
     <task id="LOCAL-00006" summary="need PImage refactor">
       <option name="closed" value="true" />
@@ -916,6 +929,13 @@
             <State>
               <option name="FILTERS">
                 <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="17-версия-3-2-1" />
+                      </list>
+                    </value>
+                  </entry>
                   <entry key="roots">
                     <value>
                       <list>
