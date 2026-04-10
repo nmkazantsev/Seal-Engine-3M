@@ -3,12 +3,14 @@ package com.nikitos.main.debugger;
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.camera.Camera;
+import com.nikitos.main.images.PFont;
 import com.nikitos.main.images.PImage;
 import com.nikitos.main.images.TextAlign;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.shaders.default_adaptors.MainShaderAdaptor;
 import com.nikitos.main.vertices.SimplePolygon;
 import com.nikitos.maths.Matrix;
+import com.nikitos.platformBridge.AudioPlayer;
 import com.nikitos.utils.Utils;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class BSODScreen extends GamePageClass {
-    private static final String TITLE = "fatal error occurred";
+    private static final String TITLE = "Fatal error occurred!";
 
     private String errorText;
     private Camera camera;
@@ -25,12 +27,23 @@ public class BSODScreen extends GamePageClass {
     private float screenWidth;
     private float screenHeight;
 
+    AudioPlayer player;
+
     public BSODScreen(String errorText) {
         this.errorText = errorText == null ? "" : errorText;
-    }
+        shader = new Shader(
+                "vertex_shader_engine.glsl",
+                "fragment_shader_engine.glsl",
+                this,
+                new MainShaderAdaptor()
+        );
 
-    public BSODScreen() {
-        this.errorText = "no error reported";
+
+        screenPolygon = new SimplePolygon(redrawScreen, false, 0, this);
+
+        player = CoreRenderer.engine.getPlatformBridge().getAudioPlayer();
+        player.playMusic("bsod.mp3", false);
+
     }
 
     @Override
@@ -41,21 +54,8 @@ public class BSODScreen extends GamePageClass {
         camera = new Camera(x, y);
         camera.resetFor2d();
 
-        if (shader == null) {
-            shader = new Shader(
-                    "vertex_shader_engine.glsl",
-                    "fragment_shader_engine.glsl",
-                    this,
-                    new MainShaderAdaptor()
-            );
-        }
-
-        if (screenPolygon == null) {
-            screenPolygon = new SimplePolygon(redrawScreen, false, 0, this);
-        } else {
-            screenPolygon.setRedrawNeeded(true);
-            screenPolygon.redrawNow();
-        }
+        screenPolygon.setRedrawNeeded(true);
+        screenPolygon.redrawNow();
     }
 
     @Override
@@ -66,29 +66,35 @@ public class BSODScreen extends GamePageClass {
         camera.resetFor2d();
         camera.apply();
         Matrix.applyMatrix(Matrix.resetTranslateMatrix(new float[16]));
-        screenPolygon.prepareAndDraw(0, 0, screenWidth, screenHeight, 0.1f  );
+        screenPolygon.prepareAndDraw(0, 0, screenWidth, screenHeight, 0.1f);
     }
 
     @Override
     public void onResume() {
+        player.start();
     }
 
     @Override
     public void onPause() {
+        player.stopMusic();
     }
 
     private final Function<List<Object>, PImage> redrawScreen = objects -> {
+        PFont win = PFont.fromAsset("win.otf");
         float kx = Utils.getKx();
         float ky = Utils.getKy();
+        screenWidth = Utils.getX();
+        screenHeight = Utils.getY();
 
         PImage image = new PImage(screenWidth, screenHeight);
+        image.setFont(win);
         image.setAntiAlias(true);
         image.background(0, 45, 135, 255);
         image.noStroke();
 
         float titleMarginX = 72f * kx;
         float titleTop = 68f * ky;
-        float titleSize = 42f * Math.min(kx, ky);
+        float titleSize = 60f * Math.min(kx, ky);
 
         image.fill(255, 255, 255, 255);
         image.textAlign(TextAlign.LEFT);

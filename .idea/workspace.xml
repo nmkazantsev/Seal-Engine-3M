@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b42c303c-b4ea-43a4-9299-ea1e8eef9f45" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/core/src/main/resources/W95font.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/resources/bsod.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/BSODScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/BSODScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,12 +27,12 @@
     </projectState>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="3CBPG2JHkOnTsjjRpLW8OHTPjjG" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -36,13 +40,44 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "19-bsod",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/core/src/main/resources" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
+      <module name="Demo.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nikitos.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -59,6 +94,7 @@
       <option name="presentableId" value="Default" />
       <updated>1775855899535</updated>
       <workItem from="1775855901829" duration="40000" />
+      <workItem from="1775857602252" duration="349000" />
     </task>
     <servers />
   </component>
