@@ -176,7 +176,7 @@ public class PImage {
         impl.drawSector(cx, cy, radius, startAngle, sweepAngle, fill);
     }
 
-    public void stroke(float r, float b, float g) {
+    public void stroke(float r, float g, float b) {
         impl.stroke((int) (r), (int) (g), (int) (b), (int) (g));
     }
     public void clear(){
