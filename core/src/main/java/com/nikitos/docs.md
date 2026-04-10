@@ -1,31 +1,12 @@
-The first cross-platform version of https://github.com/nmkazantsev/seal_engine.
-
-All features are suppoerted. Unified for all platforms (Android, Windows, Linux) api was not changed.
-
-See example apps:
-Desktop: https://github.com/nmkazantsev/Demo-launcher
-
-Android: https://github.com/nmkazantsev/Demo-app
-
-
-
 # Документация пользователя ядра Seal Engine 3-M
 
 ## Введение
 
-Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.2.1). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и системы анимации.
+Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.2.0). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и системы анимации.
 
 Документ сгруппирован по функциональным разделам. Для каждого класса приведено краткое описание и список публичных методов, которые могут быть полезны разработчику.
 
 ---
-
-## руководство по созданию страницы движка
-1. создать имплементацию ``GamePageClass``.
-2. В конструкторе (или заранее) загружать тяжелые объекты, такие, как меши и картинки, а также шейдеры и шрифты.
-3. в onSurfaceChanged пересоздавать камеру, frame buffers и другие объекты, которые прямо или косвенно зависят от разрешения экрана. 
-4. при отрисовке каждый кадр нужно: подключить шейдер, подключить матрицу проекции и камеру. Отрисовать сцену.
-5. в целях адаптации, обработчик касаний не должен ни где кешировать границы, они должны вычисляться динамически, чтобы изменение размеров экрана не повлияло на его работу.
-6. рекомендуется разделять контекст на страницы и избегать использования статических объектов, так как неаккуратное обращение с ними спровоцирует утечку видеопамяти. Для их удаления не забывать запускать метод очисти видеопамяти.
 
 ## 1. Ядро движка и управление страницами
 
@@ -202,8 +183,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `void textSize(float size)` – размер шрифта.
 - `void textAlign(int align)` – выравнивание текста.
 - `void text(String text, float x, float y, boolean upperText)` – вывод текста (если upperText=true, переводит в верхний регистр).
-- `void setFont(String font)` – загружает шрифт (путь к файлу в assets).
-- `void setFont(PFont font)` – устанавливает предварительно загруженный шрифт.
+- `void setFont(String font)` – загружает шрифт.
 - `void image(AbstractImage img, float x, float y)` – рисует изображение.
 - `void image(AbstractImage img, float x, float y, float w, float h)` – с масштабированием.
 - `void image(AbstractImage img, float x, float y, float scale)` – с масштабом относительно оригинала.
@@ -212,11 +192,9 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `Object getBitmap()` – возвращает платформенный объект Bitmap.
 - `void createBitmap(int width, int height)` – создаёт пустое растровое изображение.
 - `void textAlign(TextAlign align)` – выравнивание текста (LEFT, CENTER, RIGHT).
-- `float getTextWidth(String s)` – ширина текста в пикселях с учётом текущего шрифта и размера.
-- `float getTextHeight(String s)` – высота текста в пикселях (учитывает переносы строк).
-- `void setAntiAlias(boolean b)` – включает/отключает сглаживание примитивов и текста.
-- `void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean fill)` – рисует сектор круга (углы в градусах). Если `fill` = true, заливает цветом заливки, иначе только обводка (если активна).
-- `void clear()` – очищает содержимое изображения, делая его полностью прозрачным.
+- `float getTextWidth(String s)`, `float getTextHeight(String s)` – ширина и высота текста в пикселях.
+- `void setAntiAlias(boolean b)` – включает/отключает сглаживание.
+- `void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle)` – рисует сектор круга (углы в радианах).
 
 ### PImage
 Основной класс для работы с 2D графикой. Оборачивает `AbstractImage` и предоставляет удобные перегрузки.
@@ -236,7 +214,6 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `void roundRect(float x, float y, float w, float h, float rx, float ry)` – прямоугольник со скруглёнными углами.
 - `void ellipse(float x, float y, float rx, float ry)` – эллипс.
 - `void stroke(float s)` – цвет обводки (серый).
-- `void stroke(float r, float g, float b)` – цвет обводки RGBA (без альфа-канала, непрозрачный).
 - `void stroke(float r, float g, float b, float a)` – цвет обводки RGBA.
 - `void strokeWeight(float w)` – толщина обводки.
 - `void noStroke()` – отключить обводку.
@@ -250,43 +227,15 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `void rotImage(PImage img, float x, float y, float scale, float rot)` – повёрнутое изображение (угол в радианах).
 - `int getWidth()`, `int getHeight()`
 - `Object getBitmap()` – возвращает платформенный объект Bitmap (может быть null).
-- `float getTextWidth(String s)` – ширина текста с текущим шрифтом.
-- `float getTextHeight(String s)` – высота текста (включая межстрочный интервал для многострочного текста).
-- `void setAntiAlias(boolean b)` – управление сглаживанием.
-- `void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean fill)` – рисование сектора (углы в градусах).
-- `void clear()` – очистка изображения до прозрачного фона.
-- `void setFont(PFont font)` – установка шрифта из объекта PFont.
+- `float getTextWidth(String s)`, `float getTextHeight(String s)`
+- `void setAntiAlias(boolean b)`
 
 ### TextAlign
 Перечисление: `LEFT`, `CENTER`, `RIGHT`.
 
 ---
 
-## 5. Шрифты
-
-### PFont
-Класс для загрузки и управления шрифтами, кроссплатформенная обёртка над платформенным шрифтом.
-
-**Конструкторы:**
-- `PFont()` – создаёт пустой объект шрифта (требуется вызов `loadAsset`).
-- `PFont(AbstractFont impl)` – для внутреннего использования.
-
-**Публичные методы:**
-- `void loadAsset(String assetPath)` – загружает шрифт из assets (Android) или из ресурсов JAR (Desktop). Ожидается файл .ttf или .otf.
-- `void close()` – освобождает ресурсы шрифта.
-- `boolean isLoaded()` – возвращает `true`, если шрифт успешно загружен.
-- `Object getPlatformFont()` – возвращает платформенно-зависимый объект шрифта (Typeface для Android, Font для Skija на Desktop).
-- `static PFont fromAsset(String assetPath)` – удобный статический метод для быстрой загрузки шрифта из assets.
-
-**Пример использования:**
-```java
-PFont myFont = PFont.fromAsset("fonts/Roboto-Regular.ttf");
-PImage img = new PImage(800, 600);
-img.setFont(myFont);
-img.textSize(32);
-img.text("Hello, World!", 100, 100);
-```
-## 6. 3D графика и вершинные объекты
+## 5. 3D графика и вершинные объекты
 
 ### Shape
 Загружает 3D модель из OBJ файла (асинхронно) и отрисовывает её с текстурой и опционально normal map.
@@ -309,12 +258,6 @@ img.text("Hello, World!", 100, 100);
 **Конструкторы:**
 - `Polygon(Function<List<Object>, PImage> redrawFunction, boolean saveMemory, int paramSize, GamePageClass page)`
 - `Polygon(Function<List<Object>, PImage> redrawFunction, boolean saveMemory, int paramSize, GamePageClass page, boolean mipMap)`
-
-параметр ``saveMemory`` отвечает за удаление PImage из памяти после загрузки его в видеопамять. Если не планируется дальнейшая работа с этой картинкой - рекомендуется ставить true
-
-параметр ``mipMap`` активирует генерацию mip-maps при загрузке текстуры в видеопамять.
-
-параметр ```paramSize``` нужен для задания размеров списка параметров, который буден передан в функцию ``redrawFunction``. Механизм передачи параметров устаревает и скоро будет удален из движка, не рекомендуется к использованию.
 
 **Поля:**
 - `List<Object> redrawParams` – параметры для функции генерации текстуры.
@@ -392,7 +335,7 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 7. Шейдеры и адаптеры
+## 6. Шейдеры и адаптеры
 
 ### Shader
 Представляет программу шейдера (вершинный + фрагментный, опционально геометрический). Загружается из файлов в assets.
@@ -434,7 +377,7 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 8. Освещение и материалы
+## 7. Освещение и материалы
 
 ### DirectedLight
 Направленный источник света. Наследник `ShaderData`. Автоматически добавляется в массив источников.
@@ -463,74 +406,9 @@ img.text("Hello, World!", 100, 100);
 **Публичные методы:**
 - `void apply()` – отправляет материал в активный шейдер.
 
-### AmbientLight
-Глобальное фоновое освещение (ambient light). Наследник `ShaderData`. Отправляется в шейдер автоматически при смене страницы.
-
-**Конструктор:**
-- `AmbientLight(GamePageClass gamePageClass)`
-
-**Поля:**
-- `PVector color` – цвет фонового освещения (по умолчанию (0,0,0)).
-
-**Особенности:**  
-Не требует вызова дополнительных методов – данные автоматически передаются в активный шейдер.
-
-### PointLight
-Точечный источник света. Наследник `ShaderData`. Автоматически добавляется в массив точечных источников.
-
-**Конструктор:**
-- `PointLight(GamePageClass gamePageClass)`
-
-**Поля:**
-- `PVector color` – цвет света.
-- `PVector position` – позиция в мировых координатах.
-- `float diffuse`, `float specular` – интенсивности диффузной и зеркальной составляющих.
-- `float constant`, `float linear`, `float quadratic` – коэффициенты затухания (attenuation).
-
-**Публичные методы:**
-- `void deleteLight()` – удаляет этот источник из списка (должен вызываться перед уничтожением объекта).
-
-### SourceLight
-Направленный источник света с конусом (прожектор, spotlight). Наследник `ShaderData`.
-
-**Конструктор:**
-- `SourceLight(GamePageClass gamePageClass)`
-
-**Поля:**
-- `PVector color` – цвет света.
-- `PVector position` – позиция источника.
-- `PVector direction` – направление центра луча (должно быть нормализовано).
-- `float diffuse`, `float specular` – интенсивности.
-- `float constant`, `float linear`, `float quadratic` – коэффициенты затухания.
-- `float cutOff` – косинус угла внутреннего конуса (полная яркость).
-- `float outerCutOff` – косинус угла внешнего конуса (граница спада).
-
-**Публичные методы:**
-- `void deleteLight()` – удаляет этот источник из списка.
-
-### ExpouseSettings
-Настройки экспозиции и гамма-коррекции для пост-обработки. Наследник `ShaderData`.
-
-**Конструктор:**
-- `ExpouseSettings(GamePageClass gamePageClass)`
-
-**Поля:**
-- `float expouse` – экспозиция (по умолчанию 1).
-- `float gamma` – гамма (по умолчанию 1).
-
-**Особенности:**  
-Данные автоматически передаются в шейдер. Используется совместно с HDR-рендерингом.
-
-### Примечание о встроенных шейдерах для освещения
-Движок предоставляет готовые шейдеры для работы с источниками света:
-- `light_shader_vertex.glsl`
-- `light_shader_fragment.glsl`
-
-Они используют адаптер `LightShaderAdaptor`, который поддерживает карты нормалей (normal mapping), касательные и бикасательные векторы. Для корректной работы необходимо, чтобы в моделях были текстурные координаты и нормали.
-
 ---
 
-## 9. Текстуры
+## 8. Текстуры
 
 ### Texture
 Базовый класс для 2D текстур.
@@ -553,7 +431,7 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 10. Анимация
+## 9. Анимация
 
 ### Animator
 Статический класс для создания и управления анимациями объектов `SealObject`.
@@ -587,7 +465,7 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 11. Объекты движка
+## 10. Объекты движка
 
 ### SealObject
 Представляет игровой объект, который может быть анимирован и отрисован через `Shape`.
@@ -606,7 +484,7 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 12. Ввод (сенсорный ввод)
+## 11. Ввод (сенсорный ввод)
 
 ### TouchProcessor
 Класс для обработки касаний (нажатий, перемещений, отпусканий). Позволяет привязать логику к области экрана.
@@ -639,27 +517,30 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 13. Аудио
+## 12. Аудио
 
 ### AudioPlayer
 Интерфейс для воспроизведения звука и музыки. Реализуется платформой.
 
 **Публичные методы:**
 - `void playMusic(String path, boolean loop)`
-- `void stopMusic()`, `void pauseMusic()` - методы управления воспроизведением музыки
-- `void setVolume(float volume)` – устанавливает громкость музыки и звуков (диапазон 0.0 – 1.0).
-- `float getVolume()` – возвращает текущую громкость.
+- `void stopMusic()`, `void pauseMusic()`, `void start()`
+- `void playSound(String path)`
+- `void setListenerPosition(Vec3 position)`
+- `void setSourcePosition(int soundId, Vec3 position)`
+- `void setVolume(float volume)`
+- `float getVolume()`
 
 ---
 
-## 14. Утилиты и вспомогательные классы
+## 13. Утилиты и вспомогательные классы
 
 ### Utils
 Статический класс с математическими и вспомогательными функциями.
 
 **Публичные методы (часто используемые):**
 - `static float getX()`, `getY()` – размер экрана.
-- `static float getKx()`, `getKy()` – коэффициенты масштабирования (размер "дефолтного" экрана / 1280x720).
+- `static float getKx()`, `getKy()` – коэффициенты масштабирования (размер экрана / 1280x720).
 - `static void background(int r, int b, int g)` – устанавливает цвет очистки экрана (OpenGL).
 - `static float findDrot(float rot, float aimRot)` – минимальное изменение угла для достижения цели (в градусах).
 - `static float sq(float a)`, `sqrt(float a)`, `pow(float a, float b)`
@@ -699,7 +580,7 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 15. Дополнительные классы
+## 14. Дополнительные классы
 
 ### FrameBuffer
 Позволяет рендерить в текстуру (off-screen rendering). Может использоваться для пост-эффектов.
@@ -726,65 +607,17 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
-## 16. Отладка
-
-### Debugger
-Статический класс, предоставляющий встроенный графический интерфейс для отладки значений и отображения FPS. Позволяет во время работы приложения изменять числовые параметры (например, скорость, силу света) через ползунки.
-
-**Публичные методы:**
-- `static void debuggerInit()` – инициализирует отладчик (вызывается автоматически при первом использовании, но можно вызвать вручную для ранней настройки).
-- `static DebugValueFloat addDebugValueFloat(float min, float max, String name)` – создаёт отлаживаемую переменную с плавающей точкой. При повторном вызове с тем же именем возвращает существующий объект.
-- `static void draw()` – отрисовывает интерфейс отладчика (вызывается движком автоматически).
-- `static void onResChange(int x, int y)` – обновляет размеры интерфейса при изменении экрана.
-- `static void setEnabled(boolean debuggerEnabled)` – включает/выключает отладчик.
-- `static TouchProcessor getMainPageTouchProcessor()` – возвращает обработчик касаний для управления отладчиком (используется движком).
-- `static int getPage()` – возвращает номер текущей страницы меню отладчика (0 – свёрнуто, 1 и выше – открыто меню).
-
-**Примечание:**  
-Отладчик автоматически показывает FPS в левом верхнем углу. При касании этой области открывается меню, где можно изменять значения, добавленные через `addDebugValueFloat`. Для выхода из меню нужно коснуться крестика внизу экрана.
-
-### Axes
-Класс для отрисовки осей координат (X – красный, Y – зелёный, Z – синий) в 3D-пространстве. Используется для отладки сцены.
-
-**Конструктор:**
-- `Axes(GamePageClass gamePageClass)`
-
-**Публичные методы:**
-- `void drawAxes(float limit, float step, float tickSize, float[] matrix, Camera camera)` – отрисовывает оси.
-    - `limit` – максимальная длина каждой оси (от -limit до limit).
-    - `step` – шаг между засечками на осях.
-    - `tickSize` – длина засечек (перпендикулярно оси).
-    - `matrix` – матрица трансформации (может быть null, тогда используется единичная).
-    - `camera` – камера, через которую выполняется рендеринг.
-
-**Особенности:**  
-Для отрисовки используется встроенный шейдер `line_vertex_engine.glsl` и `line_fragment_engine.glsl`. Оси рисуются с учётом переданной матрицы, что позволяет отображать их в локальной системе координат объекта.
-
-### DebugValueFloat
-Класс, представляющий отлаживаемое значение с плавающей точкой. Экземпляры создаются только через `Debugger.addDebugValueFloat()`.
-
-**Поля:**
-- `float value` – текущее значение (можно читать и изменять в коде игры).
-- `protected float min`, `max` – границы ползунка.
-- `protected String name` – отображаемое имя.
-
-**Примечание:**  
-Значение `value` автоматически синхронизируется с ползунком в интерфейсе отладчика.
-
----
-
 ## Заключение
 
 Данная документация покрывает основные классы движка Seal Engine 3-M. Для создания игры необходимо:
 
 1. Реализовать свою страницу, унаследовав `GamePageClass`.
-2. Загрузить и скомпилировать шейдеры, передать в них матрицу преобразования.
-3. В `onSurfaceChanged` инициализировать камеру (`Camera`), загрузить ресурсы. Передать камеру в шейдер.
-4. В `draw` вызывать `camera.apply()`, отрисовывать 2D/3D объекты.
-5. Использовать `TouchProcessor` для обработки ввода.
-6. Для 3D моделей – загружать `Shape` и отрисовывать через `SealObject` или напрямую с применением матриц через `Matrix.applyMatrix`.
-7. Для 2D интерфейса – использовать `PImage` (рисование примитивов, текста, изображений).
-8. Для анимации – создавать анимации через `Animator`.
+2. В `onSurfaceChanged` инициализировать камеру (`Camera`), загрузить ресурсы.
+3. В `draw` вызывать `camera.apply()`, отрисовывать 2D/3D объекты.
+4. Использовать `TouchProcessor` для обработки ввода.
+5. Для 3D моделей – загружать `Shape` и отрисовывать через `SealObject` или напрямую с применением матриц через `Matrix.applyMatrix`.
+6. Для 2D интерфейса – использовать `PImage` (рисование примитивов, текста, изображений).
+7. Для анимации – создавать анимации через `Animator`.
 
 При смене страницы движок автоматически удаляет ресурсы, созданные на предыдущей странице (через `VRAMobject`).
-```
+

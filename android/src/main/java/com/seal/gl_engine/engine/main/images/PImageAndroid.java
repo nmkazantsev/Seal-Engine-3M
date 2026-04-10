@@ -1,13 +1,13 @@
 package com.seal.gl_engine.engine.main.images;
 
 import android.graphics.*;
-
 import com.nikitos.CoreRenderer;
 import com.nikitos.main.images.AbstractImage;
+import com.nikitos.main.images.PFont;
 import com.nikitos.main.images.TextAlign;
 import com.nikitos.maths.Section;
 import com.seal.gl_engine.platform.AndroidBridge;
-import com.seal.gl_engine.utils.Utils;
+
 
 public class PImageAndroid extends AbstractImage {
     private Bitmap bitmap;
@@ -80,6 +80,50 @@ public class PImageAndroid extends AbstractImage {
     }
 
     @Override
+    public float getTextWidth(String s) {
+        return paint.measureText(s);
+    }
+
+    @Override
+    public float getTextHeight(String s) {
+        String[] lines = s.split("\n");
+
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        float lineHeight = (fm.descent - fm.ascent);
+
+        return lineHeight * lines.length;
+
+    }
+
+    @Override
+    public void setAntiAlias(boolean b) {
+        paint.setAntiAlias(b);
+        stroke.setAntiAlias(b);
+        paintImg.setAntiAlias(b);
+    }
+
+    @Override
+    public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean fill) {
+        RectF oval = new RectF(cx - radius, cy - radius, cx + radius, cy + radius);
+
+        // Сначала рисуем заливку (если требуется)
+        if (fill) {
+            canvas.drawArc(oval, startAngle, sweepAngle, true, paint);
+        }
+
+        // Затем рисуем обводку (если активна)
+        // Обводка считается активной, если stroke имеет ненулевую ширину и цвет не полностью прозрачный
+        if (stroke.getStrokeWidth() > 0 && stroke.getAlpha() > 0) {
+            canvas.drawArc(oval, startAngle, sweepAngle, true, stroke);
+        }
+    }
+
+    @Override
+    public void clear() {
+        canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+    }
+
+    @Override
     public void roundRect(float x, float y, float w, float h, float rx, float ry) {
         RectF r = new RectF(x, y, x + w, y + h);
         canvas.drawRoundRect(r, rx, ry, paint);
@@ -148,7 +192,7 @@ public class PImageAndroid extends AbstractImage {
 
     @Override
     public void setFont(String font) {
-        paint.setTypeface(Typeface.createFromAsset(((AndroidBridge)CoreRenderer.engine.getPlatformBridge()).getContext().getAssets(), font));
+        paint.setTypeface(Typeface.createFromAsset(((AndroidBridge) CoreRenderer.engine.getPlatformBridge()).getContext().getAssets(), font));
     }
 
     @Override
@@ -195,5 +239,16 @@ public class PImageAndroid extends AbstractImage {
     @Override
     public Object getBitmap() {
         return bitmap;
+    }
+
+    @Override
+    public void setFont(PFont font) {
+        Object pf = font.getPlatformFont();
+        if (pf instanceof Typeface) {
+            Typeface currentTypeface = (Typeface) pf;
+            paint.setTypeface(currentTypeface);
+        } else {
+            throw new IllegalArgumentException("Unsupported font type for Android");
+        }
     }
 }

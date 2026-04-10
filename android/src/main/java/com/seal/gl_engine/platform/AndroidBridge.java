@@ -199,6 +199,11 @@ public class AndroidBridge extends PlatformBridge {
         return new AndroidAudioPLayer(context);
     }
 
+    @Override
+    public FontBridge getFontBridge() {
+        return new FontBridgeAndroid();
+    }
+
     public Context getContext(){
         return context;
     }

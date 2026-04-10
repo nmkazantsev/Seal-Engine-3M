@@ -83,6 +83,10 @@ public class DesktopLauncher {
         //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("mac")) {
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        }
 
         // Get the resolution of the primary monitor
         vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -91,7 +95,6 @@ public class DesktopLauncher {
 
         if (launcherParams.getFullScreen()) {
             fullScreenOpened = true;
-            String osName = System.getProperty("os.name").toLowerCase();
             if (osName.contains("mac")) {
                 System.out.println("engine: This is a Mac operating system. Using custom full screen. Press ESC to exit.");
                 glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
@@ -145,7 +148,6 @@ public class DesktopLauncher {
                         glfwMaximizeWindow(window);
                     } else {
                         fullScreenOpened = true;
-                        String osName = System.getProperty("os.name").toLowerCase();
                         if (osName.contains("mac")) {
                             System.out.println("engine: This is a Mac operating system. Using custom full screen. Press ESC to exit.");
                             goBoardLessMode(window);

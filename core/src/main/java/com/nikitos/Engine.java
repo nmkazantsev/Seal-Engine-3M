@@ -5,14 +5,12 @@ import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
-import com.nikitos.platformBridge.LauncherParams;
-import com.nikitos.platformBridge.Platform;
-import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.platformBridge.*;
 import com.nikitos.utils.Utils;
 
 public class Engine {
     public static String getVersion() {
-        return "v3.2.0";
+        return "v3.2.1";
     }
 
     public float fps;
@@ -25,13 +23,18 @@ public class Engine {
     private static long prevPageChangeTime = 0;
     private final LauncherParams launcherParams;
 
+    private final GeneralPlatformBridge generalPlatformBridge;
+    private final GLConstBridge glconstBridge;
+
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
         this.platformBridge = platformBridge;
         this.launcherParams = launcherParams;
+        this.generalPlatformBridge = platformBridge.getGeneralPlatformBridge();
+        this.glconstBridge = platformBridge.getGLConstBridge();
         Matrix.init(platformBridge);
         Utils.programStartTime = System.currentTimeMillis();
-            String version = System.getProperty("java.version");
-            platformBridge.log_i("engine", "engine is running at java "+version);
+        String version = System.getProperty("java.version");
+        platformBridge.log_i("engine", "engine is running at java " + version);
     }
 
     public void onSurfaceChanged(int x, int y) {
@@ -121,7 +124,15 @@ public class Engine {
         );
     }
 
-    public Platform getPlatform(){
+    public void disableBlend() {
+        generalPlatformBridge.glDisable(glconstBridge.GL_BLEND());
+    }
+
+    public void enableBlend() {
+        generalPlatformBridge.glEnable(glconstBridge.GL_BLEND());
+    }
+
+    public Platform getPlatform() {
         return platformBridge.getPlatform();
     }
 }

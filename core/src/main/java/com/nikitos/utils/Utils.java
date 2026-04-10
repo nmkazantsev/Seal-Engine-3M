@@ -39,7 +39,7 @@ public class Utils {
 
     private static long stopTime;
 
-    public static void background(int r, int b, int g) {
+    public static void background(float r, float b, float g) {
         CoreRenderer.engine.getPlatformBridge().glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 1);
     }
 

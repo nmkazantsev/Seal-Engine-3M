@@ -98,4 +98,9 @@ public class DesktopBridge extends PlatformBridge {
     public AudioPlayer getAudioPlayer() {
         return new AudioPLayerDesktop();
     }
+
+    @Override
+    public FontBridge getFontBridge() {
+        return new FontBridgeDesktop();
+    }
 }

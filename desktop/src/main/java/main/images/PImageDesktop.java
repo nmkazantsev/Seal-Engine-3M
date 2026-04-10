@@ -1,6 +1,7 @@
 package main.images;
 
 import com.nikitos.main.images.AbstractImage;
+import com.nikitos.main.images.PFont;
 import com.nikitos.main.images.TextAlign;
 import com.nikitos.maths.Section;
 import io.github.humbleui.skija.*;
@@ -65,6 +66,7 @@ public class PImageDesktop extends AbstractImage {
         font = new Font(typeface, textSize);
 
         loaded = true;
+        clear();
     }
 
     @Override
@@ -83,6 +85,31 @@ public class PImageDesktop extends AbstractImage {
     @Override
     public void textAlign(TextAlign align) {
         this.textAlign = align;
+    }
+
+    @Override
+    public float getTextWidth(String s) {
+        float max = 0;
+        for (String line : s.split("\n")) {
+            max = Math.max(max, font.measureTextWidth(line));
+        }
+        return max;
+    }
+
+    @Override
+    public float getTextHeight(String s) {
+        String[] lines = s.split("\n");
+
+        FontMetrics metrics = font.getMetrics();
+        float lineHeight = metrics.getDescent() - metrics.getAscent();
+
+        return lineHeight * lines.length;
+    }
+
+    @Override
+    public void setAntiAlias(boolean b) {
+        fillPaint.setAntiAlias(b);
+        strokePaint.setAntiAlias(b);
     }
 
     @Override
@@ -157,13 +184,17 @@ public class PImageDesktop extends AbstractImage {
     // --- TEXT SIZE ---
     @Override
     public void textSize(float size) {
-        textSize = size;
-
-        if (typeface == null) {
-            typeface = fontMgr.matchFamilyStyle(null, FontStyle.NORMAL);
+        this.textSize = size;
+        if (this.font != null) {
+            // Просто меняем размер существующего шрифта
+            this.font.setSize(size);
+        } else {
+            // Если шрифт ещё не создан (редкий случай), создаём дефолтный
+            if (typeface == null) {
+                typeface = fontMgr.matchFamilyStyle(null, FontStyle.NORMAL);
+            }
+            this.font = new Font(typeface, size);
         }
-
-        font = new Font(typeface, textSize);
     }
 
     @Override
@@ -283,5 +314,38 @@ public class PImageDesktop extends AbstractImage {
 
         canvas.restore();
         skImage.close();
+    }
+
+    @Override
+    public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean useStroke) {
+        // Прямоугольник, ограничивающий круг
+        float left = cx - radius;
+        float top = cy - radius;
+        float right = cx + radius;
+        float bottom = cy + radius;
+
+        // Рисуем заливку
+        canvas.drawArc(left, top, right, bottom, startAngle, sweepAngle, true, fillPaint);
+        // Рисуем обводку, если включена
+        if (useStroke) {
+            canvas.drawArc(left, top, right, bottom, startAngle, sweepAngle, true, strokePaint);
+        }
+    }
+
+    @Override
+    public void clear() {
+        canvas.clear(Color.TRANSPARENT);
+    }
+
+    @Override
+    public void setFont(PFont font) {
+        Object platformFont = font.getPlatformFont();
+        if (platformFont instanceof Font) {
+            this.font = (Font) platformFont;
+            // Также обновляем размер, если textSize уже была установлена
+            this.font.setSize(textSize > 0 ? textSize : 16f);
+        } else {
+            throw new IllegalArgumentException("Unsupported font type for Desktop");
+        }
     }
 }

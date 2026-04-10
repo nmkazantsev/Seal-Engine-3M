@@ -3,6 +3,7 @@ package com.nikitos.main.images;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.maths.Section;
+import com.nikitos.maths.Vec3;
 
 public class PImage {
     private TextAlign textAlign = TextAlign.LEFT;
@@ -17,18 +18,36 @@ public class PImage {
         this.impl = CoreRenderer.engine.getPlatformBridge().getAbstractImage();
     }
 
-    public PImage(int width, int height) {
+    public PImage(float width, float height) {
         this.impl = CoreRenderer.engine.getPlatformBridge().getAbstractImage();
-        impl.createBitmap(width, height);
+        impl.createBitmap((int) width, (int) height);
     }
 
-    public void fill(int color) {
+
+    public void fill(float color) {
         fill(color, color, color, 255);
+    }
+
+    public void fill(float r, float g, float b) {
+        fill(r, g, b, 255);
+    }
+
+    public void fill(Vec3 color) {
+        fill(color.x, color.y, color.z, 255);
     }
 
     public void background(int color) {
         background(color, color, color, 255);
     }
+
+    public void background(float r, float g, float b) {
+        background(r, g, b, 255);
+    }
+
+    public void background(Vec3 color) {
+        background(color.x, color.y, color.z, 255);
+    }
+
 
     public void text(float text, float x, float y) {
         text(String.valueOf(text), x, y);
@@ -78,6 +97,10 @@ public class PImage {
 
     public void fill(float r, float g, float b, float a) {
         impl.fill((int) (r), (int) (g), (int) (b), (int) (a));
+    }
+
+    public void stroke(float s) {
+        stroke(s, s, s, 255);
     }
 
     public void stroke(float r, float g, float b, float a) {
@@ -135,6 +158,33 @@ public class PImage {
 
     public Object getBitmap() {
         return impl.getBitmap();
+    }
+
+    public float getTextWidth(String s) {
+        return impl.getTextWidth(s);
+    }
+
+    public float getTextHeight(String s) {
+        return impl.getTextHeight(s);
+    }
+
+    public void setAntiAlias(boolean b) {
+        impl.setAntiAlias(b);
+    }
+
+    public void drawSector(float cx, float cy, float radius, float startAngle, float sweepAngle, boolean fill) {
+        impl.drawSector(cx, cy, radius, startAngle, sweepAngle, fill);
+    }
+
+    public void stroke(float r, float g, float b) {
+        impl.stroke((int) (r), (int) (g), (int) (b), (int) (g));
+    }
+    public void clear(){
+        impl.clear();
+    }
+
+    public void setFont(PFont font) {
+        impl.setFont(font);
     }
 
 }
