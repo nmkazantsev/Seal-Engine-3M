@@ -286,6 +286,22 @@ img.setFont(myFont);
 img.textSize(32);
 img.text("Hello, World!", 100, 100);
 ```
+## 6. 3D графика и вершинные объекты
+
+### Shape
+Загружает 3D модель из OBJ файла (асинхронно) и отрисовывает её с текстурой и опционально normal map.
+
+**Конструкторы:**
+- `Shape(String fileName, String textureFileName, GamePageClass page)` – загружает модель из assets и текстуру.
+- `Shape(PreLoadedMesh preLoadedMesh, String textureFileName, GamePageClass page)` – использует предварительно загруженную модель.
+
+**Публичные методы:**
+- `void addNormalMap(String normalMapFileName)` – добавляет карту нормалей для модели.
+- `void prepareAndDraw()` – отрисовывает модель с текущей матрицей трансформации (должна быть задана через `Matrix.applyMatrix`).
+- `void redrawNow()` – принудительно перезагружает текстуру.
+- `void onRedrawSetup()`, `void setRedrawNeeded(boolean redrawNeeded)`, `boolean isRedrawNeeded()` – управление перезагрузкой.
+- `void delete()` – удаляет ресурсы.
+- Статический метод `static void loadFacesAsync(String fileName, Function<PreLoadedMesh, Void> callback)` – асинхронная загрузка OBJ.
 
 ### Polygon
 Класс для создания простого прямоугольного полигона (два треугольника) с динамически генерируемой текстурой (через `Function`).
@@ -630,10 +646,7 @@ img.text("Hello, World!", 100, 100);
 
 **Публичные методы:**
 - `void playMusic(String path, boolean loop)`
-- `void stopMusic()`, `void pauseMusic()`, `void start()`
-- `void playSound(String path)`
-- `void setListenerPosition(Vec3 position)`
-- `void setSourcePosition(int soundId, Vec3 position)`
+- `void stopMusic()`, `void pauseMusic()` - методы управления воспроизведением музыки
 - `void setVolume(float volume)` – устанавливает громкость музыки и звуков (диапазон 0.0 – 1.0).
 - `float getVolume()` – возвращает текущую громкость.
 
@@ -647,7 +660,7 @@ img.text("Hello, World!", 100, 100);
 **Публичные методы (часто используемые):**
 - `static float getX()`, `getY()` – размер экрана.
 - `static float getKx()`, `getKy()` – коэффициенты масштабирования (размер "дефолтного" экрана / 1280x720).
-- `static void background(float r, float g, float b)` – устанавливает цвет очистки экрана (OpenGL). Компоненты задаются в диапазоне 0–255.
+- `static void background(int r, int b, int g)` – устанавливает цвет очистки экрана (OpenGL).
 - `static float findDrot(float rot, float aimRot)` – минимальное изменение угла для достижения цели (в градусах).
 - `static float sq(float a)`, `sqrt(float a)`, `pow(float a, float b)`
 - `static float[] contactArray(float[] a, float[] b)` – объединяет два массива.
