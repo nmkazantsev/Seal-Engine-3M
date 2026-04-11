@@ -100,6 +100,7 @@ When asked to modify an application built on Seal Engine, start in this order:
      - `test.mp3` (long music track, optional in this repo)
      - `bsod.mp3` (short MP3)
      - `test.wav` (WAV test sound)
+   - Android note: engine module audio assets typically live under `android/src/main/assets/` and are accessed via `AssetManager` APIs (not the desktop classpath).
 
 ## 7. Common App-Level Tasks (Where To Change Code)
 

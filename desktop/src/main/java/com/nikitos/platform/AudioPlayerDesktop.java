@@ -17,6 +17,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Desktop audio implementation:
  * - Music: one long-lived streaming player (BasicPlayer).
  * - Sound effects: short-lived independent Clips (WAV and MP3 via mp3spi).
+ *
+ * Idea:
+ * - Keep music and SFX isolated: SFX playback must never share the same underlying player/state as music.
+ * - Prefer re-creating the low-level music player on each {@link #playMusic(String, boolean)} call to avoid
+ *   stale state issues across open/play/stop cycles (which was a likely cause of short MP3 cut-offs).
+ *
+ * Limitations:
+ * - MP3 SFX support depends on JavaSound providers (mp3spi). For very short effects WAV is usually more reliable.
  */
 public final class AudioPlayerDesktop implements AudioPlayer {
     private final SealAssetManager assetManager;
@@ -245,4 +253,3 @@ public final class AudioPlayerDesktop implements AudioPlayer {
         }
     }
 }
-

@@ -94,6 +94,8 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
   - `android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java` (GLSurfaceView renderer adapter)
   - `android/src/main/java/com/seal/gl_engine/touch/AndroidMotionEventAdapter.java`
   - audio implementation: `android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java`
+    - music: `MediaPlayer`
+    - SFX: `SoundPool` (async load; play is triggered on `OnLoadComplete`), MP3 SFX fallback to short-lived `MediaPlayer`
 
 ## 5. Subsystem Notes (What To Expect Internally)
 
@@ -167,6 +169,8 @@ High blast-radius code (changes can affect all games/apps and both platforms):
   - `vertex_bueffer` typo in package name
   - `AndroidAudioPLayer` spelling/capitalization inconsistency (legacy name)
   - Android package root is `com/seal/gl_engine/*`, not `com/nikitos/*`
+  - Android SFX: `SoundPool.load()` is asynchronous; avoid "load then immediately play" patterns.
+  - Android packaging: if you use `AssetManager.openFd(...)`, the asset must not be compressed (see `android/build.gradle` `aaptOptions.noCompress`).
 
 ## 9. Items That Often Need Verification
 

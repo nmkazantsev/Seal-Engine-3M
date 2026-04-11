@@ -16,6 +16,8 @@ android {
 
     aaptOptions {
         noCompress "mp3"
+        noCompress "wav"
+        noCompress "ogg"
     }
 
     buildTypes {

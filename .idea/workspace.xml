@@ -4,22 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b42c303c-b4ea-43a4-9299-ea1e8eef9f45" name="Changes" comment="commit workspace.xml">
-      <change afterPath="$PROJECT_DIR$/core/src/main/resources/test.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" afterDir="false" />
+    <list default="true" id="b42c303c-b4ea-43a4-9299-ea1e8eef9f45" name="Changes" comment="fix bsod sound, fix sound player">
+      <change afterPath="$PROJECT_DIR$/android/src/main/assets/bsod.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/assets/bsod_engine.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/BSODScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger/BSODScreen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPLayerDesktop.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/mp3/SimpleMp3Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/W95font.otf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPlayerDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPlayerDesktop.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +45,7 @@
     </system>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -65,7 +62,7 @@
     "Gradle.Demo [:desktop:AudioSmokeTestMain.main()].executor": "Run",
     "Gradle.Demo [:desktop:com.nikitos.platform.AudioSmokeTestMain.main()].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "20-keyboar",
+    "git-widget-placeholder": "19-bsod",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources",
     "node.js.detected.package.eslint": "true",
@@ -147,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775858198358</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix bsod sound, fix sound player">
+      <option name="closed" value="true" />
+      <created>1775930735997</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1775930735997</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -155,6 +160,29 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add sound and font" />
-    <option name="LAST_COMMIT_MESSAGE" value="add sound and font" />
+    <MESSAGE value="fix bsod sound, fix sound player" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bsod sound, fix sound player" />
+  </component>
+  <component name="com.gk646.codestats.settings.Save">
+    <option name="commitTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1775930736489" />
+          <option name="linesCode" value="51973" />
+          <option name="totalLines" value="102134" />
+          <option name="info" value="fix bsod sound, fix sound player" />
+        </TimePoint>
+      </list>
+    </option>
+    <option name="genericTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1775930736489" />
+          <option name="linesCode" value="51973" />
+          <option name="totalLines" value="102134" />
+          <option name="info" value="11 Apr 2026" />
+        </TimePoint>
+      </list>
+    </option>
   </component>
 </project>

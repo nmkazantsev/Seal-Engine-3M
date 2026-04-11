@@ -655,6 +655,11 @@ img.text("Hello, World!", 100, 100);
 - Для коротких звуковых эффектов рекомендуется `WAV` (наиболее предсказуемо для SFX).
 - `MP3` поддерживается; но для очень коротких эффектов `WAV` обычно надежнее (задержка/паддинг кодека MP3).
 
+**Примечания по Android SFX:**
+- Для одноразовых звуков используется `SoundPool`, который **грузит сэмплы асинхронно**. Поэтому корректная реализация должна запускать `play()` после `OnLoadComplete`.
+- Для `MP3` SFX на некоторых устройствах `SoundPool` работает нестабильно; в движке есть fallback на короткоживущий `MediaPlayer` для `*.mp3` SFX.
+- Если используете `AssetManager.openFd(...)` (как в реализации движка), убедитесь что `wav/ogg/mp3` не сжимаются при упаковке (см. `android/build.gradle` `aaptOptions.noCompress`).
+
 **Быстрая проверка (desktop):**
 - Запуск: `desktop/src/test/java/AudioSmokeTestMain.java` (main-класс `AudioSmokeTestMain`)
 - Использует ресурсы на classpath: `bsod.mp3`, `test.wav`, и опционально `test.mp3`.
