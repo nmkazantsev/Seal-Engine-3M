@@ -121,6 +121,7 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 
 - `KeyboardProcessor` buffers key callbacks and executes them later from the render thread via `KeyboardProcessor.processKeys()` (called from `CoreRenderer.draw()`).
 - Page scoping is handled similarly to touch: `Engine.startNewPage(...)` triggers `KeyboardProcessor.onPageChange()` to drop listeners created by the previous page (unless created with `creatorPage == null`).
+- `KeyComboListener` fires once when all keys from the combo are pressed together (order-independent), and becomes eligible to fire again after any combo key is released.
 - Platform forwarding:
   - Desktop: `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java` forwards GLFW key press/release.
   - Android: `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java` forwards key events from the `GLSurfaceView` (focus required).
