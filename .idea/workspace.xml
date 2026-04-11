@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add fonts">
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add more docs">
       <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +57,7 @@
         <entry key="$PROJECT_DIR$" value="17-версия-3-2-1" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -87,57 +86,57 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [runWithJavaFX].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [run].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [shadowJar].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;#18 on 17-версия-3-2-1&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/Demo/game/src/main/resources&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.49679077&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Gradle.Build Demo.executor": "Run",
+    "Gradle.Build sealEngine_3M.executor": "Run",
+    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [dependencies].executor": "Run",
+    "Gradle.Demo [runWithJavaFX].executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.Load Gradle Dependencies.executor": "Run",
+    "Gradle.sealEngine_3M [./gradlew dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [build].executor": "Run",
+    "Gradle.sealEngine_3M [clean].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies --configuration compileClasspath].executor": "Run",
+    "Gradle.sealEngine_3M [dependencies].executor": "Run",
+    "Gradle.sealEngine_3M [jar].executor": "Run",
+    "Gradle.sealEngine_3M [run].executor": "Run",
+    "Gradle.sealEngine_3M [shadowJar].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "/home/nikita/.local/share/JetBrains/IntelliJIdea2025.2/Shell Script/shellcheck",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "20-keyboar",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.49679077",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.nikitos.platform" />
       <recent name="com.seal.gl_engine.platform" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/../Demo/game/src/main/resources" />
       <recent name="$PROJECT_DIR$/../Demo/game/src/main/assets" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger" />
-      <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs" />
