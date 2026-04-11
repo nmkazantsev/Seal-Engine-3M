@@ -1,7 +1,5 @@
 package com.nikitos.platformBridge;
 
-import com.nikitos.maths.Vec3;
-
 public interface AudioPlayer {
     void playMusic(String path, boolean loop);
 
@@ -9,15 +7,14 @@ public interface AudioPlayer {
 
     void pauseMusic();
 
-    void start();
+    /**
+     * Continue playback after {@link #pauseMusic()}.
+     */
+    void resume();
 
     void playSound(String path);
 
-    // когда-нибудь сделаю
-    void setListenerPosition(Vec3 position);
+    void setVolume(float volume);
 
-    void setSourcePosition(int soundId, Vec3 position);
-
-    public abstract void setVolume(float volume);
-    public abstract float getVolume();
+    float getVolume();
 }

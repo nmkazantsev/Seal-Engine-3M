@@ -30,6 +30,8 @@ public class BSODScreen extends GamePageClass {
     AudioPlayer player;
 
     public BSODScreen(String errorText) {
+        player = CoreRenderer.engine.getPlatformBridge().getAudioPlayer();
+        player.playSound("bsod_engine.wav");
         this.errorText = errorText == null ? "" : errorText;
         shader = new Shader(
                 "vertex_shader_engine.glsl",
@@ -40,10 +42,6 @@ public class BSODScreen extends GamePageClass {
 
 
         screenPolygon = new SimplePolygon(redrawScreen, false, 0, this);
-
-        player = CoreRenderer.engine.getPlatformBridge().getAudioPlayer();
-        player.playMusic("bsod.mp3", false);
-
     }
 
     @Override
@@ -71,12 +69,12 @@ public class BSODScreen extends GamePageClass {
 
     @Override
     public void onResume() {
-        player.start();
+        player.resume();
     }
 
     @Override
     public void onPause() {
-        player.stopMusic();
+        player.pauseMusic();
     }
 
     private final Function<List<Object>, PImage> redrawScreen = objects -> {

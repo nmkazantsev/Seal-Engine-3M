@@ -8,6 +8,9 @@ import org.lwjgl.opengl.GL32;
 
 
 public class DesktopBridge extends PlatformBridge {
+    private final SealAssetManager assetManager = new DesktopSealAssetManager();
+    private final AudioPlayer audioPlayer = new AudioPlayerDesktop(assetManager);
+
     @Override
     public void onPause() {
 
@@ -91,12 +94,12 @@ public class DesktopBridge extends PlatformBridge {
 
     @Override
     public SealAssetManager getAssetManager() {
-        return new DesktopSealAssetManager();
+        return assetManager;
     }
 
     @Override
     public AudioPlayer getAudioPlayer() {
-        return new AudioPLayerDesktop();
+        return audioPlayer;
     }
 
     @Override

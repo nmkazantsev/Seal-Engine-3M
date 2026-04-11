@@ -96,6 +96,10 @@ When asked to modify an application built on Seal Engine, start in this order:
    - resize-dependent initialization tends to live in `onSurfaceChanged(...)`
 5. Assets in the *application* repo:
    - shaders, textures, models, fonts, audio, config
+   - audio note (engine-dev / desktop): assets are loaded from the classpath; for quick verification you can add test files under `core/src/main/resources/`:
+     - `test.mp3` (long music track, optional in this repo)
+     - `bsod.mp3` (short MP3)
+     - `test.wav` (WAV test sound)
 
 ## 7. Common App-Level Tasks (Where To Change Code)
 
@@ -129,4 +133,3 @@ Open the engine internals map only when:
 - you are explicitly tasked with changing Seal Engine 3-M itself, or
 - an issue cannot be resolved through public API usage (e.g., platform adapter bug, GPU resource lifecycle bug, shader binding bug), and you must trace engine implementation.
 - if you need API descritption use README file, only if something stay unclear read engine intrernals map
-

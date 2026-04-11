@@ -282,6 +282,9 @@ public class DesktopLauncher {
             glfwPollEvents();
 
         }
-        AudioPLayerDesktop.stopAll();
+        try {
+            com.nikitos.CoreRenderer.engine.getPlatformBridge().getAudioPlayer().stopMusic();
+        } catch (Exception ignored) {
+        }
     }
 }

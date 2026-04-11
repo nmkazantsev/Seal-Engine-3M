@@ -646,9 +646,18 @@ img.text("Hello, World!", 100, 100);
 
 **Публичные методы:**
 - `void playMusic(String path, boolean loop)`
-- `void stopMusic()`, `void pauseMusic()` - методы управления воспроизведением музыки
+- `void stopMusic()`, `void pauseMusic()`, `void resume()` - управление воспроизведением музыки (resume = продолжить после паузы)
+- `void playSound(String path)` – проиграть одноразовый звук (SFX), не влияя на состояние музыки
 - `void setVolume(float volume)` – устанавливает громкость музыки и звуков (диапазон 0.0 – 1.0).
 - `float getVolume()` – возвращает текущую громкость.
+
+**Примечания по формату (desktop):**
+- Для коротких звуковых эффектов рекомендуется `WAV` (наиболее предсказуемо для SFX).
+- `MP3` поддерживается; но для очень коротких эффектов `WAV` обычно надежнее (задержка/паддинг кодека MP3).
+
+**Быстрая проверка (desktop):**
+- Запуск: `desktop/src/test/java/AudioSmokeTestMain.java` (main-класс `AudioSmokeTestMain`)
+- Использует ресурсы на classpath: `bsod.mp3`, `test.wav`, и опционально `test.mp3`.
 
 ---
 

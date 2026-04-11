@@ -65,6 +65,7 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 - `core/src/main/java/com/nikitos/Engine.java`
 - `core/src/main/java/com/nikitos/GamePageClass.java`
 - `core/src/main/java/com/nikitos/platformBridge/LauncherParams.java`
+- `core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java` (music + one-shot SFX; `resume()` continues after pause; no 3D audio API)
 - `core/src/main/java/com/nikitos/main/camera/*` (camera/projection)
 - `core/src/main/java/com/nikitos/main/images/*` (`PImage`, `PFont`, image/font bridges)
 - `core/src/main/java/com/nikitos/main/vertices/*` (`Shape`, `Polygon`, `SimplePolygon`, `SkyBox`, etc.)
@@ -86,10 +87,13 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 - Desktop:
   - `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java`
   - desktop GL/touch/audio/adapters under `desktop/src/main/java/...`
+  - audio implementation: `desktop/src/main/java/com/nikitos/platform/AudioPlayerDesktop.java`
+  - desktop audio smoke test main: `desktop/src/test/java/AudioSmokeTestMain.java` (plain `main()`, default package)
 - Android:
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidLauncher.java`
   - `android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java` (GLSurfaceView renderer adapter)
   - `android/src/main/java/com/seal/gl_engine/touch/AndroidMotionEventAdapter.java`
+  - audio implementation: `android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java`
 
 ## 5. Subsystem Notes (What To Expect Internally)
 
@@ -161,7 +165,7 @@ High blast-radius code (changes can affect all games/apps and both platforms):
 - Registries/global managers are used in multiple subsystems (`VRAMobject`, `Shader`, `TouchProcessor`, `VerticesShapesManager`, `Animator`, `Debugger`).
 - Some naming is inconsistent and should be treated as legacy:
   - `vertex_bueffer` typo in package name
-  - `AudioPLayerDesktop` capitalization inconsistency
+  - `AndroidAudioPLayer` spelling/capitalization inconsistency (legacy name)
   - Android package root is `com/seal/gl_engine/*`, not `com/nikitos/*`
 
 ## 9. Items That Often Need Verification
@@ -169,4 +173,3 @@ High blast-radius code (changes can affect all games/apps and both platforms):
 - Asset loading behavior differences between Android and desktop packaging.
 - GL context recreation behavior (especially on Android) and correctness of resource reload paths.
 - Audio APIs and platform-specific implementations (some methods may be stubs/partial).
-

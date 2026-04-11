@@ -28,6 +28,8 @@ public class AndroidBridge extends PlatformBridge {
     private Context context;
     private GLSurfaceView glSurfaceView;
     protected Function<Void, GamePageClass> startPage;
+    private SealAssetManager assetManager;
+    private AudioPlayer audioPlayer;
 
     GLSurfaceView launch(AndroidLauncherParams androidLauncherParams, Engine engine) {
         startPage = androidLauncherParams.getStartPage();
@@ -191,12 +193,18 @@ public class AndroidBridge extends PlatformBridge {
 
     @Override
     public SealAssetManager getAssetManager() {
-        return new AndroidSealAssetManager(context);
+        if (assetManager == null) {
+            assetManager = new AndroidSealAssetManager(context);
+        }
+        return assetManager;
     }
 
     @Override
     public AudioPlayer getAudioPlayer() {
-        return new AndroidAudioPLayer(context);
+        if (audioPlayer == null) {
+            audioPlayer = new AndroidAudioPLayer(context);
+        }
+        return audioPlayer;
     }
 
     @Override

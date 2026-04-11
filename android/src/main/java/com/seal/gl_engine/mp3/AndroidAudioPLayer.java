@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.util.Log;
 
-import com.nikitos.maths.Vec3;
 import com.nikitos.platformBridge.AudioPlayer;
 
 import java.io.IOException;
@@ -32,12 +31,13 @@ public class AndroidAudioPLayer implements AudioPlayer {
     @Override
     public void setVolume(float volume) {
         this.volume = volume;
-        musicPlayer.setVolume(volume, volume);
+        if (musicPlayer != null) {
+            musicPlayer.setVolume(volume, volume);
+        }
     }
 
     @Override
     public float getVolume() {
-        musicPlayer.setVolume(volume, volume);
         return volume;
     }
     // 🎵 MUSIC
@@ -45,68 +45,42 @@ public class AndroidAudioPLayer implements AudioPlayer {
     //@OptIn(markerClass = UnstableApi.class)
     @Override
     public void playMusic(String path, boolean loop) {
-        Log.e("player", "play");
-        if (musicPlayer.isPlaying()) {
-            musicPlayer.stop();
-        }
-        AssetFileDescriptor afd = null;
-        try {
-            afd = context.getAssets().openFd(path);
-
+        Log.i("Audio", "playMusic: " + path + ", loop=" + loop);
+        ensureMusicPlayer();
+        try (AssetFileDescriptor afd = context.getAssets().openFd(path)) {
+            musicPlayer.reset();
             musicPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-            Log.d("Audio", "File size: " + afd.getLength()); // Убедимся, что файл не пустой
-
-            afd.close();
-
             musicPlayer.setLooping(loop);
-            musicPlayer.setVolume(1f, 1f);
-
-            // Асинхронная подготовка — ключевое исправление!
-            musicPlayer.setOnPreparedListener(mp -> {
-                Log.e("player", "Prepared, starting playback");
-                mp.start();
-            });
-
+            musicPlayer.setVolume(volume, volume);
+            musicPlayer.setOnPreparedListener(MediaPlayer::start);
             musicPlayer.setOnErrorListener((mp, what, extra) -> {
-                Log.e("player", "MediaPlayer error: what=" + what + ", extra=" + extra);
+                Log.e("Audio", "MediaPlayer error: what=" + what + ", extra=" + extra);
                 return true;
             });
-
-            // --- ДИАГНОСТИКА ---
-            musicPlayer.setOnErrorListener((mp, what, extra) -> {
-                Log.e("Audio", "MediaPlayer Error: what=" + what + ", extra=" + extra);
-                return true;
-            });
-
-            musicPlayer.setOnInfoListener((mp, what, extra) -> {
-                Log.e("Audio", "MediaPlayer Info: what=" + what + ", extra=" + extra);
-                return false;
-            });
-
-            musicPlayer.setOnPreparedListener(mp -> {
-                Log.e("Audio", "Prepared, duration: " + mp.getDuration() + " ms");
-                mp.start();
-            });
-
-            musicPlayer.setOnCompletionListener(mp -> {
-                Log.e("Audio", "Playback completed (or stopped)");
-            });
-            // --- КОНЕЦ ДИАГНОСТИКИ ---
-            musicPlayer.prepareAsync(); // вместо prepare()
+            musicPlayer.prepareAsync();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
+    private void ensureMusicPlayer() {
+        if (musicPlayer == null) {
+            musicPlayer = new MediaPlayer();
+        }
+    }
 
     @Override
     public void stopMusic() {
-        if (musicPlayer != null) {
-            musicPlayer.stop();
-            musicPlayer.release();
-            musicPlayer = null;
+        if (musicPlayer == null) return;
+        try {
+            if (musicPlayer.isPlaying()) {
+                musicPlayer.stop();
+            }
+        } catch (IllegalStateException ignored) {
+            // If it's not in a valid state, just release below.
         }
+        musicPlayer.reset();
     }
 
     @Override
@@ -117,8 +91,13 @@ public class AndroidAudioPLayer implements AudioPlayer {
     }
 
     @Override
-    public void start() {
-        musicPlayer.start();
+    public void resume() {
+        if (musicPlayer == null) return;
+        try {
+            musicPlayer.start();
+        } catch (IllegalStateException ignored) {
+            // If stopped/reset, resume isn't valid. Consumer should call playMusic again.
+        }
     }
 
 // 🔊 SOUND
@@ -135,16 +114,6 @@ public class AndroidAudioPLayer implements AudioPlayer {
         });
 
         soundPool.play(soundId, 1f, 1f, 1, 0, 1f);
-    }
-
-    @Override
-    public void setListenerPosition(Vec3 position) {
-
-    }
-
-    @Override
-    public void setSourcePosition(int soundId, Vec3 position) {
-
     }
 
 }
