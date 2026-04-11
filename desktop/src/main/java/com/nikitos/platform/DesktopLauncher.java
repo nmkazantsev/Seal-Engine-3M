@@ -3,6 +3,7 @@ package com.nikitos.platform;
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
 import com.nikitos.main.debugger.Debugger;
+import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.main.touch.MyMotionEvent;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.platformBridge.LauncherParams;
@@ -15,6 +16,7 @@ import org.lwjgl.system.MemoryStack;
 import touch.DesktopMotionEventAdapter;
 
 import java.nio.IntBuffer;
+import java.util.Locale;
 import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -49,6 +51,47 @@ public class DesktopLauncher {
         engine = new Engine(new DesktopBridge(), launcherParams);
         init();
         coreRenderer = new CoreRenderer(vidmode.width(), vidmode.height(), engine);
+    }
+
+    private static String glfwKeyToName(int key, int scancode) {
+        String name = glfwGetKeyName(key, scancode);
+        if (name != null && !name.isEmpty()) {
+            return name.toUpperCase(Locale.ROOT);
+        }
+        switch (key) {
+            case GLFW_KEY_SPACE:
+                return "SPACE";
+            case GLFW_KEY_ENTER:
+                return "ENTER";
+            case GLFW_KEY_TAB:
+                return "TAB";
+            case GLFW_KEY_BACKSPACE:
+                return "BACKSPACE";
+            case GLFW_KEY_ESCAPE:
+                return "ESCAPE";
+            case GLFW_KEY_LEFT:
+                return "LEFT";
+            case GLFW_KEY_RIGHT:
+                return "RIGHT";
+            case GLFW_KEY_UP:
+                return "UP";
+            case GLFW_KEY_DOWN:
+                return "DOWN";
+            case GLFW_KEY_LEFT_SHIFT:
+                return "LSHIFT";
+            case GLFW_KEY_RIGHT_SHIFT:
+                return "RSHIFT";
+            case GLFW_KEY_LEFT_CONTROL:
+                return "LCTRL";
+            case GLFW_KEY_RIGHT_CONTROL:
+                return "RCTRL";
+            case GLFW_KEY_LEFT_ALT:
+                return "LALT";
+            case GLFW_KEY_RIGHT_ALT:
+                return "RALT";
+            default:
+                return "KEY_" + key;
+        }
     }
 
     public void run() {
@@ -129,6 +172,12 @@ public class DesktopLauncher {
             throw new RuntimeException("Failed to create the GLFW window");
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+            if (action == GLFW_PRESS) {
+                KeyboardProcessor.onKeyPressed(glfwKeyToName(key, scancode));
+            } else if (action == GLFW_RELEASE) {
+                KeyboardProcessor.onKeyReleased(glfwKeyToName(key, scancode));
+            }
+
             if (launcherParams.getFullScreen()) {
                 if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                     if (fullScreenOpened) {

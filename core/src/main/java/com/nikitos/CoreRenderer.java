@@ -2,6 +2,7 @@ package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
 import com.nikitos.main.debugger.Debugger;
+import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.main.vertices.VerticesShapesManager;
@@ -75,5 +76,6 @@ public class CoreRenderer {
 
         VerticesShapesManager.redrawAll();
         TouchProcessor.processMotions();
+        KeyboardProcessor.processKeys();
     }
 }

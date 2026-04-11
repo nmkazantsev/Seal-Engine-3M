@@ -2,6 +2,7 @@ package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
 import com.nikitos.main.debugger.Debugger;
+import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
@@ -84,6 +85,7 @@ public class Engine {
         VRAMobject.onPageChange();
         Shader.onPageChange();
         TouchProcessor.onPageChange();
+        KeyboardProcessor.onPageChange();
     }
 
     void startDefaultPage() {
