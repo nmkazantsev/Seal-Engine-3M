@@ -23,6 +23,10 @@ If you are changing the engine itself (this repository), open `ENGINE_INTERNALS_
 
 ## 3. How Consumers Depend On The Engine (Observed Patterns)
 
+### 3.0 Create the app
+
+to create a new template app use the last version of the app generator located at gitHub: gitHub https://github.com/nmkazantsev/seal-app-generator .
+
 ### 3.1 Engine as local JARs (desktop)
 
 Observed in `~/IdeaProjects/Seal_Engine_3-M/Tanki-7.1/build.gradle`:

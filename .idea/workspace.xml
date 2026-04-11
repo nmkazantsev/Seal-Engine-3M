@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b42c303c-b4ea-43a4-9299-ea1e8eef9f45" name="Changes" comment="fix bsod sound, fix sound player">
-      <change afterPath="$PROJECT_DIR$/android/src/main/assets/bsod.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/assets/bsod_engine.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/resources/W95font.otf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPlayerDesktop.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/AudioPlayerDesktop.java" afterDir="false" />
-    </list>
+    <list default="true" id="b42c303c-b4ea-43a4-9299-ea1e8eef9f45" name="Changes" comment="fix bsod sound, fix sound player" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -152,7 +139,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775930735997</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fix bsod sound, fix sound player">
+      <option name="closed" value="true" />
+      <created>1775933427416</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1775933427416</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,14 +167,20 @@
           <option name="totalLines" value="102134" />
           <option name="info" value="fix bsod sound, fix sound player" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1775933427486" />
+          <option name="linesCode" value="19377" />
+          <option name="totalLines" value="44747" />
+          <option name="info" value="fix bsod sound, fix sound player" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
       <list>
         <TimePoint>
-          <option name="timestamp" value="1775930736489" />
-          <option name="linesCode" value="51973" />
-          <option name="totalLines" value="102134" />
+          <option name="timestamp" value="1775933427486" />
+          <option name="linesCode" value="19377" />
+          <option name="totalLines" value="44747" />
           <option name="info" value="11 Apr 2026" />
         </TimePoint>
       </list>
