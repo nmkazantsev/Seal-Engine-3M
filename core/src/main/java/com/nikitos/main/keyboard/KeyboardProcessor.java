@@ -85,10 +85,10 @@ public class KeyboardProcessor {
                     if (!listener.isActiveForCurrentPage()) continue;
                     if (listener.isBlocked()) continue;
                     listener.updateActive(pressedNow);
-                    if (!listener.canFireNow(pressedNow)) continue;
+                    if (!listener.shouldInvokeCallbackNow(pressedNow)) continue;
                     Function<String, Void> callback = listener.getComboPressedCallback();
                     if (callback != null) {
-                        listener.markFired();
+                        listener.markActive();
                         commandQueue.add(new Command(listener.getComboName(), callback, listener));
                     }
                 }

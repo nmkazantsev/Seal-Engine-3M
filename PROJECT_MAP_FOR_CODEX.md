@@ -115,7 +115,7 @@ When asked to modify an application built on Seal Engine, start in this order:
 ### 7.4 Keyboard input
 
 - In game code: use `KeyListener` / `KeyReleasedListener` (bind by key name, or use `anyKey(...)`).
-- For key combinations: use `KeyComboListener` (fires when all specified keys are pressed together, in any order).
+- For key combinations: use `KeyComboListener` (its callback is called when all specified keys are pressed together, in any order).
 - For polling: use `KeyboardProcessor.isKeyPressed(...)`, `KeyboardProcessor.getKeysPressedNumber()`, `KeyboardProcessor.getKeyPresedList()`.
 
 ### 7.3 Rendering / shader / asset load failures

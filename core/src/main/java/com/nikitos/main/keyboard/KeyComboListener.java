@@ -9,8 +9,8 @@ import java.util.function.Function;
 import static com.nikitos.main.keyboard.KeyboardProcessor.normalizeKeyName;
 
 /**
- * A listener that fires when all specified keys are pressed together (in any order).
- * Fires once per activation (until any key from the combo is released).
+ * A listener whose callback is called when all specified keys are pressed together (in any order).
+ * The callback is called once per activation, until any key from the combo is released.
  */
 public class KeyComboListener {
     private final Class<?> creatorClassName;
@@ -78,22 +78,22 @@ public class KeyComboListener {
         }
     }
 
-    boolean isReadyToFire(Set<String> pressedKeys) {
+    boolean isComboPressed(Set<String> pressedKeys) {
         if (keysSet.isEmpty()) return false;
         return pressedKeys.containsAll(keysSet);
     }
 
     void updateActive(Set<String> pressedKeys) {
-        if (!isReadyToFire(pressedKeys)) {
+        if (!isComboPressed(pressedKeys)) {
             active = false;
         }
     }
 
-    boolean canFireNow(Set<String> pressedKeys) {
-        return !active && isReadyToFire(pressedKeys);
+    boolean shouldInvokeCallbackNow(Set<String> pressedKeys) {
+        return !active && isComboPressed(pressedKeys);
     }
 
-    void markFired() {
+    void markActive() {
         active = true;
     }
 
@@ -105,4 +105,3 @@ public class KeyComboListener {
         return creatorClassName;
     }
 }
-
