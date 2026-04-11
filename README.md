@@ -639,6 +639,50 @@ img.text("Hello, World!", 100, 100);
 
 ---
 
+## 12.1 Ввод (клавиатура)
+
+Клавиатурный ввод реализован через слушатели нажатия/удержания/отпускания клавиш. Коллбэки буферизуются и выполняются в основном (рендер) потоке.
+
+### KeyListener (нажатие + удержание)
+
+**Конструкторы:**
+- `KeyListener(String key, Function<String, Void> keyPressedCallback, GamePageClass creatorPage)` – привязка к одной клавише.
+- `KeyListener(String[] keys, Function<String, Void> keyPressedCallback, GamePageClass creatorPage)` – привязка к нескольким клавишам (срабатывает на любую из них).
+
+**Дополнительно:**
+- `static KeyListener anyKey(Function<String, Void> keyPressedCallback, GamePageClass creatorPage)` – срабатывает на любую клавишу.
+- `KeyListener setHoldListener(long timeoutMs, Function<String, Void> keyHoldCallback)` – коллбэк удержания: вызывается один раз, если клавиша удерживается дольше `timeoutMs`.
+- `void block()`, `void unblock()`, `void delete()`
+
+### KeyReleasedListener (отпускание)
+
+**Конструкторы:**
+- `KeyReleasedListener(String key, Function<String, Void> keyReleasedCallback, GamePageClass creatorPage)`
+- `KeyReleasedListener(String[] keys, Function<String, Void> keyReleasedCallback, GamePageClass creatorPage)`
+
+**Дополнительно:**
+- `static KeyReleasedListener anyKey(Function<String, Void> keyReleasedCallback, GamePageClass creatorPage)`
+- `void block()`, `void unblock()`, `void delete()`
+
+### KeyboardProcessor (состояние клавиш)
+
+**Публичные методы:**
+- `static boolean isKeyPressed(String key)` – нажата ли клавиша сейчас.
+- `static int getKeysPressedNumber()` – сколько клавиш нажато сейчас.
+- `static List<String> getKeyPresedList()` – список нажатых клавиш сейчас (имена нормализованы, uppercase).
+
+### KeyComboListener (комбинации клавиш)
+
+Слушатель, который срабатывает только если **все** указанные клавиши нажаты одновременно (порядок нажатия не важен). Коллбэк вызывается **один раз** на активацию комбинации (повторно сработает после отпускания любой клавиши из комбинации и повторного нажатия).
+
+**Конструкторы:**
+- `KeyComboListener(String[] keys, Function<String, Void> comboPressedCallback, GamePageClass creatorPage)`
+- `KeyComboListener(String key1, String key2, Function<String, Void> comboPressedCallback, GamePageClass creatorPage)`
+
+**Аргумент коллбэка:** строка с названием комбинации (нормализовано, `KEY1+KEY2+...`, отсортировано по имени).
+
+---
+
 ## 13. Аудио
 
 ### AudioPlayer
