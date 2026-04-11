@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add more docs">
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" afterDir="false" />
+    <list default="true" id="4cc71482-c9f8-4f44-ab3b-a8c4fd1508dc" name="Changes" comment="add sound and font">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +56,7 @@
         <entry key="$PROJECT_DIR$" value="17-версия-3-2-1" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -113,7 +112,7 @@
     "extract.method.default.visibility": "private",
     "git-widget-placeholder": "20-keyboar",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/Demo/game/src/main/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -132,11 +131,11 @@
       <recent name="com.seal.gl_engine.platform" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/../Demo/game/src/main/resources" />
       <recent name="$PROJECT_DIR$/../Demo/game/src/main/assets" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/default_adaptors" />
       <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/debugger" />
+      <recent name="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs" />
