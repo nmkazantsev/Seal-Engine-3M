@@ -1,6 +1,7 @@
 package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
+import com.nikitos.main.debugger.BSODScreen;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
@@ -69,8 +70,15 @@ public class CoreRenderer {
             engine.startDefaultPage();
         }
         VerticesShapesManager.onFrameBegin();
-
-        engine.getGamePage().draw();
+        if (engine.getBsodAllowed()) {
+            try {
+                engine.getGamePage().draw();
+            } catch (Exception ex) {
+                engine.startNewPage(new BSODScreen(ex.getMessage()));
+            }
+        } else {
+            engine.getGamePage().draw();
+        }
         Debugger.draw();
 
         VerticesShapesManager.redrawAll();

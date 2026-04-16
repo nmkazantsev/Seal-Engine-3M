@@ -46,6 +46,9 @@ public class Engine {
         gamePage.onSurfaceChanged(x, y);
     }
 
+    public boolean getBsodAllowed(){
+        return launcherParams.getUseBSOD();
+    }
     public void calculateFps() {
         if (Utils.millis() - prevFps > 100) {
             fps = 1000.0f / (int) ((Utils.millis() - prevFps) / (float) cadrs);

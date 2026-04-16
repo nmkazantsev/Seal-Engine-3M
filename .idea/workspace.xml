@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b42c303c-b4ea-43a4-9299-ea1e8eef9f45" name="Changes" comment="fix bsod sound, fix sound player" />
+    <list default="true" id="b42c303c-b4ea-43a4-9299-ea1e8eef9f45" name="Changes" comment="fix bsod sound, fix sound player">
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/resources/shape/fragment_shader_light.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/src/main/java/com/nikitos/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/CoreRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/CoreRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/ShaderUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/shaders/ShaderUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/LauncherParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/LauncherParams.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,7 +40,12 @@
     </system>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -43,42 +56,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
-    "Gradle.Demo [:desktop:AudioSmokeTestMain.main()].executor": "Run",
-    "Gradle.Demo [:desktop:com.nikitos.platform.AudioSmokeTestMain.main()].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "19-bsod",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:desktop:AudioSmokeTestMain.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:desktop:com.nikitos.platform.AudioSmokeTestMain.main()].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/core/src/main/resources" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Main">
-    <configuration name="AudioSmokeTestMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="AudioSmokeTestMain" />
-      <module name="sealEngine_3M.desktop.test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value=".*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
       <module name="Demo.main" />
@@ -92,14 +92,110 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":desktop:dependencies" />
+            <option value="--configuration" />
+            <option value="runtimeClasspath" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="sealEngine_3M [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="sealEngine_3M [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="sealEngine_3M [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="shadowJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Application.AudioSmokeTestMain" />
       <item itemvalue="Application.Main" />
+      <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
+      <item itemvalue="Gradle.sealEngine_3M [build]" />
+      <item itemvalue="Gradle.sealEngine_3M [run]" />
+      <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.AudioSmokeTestMain" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Gradle.sealEngine_3M [shadowJar]" />
+        <item itemvalue="Gradle.sealEngine_3M [run]" />
+        <item itemvalue="Gradle.sealEngine_3M [build]" />
+        <item itemvalue="Gradle.sealEngine_3M [:desktop:dependencies --configuration runtimeClasspath]" />
       </list>
     </recent_temporary>
   </component>
@@ -152,6 +248,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add sound and font" />
