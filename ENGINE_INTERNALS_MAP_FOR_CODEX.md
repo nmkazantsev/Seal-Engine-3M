@@ -71,6 +71,7 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 - `core/src/main/java/com/nikitos/main/vertices/*` (`Shape`, `Polygon`, `SimplePolygon`, `SkyBox`, etc.)
 - `core/src/main/java/com/nikitos/main/frameBuffers/*` (`FrameBuffer`)
 - `core/src/main/java/com/nikitos/main/touch/*` (`TouchProcessor`)
+- `core/src/main/java/com/nikitos/main/keyboard/*` (`KeyListener`, `KeyReleasedListener`, `KeyComboListener`, `KeyboardProcessor`)
 - `core/src/main/java/com/nikitos/maths/*` (`PVector`, `Vec3`, `Matrix`, `Section`)
 
 ### 4.2 Engine internals / lower-level subsystems
@@ -122,6 +123,15 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 - `TouchProcessor` buffers callbacks and processes them later (render-thread oriented).
 - This design avoids GL-thread/context issues but means “touch happens later” is normal.
 
+### 5.5 Keyboard input model
+
+- `KeyboardProcessor` buffers key callbacks and executes them later from the render thread via `KeyboardProcessor.processKeys()` (called from `CoreRenderer.draw()`).
+- Page scoping is handled similarly to touch: `Engine.startNewPage(...)` triggers `KeyboardProcessor.onPageChange()` to drop listeners created by the previous page (unless created with `creatorPage == null`).
+- `KeyComboListener` calls its callback once when all keys from the combo are pressed together (order-independent), and becomes ready again after any combo key is released.
+- Platform forwarding:
+  - Desktop: `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java` forwards GLFW key press/release.
+  - Android: `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java` forwards key events from the `GLSurfaceView` (focus required).
+
 ## 6. Dependency and Interaction Maps
 
 ### 6.1 Module-level dependency direction
@@ -167,7 +177,7 @@ High blast-radius code (changes can affect all games/apps and both platforms):
 - Registries/global managers are used in multiple subsystems (`VRAMobject`, `Shader`, `TouchProcessor`, `VerticesShapesManager`, `Animator`, `Debugger`).
 - Some naming is inconsistent and should be treated as legacy:
   - `vertex_bueffer` typo in package name
-  - `AndroidAudioPLayer` spelling/capitalization inconsistency (legacy name)
+  - `AudioPLayerDesktop` capitalization inconsistency
   - Android package root is `com/seal/gl_engine/*`, not `com/nikitos/*`
   - Android SFX: `SoundPool.load()` is asynchronous; avoid "load then immediately play" patterns.
   - Android packaging: if you use `AssetManager.openFd(...)`, the asset must not be compressed (see `android/build.gradle` `aaptOptions.noCompress`).

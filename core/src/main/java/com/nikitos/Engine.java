@@ -2,6 +2,7 @@ package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
 import com.nikitos.main.debugger.Debugger;
+import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
@@ -10,7 +11,7 @@ import com.nikitos.utils.Utils;
 
 public class Engine {
     public static String getVersion() {
-        return "v3.2.1";
+        return "v3.2.2";
     }
 
     public float fps;
@@ -87,6 +88,7 @@ public class Engine {
         VRAMobject.onPageChange();
         Shader.onPageChange();
         TouchProcessor.onPageChange();
+        KeyboardProcessor.onPageChange();
     }
 
     void startDefaultPage() {

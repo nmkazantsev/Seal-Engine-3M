@@ -7,12 +7,14 @@ import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.images.AbstractImage;
+import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.platformBridge.*;
 import com.nikitos.utils.Utils;
 import com.seal.gl_engine.OpenGLRenderer;
@@ -22,6 +24,7 @@ import com.seal.gl_engine.mp3.AndroidAudioPLayer;
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
+import java.util.Locale;
 import java.util.function.Function;
 
 public class AndroidBridge extends PlatformBridge {
@@ -48,6 +51,31 @@ public class AndroidBridge extends PlatformBridge {
         glSurfaceView = new GLSurfaceView(context);
         glSurfaceView.setEGLContextClientVersion(3);
         glSurfaceView.setEGLConfigChooser(new MyConfigChooser(androidLauncherParams.getMSAA() ? 4 : 1));
+
+        // Keyboard forwarding (if the view has focus).
+        glSurfaceView.setFocusable(true);
+        glSurfaceView.setFocusableInTouchMode(true);
+        glSurfaceView.requestFocus();
+        glSurfaceView.setOnKeyListener((v, keyCode, event) -> {
+            String keyName;
+            int unicode = event.getUnicodeChar();
+            if (unicode != 0) {
+                keyName = String.valueOf(Character.toUpperCase((char) unicode));
+            } else {
+                String s = KeyEvent.keyCodeToString(keyCode);
+                if (s != null && s.startsWith("KEYCODE_")) {
+                    s = s.substring("KEYCODE_".length());
+                }
+                keyName = s == null ? null : s.toUpperCase(Locale.ROOT);
+            }
+
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
+                KeyboardProcessor.onKeyPressed(keyName);
+            } else if (event.getAction() == KeyEvent.ACTION_UP) {
+                KeyboardProcessor.onKeyReleased(keyName);
+            }
+            return false;
+        });
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         final DisplayMetrics displayMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(displayMetrics);

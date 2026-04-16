@@ -54,6 +54,7 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo/src/main/java/com/nikitos/Main.
   - `setDebug(boolean)`
   - `setStartPage(unused -> new YourStartPage())`
 - Create `DesktopLauncher(launcherParams)` and call `run()`.
+- Keyboard events are captured by the engine’s desktop launcher and routed into the engine keyboard system automatically (no app-side wiring required).
 
 ### 4.2 Android bootstrap (observed)
 
@@ -67,9 +68,10 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
   - create `AndroidLauncher(androidLauncherParams)`
   - keep the `Engine`: `engine = androidLauncher.getEngine()`
   - set content view to the returned `GLSurfaceView`: `setContentView(androidLauncher.launch())`
-  - forward touch events into the engine input system:
+- forward touch events into the engine input system:
     - `TouchProcessor.onTouch(new AndroidMotionEventAdapter(event))`
 - In `Activity.onPause()` / `Activity.onResume()` call `engine.onPause()` / `engine.onResume()`.
+- Keyboard: if a hardware keyboard is present, the engine’s returned `GLSurfaceView` is focusable and forwards key events into the engine keyboard system. Ensure the view has focus if your Activity contains other focusable views.
 
 ## 5. “Shared Game Module” Pattern (Recommended for real apps)
 
@@ -118,6 +120,12 @@ When asked to modify an application built on Seal Engine, start in this order:
 
 - Android first: verify `MotionEvent` is forwarded to `TouchProcessor` using the platform adapter (see Demo-app).
 - Game logic next: find where `TouchProcessor` instances are registered and validate their hitbox logic and coordinate assumptions.
+
+### 7.4 Keyboard input
+
+- In game code: use `KeyListener` / `KeyReleasedListener` (bind by key name, or use `anyKey(...)`).
+- For key combinations: use `KeyComboListener` (its callback is called when all specified keys are pressed together, in any order).
+- For polling: use `KeyboardProcessor.isKeyPressed(...)`, `KeyboardProcessor.getKeysPressedNumber()`, `KeyboardProcessor.getKeyPresedList()`.
 
 ### 7.3 Rendering / shader / asset load failures
 
