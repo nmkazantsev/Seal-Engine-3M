@@ -67,9 +67,6 @@ public class ShaderUtils {
         final int shaderId = shaderBridge.glCreateShader(type);
         if (shaderId == 0) {
             platformBridge.log_e("Load Shader Failed" + shaderText, "loading\n" + shaderBridge.glGetShaderInfoLog(shaderId));
-            if (CoreRenderer.engine.getBsodAllowed()) {
-                CoreRenderer.engine.startNewPage(new BSODScreen("Load Shader Failed: error: " + shaderBridge.glGetShaderInfoLog(shaderId) + "\ntext: " + shaderText));
-            }
             return 0;
         }
         shaderBridge.glShaderSource(shaderId, shaderText);
@@ -79,9 +76,6 @@ public class ShaderUtils {
         if (compileStatus[0] == 0) {
             platformBridge.log_e("Load Shader Failed: " + shaderText, "Compilation\n" + shaderBridge.glGetShaderInfoLog(shaderId));
             shaderBridge.glDeleteShader(shaderId);
-            if (CoreRenderer.engine.getBsodAllowed()) {
-                CoreRenderer.engine.startNewPage(new BSODScreen("Load Shader Failed: error: " + shaderBridge.glGetShaderInfoLog(shaderId) + "\ntext: " + shaderText));
-            }
             return 0;
         }
         return shaderId;

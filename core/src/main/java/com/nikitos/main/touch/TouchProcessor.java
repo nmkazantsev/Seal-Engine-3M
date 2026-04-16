@@ -3,6 +3,7 @@ package com.nikitos.main.touch;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.main.debugger.BSODScreen;
 import com.nikitos.main.debugger.Debugger;
 
 import java.util.*;
@@ -268,7 +269,15 @@ public class TouchProcessor {
         }
 
         private void run() {
-            function.apply(touchPoint);
+            if (CoreRenderer.engine.getBsodAllowed()) {
+                try {
+                    function.apply(touchPoint);
+                } catch (Exception e) {
+                    CoreRenderer.engine.startNewPage(new BSODScreen(e));
+                }
+            } else {
+                function.apply(touchPoint);
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ import com.nikitos.platformBridge.AudioPlayer;
 import com.nikitos.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -29,8 +30,11 @@ public class BSODScreen extends GamePageClass {
 
     AudioPlayer player;
 
-    public BSODScreen(String errorText) {
+    public BSODScreen(Exception e) {
+        Debugger.setEnabled(false);
+        errorText = e.getMessage() + "\n at: " + Arrays.toString(e.getStackTrace());
         player = CoreRenderer.engine.getPlatformBridge().getAudioPlayer();
+        player.stopMusic();
         player.playSound("bsod_engine.wav");
         this.errorText = errorText == null ? "" : errorText;
         shader = new Shader(

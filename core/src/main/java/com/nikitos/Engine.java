@@ -1,6 +1,7 @@
 package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
+import com.nikitos.main.debugger.BSODScreen;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.main.shaders.Shader;
@@ -47,9 +48,10 @@ public class Engine {
         gamePage.onSurfaceChanged(x, y);
     }
 
-    public boolean getBsodAllowed(){
+    public boolean getBsodAllowed() {
         return launcherParams.getUseBSOD();
     }
+
     public void calculateFps() {
         if (Utils.millis() - prevFps > 100) {
             fps = 1000.0f / (int) ((Utils.millis() - prevFps) / (float) cadrs);
@@ -77,18 +79,26 @@ public class Engine {
     }
 
     public void startNewPage(GamePageClass newPage) {
-        platformBridge.log_i("engine", "start new page");
-        Utils.unfreezeMillis();
-        gamePage = null;
-        System.gc();
-        gamePage = newPage;
-        resetPageMillis();
-        newPage.onSurfaceChanged((int) Utils.getX(), (int) Utils.getY());
-        Debugger.onResChange((int) Utils.getX(), (int) Utils.getY());
-        VRAMobject.onPageChange();
-        Shader.onPageChange();
-        TouchProcessor.onPageChange();
-        KeyboardProcessor.onPageChange();
+        try {
+            platformBridge.log_i("engine", "start new page");
+            Utils.unfreezeMillis();
+            gamePage = null;
+            System.gc();
+            gamePage = newPage;
+            resetPageMillis();
+            newPage.onSurfaceChanged((int) Utils.getX(), (int) Utils.getY());
+            Debugger.onResChange((int) Utils.getX(), (int) Utils.getY());
+            VRAMobject.onPageChange();
+            Shader.onPageChange();
+            TouchProcessor.onPageChange();
+            KeyboardProcessor.onPageChange();
+        } catch (Exception e) {
+            if (launcherParams.getUseBSOD()) {
+                startNewPage(new BSODScreen(e));
+            } else {
+                throw e;
+            }
+        }
     }
 
     void startDefaultPage() {
@@ -99,7 +109,15 @@ public class Engine {
             platformBridge.log_i("engine", "asked to start default page, but it exists");
             return;
         }
-        startNewPage(launcherParams.getStartPage().apply(null));
+        try {
+            startNewPage(launcherParams.getStartPage().apply(null));
+        } catch (Exception e) {
+            if (launcherParams.getUseBSOD()) {
+                startNewPage(new BSODScreen(e));
+            } else {
+                throw e;
+            }
+        }
     }
 
     public void resetPageMillis() {

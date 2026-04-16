@@ -75,7 +75,7 @@ public class CoreRenderer {
             try {
                 engine.getGamePage().draw();
             } catch (Exception ex) {
-                engine.startNewPage(new BSODScreen(ex.getMessage()));
+                engine.startNewPage(new BSODScreen(ex));
             }
         } else {
             engine.getGamePage().draw();
