@@ -4,18 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="merge master">
-      <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/PlatformBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="codex adds mouse and files&#10;seems ok">
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,9 +102,17 @@
       <workItem from="1776405835529" duration="455000" />
       <workItem from="1776416323417" duration="196000" />
       <workItem from="1776427904629" duration="598000" />
-      <workItem from="1777034041004" duration="383000" />
+      <workItem from="1777034041004" duration="732000" />
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
+      <option name="closed" value="true" />
+      <created>1777034576159</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1777034576159</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,7 +131,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="merge master" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge master" />
+    <MESSAGE value="codex adds mouse and files&#10;seems ok" />
+    <option name="LAST_COMMIT_MESSAGE" value="codex adds mouse and files&#10;seems ok" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -143,6 +142,12 @@
           <option name="linesCode" value="20254" />
           <option name="totalLines" value="55078" />
           <option name="info" value="merge master" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777034576227" />
+          <option name="linesCode" value="20564" />
+          <option name="totalLines" value="55646" />
+          <option name="info" value="codex adds mouse and files&#10;seems ok" />
         </TimePoint>
       </list>
     </option>
@@ -155,9 +160,9 @@
           <option name="info" value="16 Apr 2026" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1777034414590" />
+          <option name="timestamp" value="1777034576227" />
           <option name="linesCode" value="20564" />
-          <option name="totalLines" value="55645" />
+          <option name="totalLines" value="55646" />
           <option name="info" value="24 Apr 2026" />
         </TimePoint>
       </list>
