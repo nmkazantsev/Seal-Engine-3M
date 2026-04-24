@@ -37,6 +37,8 @@ public class DesktopLauncher {
 
     private final Engine engine;
 
+    private final DesktopBridge desktopBridge;
+
     private GLFWVidMode vidmode;
 
     private boolean fullScreenOpened = false;
@@ -48,7 +50,8 @@ public class DesktopLauncher {
 
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
-        engine = new Engine(new DesktopBridge(), launcherParams);
+        desktopBridge = new DesktopBridge();
+        engine = new Engine(desktopBridge, launcherParams);
         init();
         coreRenderer = new CoreRenderer(vidmode.width(), vidmode.height(), engine);
     }
@@ -170,6 +173,7 @@ public class DesktopLauncher {
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
+        desktopBridge.attachWindow(window);
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {

@@ -38,7 +38,7 @@ This page-scoping behavior is one of the most important architectural constraint
 ### 3.2 Platform bridge pattern
 
 - `core` stays platform-agnostic by depending on platform bridge interfaces.
-- `desktop` and `android` provide concrete implementations for GL calls/constants, images/fonts, asset loading, audio, and error/logging.
+- `desktop` and `android` provide concrete implementations for GL calls/constants, images/fonts, asset loading, runtime filesystem, mouse/window control, audio, and error/logging.
 
 Key packages:
 
@@ -66,6 +66,8 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 - `core/src/main/java/com/nikitos/GamePageClass.java`
 - `core/src/main/java/com/nikitos/platformBridge/LauncherParams.java`
 - `core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java` (music + one-shot SFX; `resume()` continues after pause; no 3D audio API)
+- `core/src/main/java/com/nikitos/platformBridge/RuntimeFileBridge.java` (shared runtime path semantics; relative-path root supplied by platform)
+- `core/src/main/java/com/nikitos/platformBridge/MouseControlBridge.java` (desktop window mouse control API; safe no-op on Android)
 - `core/src/main/java/com/nikitos/main/camera/*` (camera/projection)
 - `core/src/main/java/com/nikitos/main/images/*` (`PImage`, `PFont`, image/font bridges)
 - `core/src/main/java/com/nikitos/main/vertices/*` (`Shape`, `Polygon`, `SimplePolygon`, `SkyBox`, etc.)
@@ -87,11 +89,17 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 
 - Desktop:
   - `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java`
+  - `desktop/src/main/java/com/nikitos/platform/DesktopBridge.java`
+  - `desktop/src/main/java/com/nikitos/platform/DesktopRuntimeFileBridge.java`
+  - `desktop/src/main/java/com/nikitos/platform/DesktopMouseControlBridge.java`
   - desktop GL/touch/audio/adapters under `desktop/src/main/java/...`
   - audio implementation: `desktop/src/main/java/com/nikitos/platform/AudioPlayerDesktop.java`
   - desktop audio smoke test main: `desktop/src/test/java/AudioSmokeTestMain.java` (plain `main()`, default package)
 - Android:
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidLauncher.java`
+  - `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java`
+  - `android/src/main/java/com/seal/gl_engine/platform/AndroidRuntimeFileBridge.java`
+  - `android/src/main/java/com/seal/gl_engine/platform/AndroidMouseControlBridge.java`
   - `android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java` (GLSurfaceView renderer adapter)
   - `android/src/main/java/com/seal/gl_engine/touch/AndroidMotionEventAdapter.java`
   - audio implementation: `android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java`
@@ -131,6 +139,25 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 - Platform forwarding:
   - Desktop: `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java` forwards GLFW key press/release.
   - Android: `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java` forwards key events from the `GLSurfaceView` (focus required).
+
+### 5.6 Runtime filesystem and mouse control
+
+- Public API entry point is `Engine`; game code should not branch on platform for standard runtime file operations.
+- `RuntimeFileBridge` centralizes path semantics for all runtime file methods:
+  - absolute paths use `File.isAbsolute()`
+  - relative paths resolve against a platform-defined runtime root, are normalized, and may not escape that root
+  - `loadTextFile(...)` / `saveTextFile(...)` use UTF-8
+  - `fileExists(...)` only reports regular files
+  - `folderExists(...)` only reports directories
+  - `createFolder(...)` uses recursive directory creation
+  - `saveTextFile(...)` does not auto-create parent directories
+- Platform roots:
+  - Desktop: `System.getProperty("user.dir")`
+  - Android: `Context.getExternalFilesDir(null)` app-specific external/shared storage
+- Asset loading is still handled separately through `SealAssetManager`; runtime file APIs must not be used as a replacement for packaged resources.
+- Mouse control is routed through `MouseControlBridge`:
+  - Desktop implementation is bound to the actual GLFW window from `DesktopLauncher`
+  - Android implementation is intentionally a safe no-op to keep the API surface stable without affecting touch/input behavior
 
 ## 6. Dependency and Interaction Maps
 

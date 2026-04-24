@@ -55,6 +55,8 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo/src/main/java/com/nikitos/Main.
   - `setStartPage(unused -> new YourStartPage())`
 - Create `DesktopLauncher(launcherParams)` and call `run()`.
 - Keyboard events are captured by the engine’s desktop launcher and routed into the engine keyboard system automatically (no app-side wiring required).
+- Runtime files: relative paths passed to `Engine.loadTextFile(...)`, `saveTextFile(...)`, `fileExists(...)`, `folderExists(...)`, `createFolder(...)` resolve from the current working directory.
+- Mouse control: desktop supports `Engine.hideMouseCursor()`, `showMouseCursor()`, and `setMousePosition(...)` against the GLFW window.
 
 ### 4.2 Android bootstrap (observed)
 
@@ -72,6 +74,22 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
     - `TouchProcessor.onTouch(new AndroidMotionEventAdapter(event))`
 - In `Activity.onPause()` / `Activity.onResume()` call `engine.onPause()` / `engine.onResume()`.
 - Keyboard: if a hardware keyboard is present, the engine’s returned `GLSurfaceView` is focusable and forwards key events into the engine keyboard system. Ensure the view has focus if your Activity contains other focusable views.
+- Runtime files: relative paths passed to the same `Engine` file API resolve under `Context.getExternalFilesDir(null)` (typically `/storage/emulated/0/Android/data/<package>/files`).
+- Mouse control methods are exposed on `Engine` for API consistency, but are safe no-ops on Android.
+
+### 4.3 Runtime files vs packaged assets
+
+- `FileUtils` / `SealAssetManager` remain asset-only APIs for bundled resources.
+- Runtime user files go through `Engine.loadTextFile(...)`, `saveTextFile(...)`, `fileExists(...)`, `folderExists(...)`, `createFolder(...)`.
+- Path contract is unified across platforms:
+  - absolute paths are used directly
+  - relative paths are resolved against the platform runtime root and normalized
+  - normalized relative paths may not escape that runtime root
+  - `fileExists(...)` is true only for regular files
+  - `folderExists(...)` is true only for directories
+  - `createFolder(...)` creates nested directories recursively
+  - `saveTextFile(...)` does not auto-create missing parent directories
+- On modern Android, the engine intentionally uses app-specific external/shared storage for relative runtime files instead of assets or private internal storage.
 
 ## 5. “Shared Game Module” Pattern (Recommended for real apps)
 
@@ -126,6 +144,12 @@ When asked to modify an application built on Seal Engine, start in this order:
 - In game code: use `KeyListener` / `KeyReleasedListener` (bind by key name, or use `anyKey(...)`).
 - For key combinations: use `KeyComboListener` (its callback is called when all specified keys are pressed together, in any order).
 - For polling: use `KeyboardProcessor.isKeyPressed(...)`, `KeyboardProcessor.getKeysPressedNumber()`, `KeyboardProcessor.getKeyPresedList()`.
+
+### 7.5 Runtime saves / config / logs
+
+- Use the `Engine` runtime file API, not `FileUtils`, when the data must persist after launch.
+- If you need a relative save path, create folders explicitly with `engine.createFolder("saves/slot1")` before calling `engine.saveTextFile(...)`.
+- If you need packaged read-only data, keep using assets/classpath resources.
 
 ### 7.3 Rendering / shader / asset load failures
 

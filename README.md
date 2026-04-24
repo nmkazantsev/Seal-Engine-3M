@@ -46,7 +46,33 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `void disableBlend()` – отключает смешивание цветов.
 - `void enableBlend()` – включает смешивание цветов.
 - `Platform getPlatform()` – возвращает платформу (DESKTOP или MOBILE).
+- `String loadTextFile(String path)` – читает UTF-8 текстовый файл из runtime filesystem.
+- `void saveTextFile(String path, String text)` – сохраняет UTF-8 текстовый файл в runtime filesystem. Родительская папка должна уже существовать.
+- `boolean fileExists(String path)` – возвращает true только если путь указывает на существующий обычный файл.
+- `boolean folderExists(String path)` – возвращает true только если путь указывает на существующую папку.
+- `boolean createFolder(String path)` – рекурсивно создаёт папку и недостающие родительские папки.
+- `void hideMouseCursor()` – скрывает курсор мыши на desktop; на Android безопасный no-op.
+- `void showMouseCursor()` – показывает курсор мыши на desktop; на Android безопасный no-op.
+- `void setMousePosition(float x, float y)` – устанавливает позицию курсора в координатах окна на desktop; на Android безопасный no-op.
 - `float fps` – публичное поле, содержащее текущий FPS.
+
+**Правила путей для runtime filesystem (`Engine.*File*` / `createFolder`)**
+- Эти методы работают только с runtime filesystem и не используют assets / classpath ресурсы.
+- Все текстовые операции используют UTF-8.
+- Абсолютный путь определяется платформенным `File.isAbsolute()` и используется как есть.
+- Относительный путь всегда сначала привязывается к platform-specific runtime root, затем нормализуется (`.` / `..`), и не может выйти за пределы этого root.
+- Пустой или пробельный путь считается невалидным.
+- Если путь существует, но имеет неверный тип, поведение строгое:
+  - `fileExists(...)` вернёт `false` для папки
+  - `folderExists(...)` вернёт `false` для обычного файла
+  - `loadTextFile(...)` и `saveTextFile(...)` выбросят `RuntimeException`
+  - `createFolder(...)` вернёт `false`, если по этому пути уже существует обычный файл
+- `saveTextFile(...)` не создаёт родительские папки автоматически; для этого сначала вызовите `createFolder(...)`.
+
+**Platform-specific runtime root для относительных путей**
+- Desktop: текущая рабочая директория приложения (`System.getProperty("user.dir")`).
+- Android: app-specific external files directory, возвращаемая `Context.getExternalFilesDir(null)`, обычно путь вида `/storage/emulated/0/Android/data/<package>/files`.
+- Android note: это не `assets` и не private internal files dir. Это современный безопасный вариант для пользовательских runtime-файлов без общего storage permission. Доступность для пользователя зависит от версии Android и файлового менеджера, но файлы остаются в shared/external app-specific storage и доступны, например, через USB / adb / совместимые файловые менеджеры.
 
 ### GamePageClass
 Абстрактный класс, от которого должны наследоваться все игровые страницы.
@@ -677,6 +703,19 @@ img.text("Hello, World!", 100, 100);
 - `static int getKeysPressedNumber()` – сколько клавиш нажато сейчас.
 - `static List<String> getKeyPresedList()` – список нажатых клавиш сейчас (имена нормализованы, uppercase).
 
+### Desktop Mouse Control
+
+Mouse control exposed through `Engine` and implemented only on desktop.
+
+**Публичные методы:**
+- `void hideMouseCursor()`
+- `void showMouseCursor()`
+- `void setMousePosition(float x, float y)` – координаты внутри окна в пикселях.
+
+**Поведение по платформам:**
+- Desktop: использует окно GLFW, не меняя существующий keyboard/touch pipeline.
+- Android: все методы безопасно ничего не делают.
+
 ### KeyComboListener (комбинации клавиш)
 
 Слушатель, у которого коллбэк вызывается только если **все** указанные клавиши нажаты одновременно (порядок нажатия не важен). Коллбэк вызывается **один раз** на активацию комбинации; после отпускания любой клавиши комбинация сбрасывается и может сработать снова.
@@ -742,6 +781,8 @@ img.text("Hello, World!", 100, 100);
 
 ### FileUtils
 Утилита для работы с файлами из assets.
+
+Для runtime user files используйте `Engine.loadTextFile(...)`, `Engine.saveTextFile(...)`, `Engine.fileExists(...)`, `Engine.folderExists(...)`, `Engine.createFolder(...)`.
 
 **Конструктор:**
 - `FileUtils()`

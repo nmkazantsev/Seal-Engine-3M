@@ -158,4 +158,36 @@ public class Engine {
     public Platform getPlatform() {
         return platformBridge.getPlatform();
     }
+
+    public String loadTextFile(String path) {
+        return platformBridge.getRuntimeFileBridge().loadTextFile(path);
+    }
+
+    public void saveTextFile(String path, String text) {
+        platformBridge.getRuntimeFileBridge().saveTextFile(path, text);
+    }
+
+    public boolean fileExists(String path) {
+        return platformBridge.getRuntimeFileBridge().fileExists(path);
+    }
+
+    public boolean folderExists(String path) {
+        return platformBridge.getRuntimeFileBridge().folderExists(path);
+    }
+
+    public boolean createFolder(String path) {
+        return platformBridge.getRuntimeFileBridge().createFolder(path);
+    }
+
+    public void hideMouseCursor() {
+        platformBridge.getMouseControlBridge().hideMouseCursor();
+    }
+
+    public void showMouseCursor() {
+        platformBridge.getMouseControlBridge().showMouseCursor();
+    }
+
+    public void setMousePosition(float x, float y) {
+        platformBridge.getMouseControlBridge().setMousePosition(x, y);
+    }
 }

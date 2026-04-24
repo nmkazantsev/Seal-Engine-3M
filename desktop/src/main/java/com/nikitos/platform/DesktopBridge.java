@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL32;
 public class DesktopBridge extends PlatformBridge {
     private final SealAssetManager assetManager = new DesktopSealAssetManager();
     private final AudioPlayer audioPlayer = new AudioPlayerDesktop(assetManager);
+    private final RuntimeFileBridge runtimeFileBridge = new DesktopRuntimeFileBridge();
+    private final DesktopMouseControlBridge mouseControlBridge = new DesktopMouseControlBridge();
 
     @Override
     public void onPause() {
@@ -105,5 +107,19 @@ public class DesktopBridge extends PlatformBridge {
     @Override
     public FontBridge getFontBridge() {
         return new FontBridgeDesktop();
+    }
+
+    @Override
+    public RuntimeFileBridge getRuntimeFileBridge() {
+        return runtimeFileBridge;
+    }
+
+    @Override
+    public MouseControlBridge getMouseControlBridge() {
+        return mouseControlBridge;
+    }
+
+    public void attachWindow(long window) {
+        mouseControlBridge.attachWindow(window);
     }
 }

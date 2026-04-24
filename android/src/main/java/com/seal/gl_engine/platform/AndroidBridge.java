@@ -33,6 +33,8 @@ public class AndroidBridge extends PlatformBridge {
     protected Function<Void, GamePageClass> startPage;
     private SealAssetManager assetManager;
     private AudioPlayer audioPlayer;
+    private RuntimeFileBridge runtimeFileBridge;
+    private final MouseControlBridge mouseControlBridge = new AndroidMouseControlBridge();
 
     GLSurfaceView launch(AndroidLauncherParams androidLauncherParams, Engine engine) {
         startPage = androidLauncherParams.getStartPage();
@@ -242,5 +244,18 @@ public class AndroidBridge extends PlatformBridge {
 
     public Context getContext(){
         return context;
+    }
+
+    @Override
+    public RuntimeFileBridge getRuntimeFileBridge() {
+        if (runtimeFileBridge == null) {
+            runtimeFileBridge = new AndroidRuntimeFileBridge(context);
+        }
+        return runtimeFileBridge;
+    }
+
+    @Override
+    public MouseControlBridge getMouseControlBridge() {
+        return mouseControlBridge;
     }
 }
