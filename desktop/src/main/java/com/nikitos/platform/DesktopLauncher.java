@@ -118,6 +118,10 @@ public class DesktopLauncher {
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
+        glfwSetErrorCallback((error, description) -> {
+            System.err.println("GLFW error " + error + ": " + GLFWErrorCallback.getDescription(description));
+        });
+
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation

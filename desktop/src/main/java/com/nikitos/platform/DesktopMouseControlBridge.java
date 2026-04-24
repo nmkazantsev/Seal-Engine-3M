@@ -2,39 +2,38 @@ package com.nikitos.platform;
 
 import com.nikitos.platformBridge.MouseControlBridge;
 
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_HIDDEN;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
-import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class DesktopMouseControlBridge extends MouseControlBridge {
     private long window;
+    private boolean mouseEnabled=true;
 
     public void attachWindow(long window) {
         this.window = window;
     }
 
     @Override
-    public void hideMouseCursor() {
+    public void disableMouseCursor() {
         if (window == 0) {
             return;
         }
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        mouseEnabled=false;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     @Override
-    public void showMouseCursor() {
+    public void enableMouseCursor() {
         if (window == 0) {
             return;
         }
+        mouseEnabled=true;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
     @Override
     public void setMousePosition(float x, float y) {
         if (window == 0) {
-            return;
+            throw new RuntimeException("window is not bind");
         }
         glfwSetCursorPos(window, x, y);
     }

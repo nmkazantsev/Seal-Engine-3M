@@ -179,12 +179,12 @@ public class Engine {
         return platformBridge.getRuntimeFileBridge().createFolder(path);
     }
 
-    public void hideMouseCursor() {
-        platformBridge.getMouseControlBridge().hideMouseCursor();
+    public void disableMouseCursor() {
+        platformBridge.getMouseControlBridge().disableMouseCursor();
     }
 
-    public void showMouseCursor() {
-        platformBridge.getMouseControlBridge().showMouseCursor();
+    public void enableMouseCursor() {
+        platformBridge.getMouseControlBridge().enableMouseCursor();
     }
 
     public void setMousePosition(float x, float y) {
