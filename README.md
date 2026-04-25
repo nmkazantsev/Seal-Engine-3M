@@ -659,12 +659,46 @@ img.text("Hello, World!", 100, 100);
 - `boolean getTouchAlive()` – true, если касание активно.
 - `void terminate()` – принудительно завершает обработку касания.
 - `void delete()` – удаляет процессор.
+- `static void setLeftButtonProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик нажатия левой кнопки мыши для страницы.
+- `static void setRightButtonProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик нажатия правой кнопки мыши для страницы.
+- `static void setMouseMovedProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик движения мыши для страницы.
+- `static void setMouseWheelProcessor(Function<MouseWheelData, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик колеса мыши для страницы.
+
+**Семантика mouse callbacks:**
+- Для каждого типа обработчика хранится ровно один callback на страницу.
+- Повторный вызов того же setter для той же страницы перезаписывает предыдущий callback.
+- Хранилище разделено по типам:
+  - page -> left button processor
+  - page -> right button processor
+  - page -> mouse moved processor
+  - page -> mouse wheel processor
+- Callbacks буферизуются и выполняются позже в render thread, как и обычные touch callbacks.
+- Desktop runtime behavior:
+  - `setLeftButtonProcessor(...)` вызывается при `GLFW_PRESS` левой кнопки
+  - `setRightButtonProcessor(...)` вызывается при `GLFW_PRESS` правой кнопки
+  - `setMouseMovedProcessor(...)` вызывается на каждом desktop cursor move
+  - `setMouseWheelProcessor(...)` вызывается на каждом desktop wheel event
+- Android runtime behavior: эти callbacks никогда не вызываются и не эмулируются через touch/gesture input.
+- Для быстрой ручной проверки в `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` добавлена standalone desktop test scene с двумя полигонами: один следует за мышью через mouse-move callback, второй двигается по Y через mouse-wheel callback. Это debug/smoke test, а не gameplay feature.
 
 ### TouchPoint
 Простой класс, хранящий координаты касания.
 
 **Поля:**
 - `float touchX`, `touchY`
+
+### MousePoint
+Простой immutable snapshot координат мыши.
+
+**Поля:**
+- `float mouseX`, `mouseY`
+
+### MouseWheelData
+Immutable snapshot события колеса мыши.
+
+**Поля:**
+- `float mouseX`, `mouseY` – текущие координаты курсора в момент wheel event.
+- `float wheelX`, `wheelY` – scroll delta, передаваемая desktop platform layer.
 
 ### MyMotionEvent
 Интерфейс, абстрагирующий платформенное событие касания. Константы `ACTION_DOWN`, `ACTION_UP`, `ACTION_MOVE`, `ACTION_POINTER_DOWN`, `ACTION_POINTER_UP`. Пользователь не реализует напрямую.

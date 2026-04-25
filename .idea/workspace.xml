@@ -4,13 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="edit mouse">
+      <change beforePath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/MouseControlBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/platformBridge/MouseControlBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/ENGINE_INTERNALS_MAP_FOR_CODEX.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT_MAP_FOR_CODEX.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopMouseControlBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/main/java/com/nikitos/platform/DesktopMouseControlBridge.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +54,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [:desktop:MouseCallbacksSmokeTestMain.main()].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "git-widget-placeholder": "19-bsod",
@@ -64,7 +66,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.MouseCallbacksSmokeTestMain">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
       <module name="Demo.main" />
@@ -78,8 +80,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MouseCallbacksSmokeTestMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MouseCallbacksSmokeTestMain" />
+      <module name="sealEngine_3M.desktop.test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MouseCallbacksSmokeTestMain" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -112,6 +122,8 @@
       <workItem from="1776416323417" duration="196000" />
       <workItem from="1776427904629" duration="598000" />
       <workItem from="1777034041004" duration="732000" />
+      <workItem from="1777119137931" duration="1295000" />
+      <workItem from="1777133902438" duration="1134000" />
     </task>
     <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
       <option name="closed" value="true" />
@@ -121,7 +133,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777034576159</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="edit mouse">
+      <option name="closed" value="true" />
+      <created>1777037093156</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1777037093156</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,7 +167,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -156,7 +188,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="merge master" />
     <MESSAGE value="codex adds mouse and files&#10;seems ok" />
-    <option name="LAST_COMMIT_MESSAGE" value="codex adds mouse and files&#10;seems ok" />
+    <MESSAGE value="edit mouse" />
+    <option name="LAST_COMMIT_MESSAGE" value="edit mouse" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -173,6 +206,12 @@
           <option name="totalLines" value="55646" />
           <option name="info" value="codex adds mouse and files&#10;seems ok" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777037093254" />
+          <option name="linesCode" value="20570" />
+          <option name="totalLines" value="55648" />
+          <option name="info" value="edit mouse" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -184,9 +223,9 @@
           <option name="info" value="16 Apr 2026" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1777034576227" />
-          <option name="linesCode" value="20564" />
-          <option name="totalLines" value="55646" />
+          <option name="timestamp" value="1777037093254" />
+          <option name="linesCode" value="20570" />
+          <option name="totalLines" value="55648" />
           <option name="info" value="24 Apr 2026" />
         </TimePoint>
       </list>

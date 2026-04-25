@@ -253,28 +253,36 @@ public class DesktopLauncher {
         //снова обработка тача
         //начало и конец тача
         glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
-            if (button != GLFW_MOUSE_BUTTON_LEFT) return;
+            if (button == GLFW_MOUSE_BUTTON_LEFT) {
+                int motionAction;
 
-            int motionAction;
+                if (action == GLFW_PRESS) {
+                    mousePressed = true;
+                    TouchProcessor.onLeftButtonPressed((float) mouseX, (float) mouseY);
+                    motionAction = MyMotionEvent.ACTION_DOWN;
+                } else if (action == GLFW_RELEASE) {
+                    mousePressed = false;
+                    motionAction = MyMotionEvent.ACTION_UP;
+                } else {
+                    return;
+                }
 
-            if (action == GLFW_PRESS) {
-                mousePressed = true;
-                motionAction = MyMotionEvent.ACTION_DOWN;
-            } else if (action == GLFW_RELEASE) {
-                mousePressed = false;
-                motionAction = MyMotionEvent.ACTION_UP;
-            } else {
+                DesktopMotionEventAdapter event =
+                        new DesktopMotionEventAdapter(motionAction, (float) mouseX, (float) mouseY);
+                TouchProcessor.onTouch(event);
                 return;
             }
 
-            DesktopMotionEventAdapter event =
-                    new DesktopMotionEventAdapter(motionAction, (float) mouseX, (float) mouseY);
-            TouchProcessor.onTouch(event);
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+                TouchProcessor.onRightButtonPressed((float) mouseX, (float) mouseY);
+            }
         });
         //touchMoved
         glfwSetCursorPosCallback(window, (w, x, y) -> {
             mouseX = x;
             mouseY = y;
+
+            TouchProcessor.onMouseMoved((float) x, (float) y);
 
             if (!mousePressed) return;
 
@@ -283,6 +291,9 @@ public class DesktopLauncher {
 
             TouchProcessor.onTouch(event);
         });
+        glfwSetScrollCallback(window, (w, xoffset, yoffset) ->
+                TouchProcessor.onMouseWheel((float) mouseX, (float) mouseY, (float) xoffset, (float) yoffset)
+        );
     }
 
     private void goBoardLessMode(long window) {

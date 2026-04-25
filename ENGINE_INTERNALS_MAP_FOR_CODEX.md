@@ -159,6 +159,25 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   - Desktop implementation is bound to the actual GLFW window from `DesktopLauncher`
   - Android implementation is intentionally a safe no-op to keep the API surface stable without affecting touch/input behavior
 
+### 5.7 TouchProcessor desktop mouse extension
+
+- `TouchProcessor` still owns buffered touch delivery and page cleanup on page changes.
+- Desktop mouse callbacks are implemented as a separate path inside `TouchProcessor`, not by mutating touch capture state:
+  - one page-scoped map for left button callbacks
+  - one page-scoped map for right button callbacks
+  - one page-scoped map for mouse moved callbacks
+  - one page-scoped map for mouse wheel callbacks
+- Re-registering the same handler type for the same page overwrites the previous callback.
+- Callback payloads are separate from touch payloads:
+  - `MousePoint` for button/move events
+  - `MouseWheelData` for wheel events
+- Desktop forwarding lives in `DesktopLauncher`:
+  - left button press queues both the new mouse callback and the existing touch-start path
+  - left button move still feeds the existing touch move path while independently queuing mouse-move callbacks
+  - right button and wheel events only feed the new mouse callback path
+- Android does not forward any of these mouse callbacks at runtime.
+- Repo-level verification scene: `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` starts a dedicated page with two visible polygons to validate mouse-move and wheel delivery without touching gameplay code.
+
 ## 6. Dependency and Interaction Maps
 
 ### 6.1 Module-level dependency direction

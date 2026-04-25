@@ -139,6 +139,20 @@ When asked to modify an application built on Seal Engine, start in this order:
 - Android first: verify `MotionEvent` is forwarded to `TouchProcessor` using the platform adapter (see Demo-app).
 - Game logic next: find where `TouchProcessor` instances are registered and validate their hitbox logic and coordinate assumptions.
 
+### 7.2.1 Desktop mouse callbacks through `TouchProcessor`
+
+- `TouchProcessor` now also exposes page-scoped desktop mouse callbacks:
+  - `setLeftButtonProcessor(...)`
+  - `setRightButtonProcessor(...)`
+  - `setMouseMovedProcessor(...)`
+  - `setMouseWheelProcessor(...)`
+- These do not replace normal touch processors; they are a separate desktop-only callback path.
+- Each setter stores exactly one callback per page and per handler kind. Re-registering overwrites the previous callback for that page.
+- Mouse move / button callbacks receive `MousePoint` with current mouse coordinates.
+- Mouse wheel callbacks receive `MouseWheelData` with current coordinates and wheel deltas.
+- Android keeps the API surface through `core`, but runtime delivery is intentionally disabled there.
+- For quick desktop verification inside this repo, use `desktop/src/test/java/MouseCallbacksSmokeTestMain.java`. It is an isolated smoke test scene, not application/game logic.
+
 ### 7.4 Keyboard input
 
 - In game code: use `KeyListener` / `KeyReleasedListener` (bind by key name, or use `anyKey(...)`).
