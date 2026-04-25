@@ -4,16 +4,23 @@ import com.nikitos.main.touch.MyMotionEvent;
 
 public class DesktopMotionEventAdapter implements MyMotionEvent {
 
-    private final int actionMasked;
+    private int actionMasked;
     private final int actionIndex;
-    private final float x;
-    private final float y;
+    private float x;
+    private float y;
 
     public DesktopMotionEventAdapter(int actionMasked, float x, float y) {
         this.actionMasked = actionMasked;
         this.actionIndex = 0;
         this.x = x;
         this.y = y;
+    }
+
+    public DesktopMotionEventAdapter set(int actionMasked, float x, float y) {
+        this.actionMasked = actionMasked;
+        this.x = x;
+        this.y = y;
+        return this;
     }
 
     @Override

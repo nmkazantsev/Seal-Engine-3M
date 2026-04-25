@@ -37,6 +37,8 @@ public class DesktopLauncher {
 
     private final Engine engine;
 
+    private final DesktopBridge desktopBridge;
+
     private GLFWVidMode vidmode;
 
     private boolean fullScreenOpened = false;
@@ -45,10 +47,12 @@ public class DesktopLauncher {
     private boolean mousePressed = false;
     private double mouseX = 0;
     private double mouseY = 0;
+    private final DesktopMotionEventAdapter mouseTouchEvent = new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, 0, 0);
 
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
-        engine = new Engine(new DesktopBridge(), launcherParams);
+        desktopBridge = new DesktopBridge();
+        engine = new Engine(desktopBridge, launcherParams);
         init();
         coreRenderer = new CoreRenderer(vidmode.width(), vidmode.height(), engine);
     }
@@ -115,6 +119,10 @@ public class DesktopLauncher {
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
+        glfwSetErrorCallback((error, description) -> {
+            System.err.println("GLFW error " + error + ": " + GLFWErrorCallback.getDescription(description));
+        });
+
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
@@ -170,6 +178,7 @@ public class DesktopLauncher {
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
+        desktopBridge.attachWindow(window);
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
@@ -245,36 +254,45 @@ public class DesktopLauncher {
         //снова обработка тача
         //начало и конец тача
         glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
-            if (button != GLFW_MOUSE_BUTTON_LEFT) return;
+            if (button == GLFW_MOUSE_BUTTON_LEFT) {
+                int motionAction;
 
-            int motionAction;
+                if (action == GLFW_PRESS) {
+                    mousePressed = true;
+                    TouchProcessor.onLeftButtonPressed((float) mouseX, (float) mouseY);
+                    motionAction = MyMotionEvent.ACTION_DOWN;
+                } else if (action == GLFW_RELEASE) {
+                    mousePressed = false;
+                    TouchProcessor.onLeftButtonReleased((float) mouseX, (float) mouseY);
+                    motionAction = MyMotionEvent.ACTION_UP;
+                } else {
+                    return;
+                }
 
-            if (action == GLFW_PRESS) {
-                mousePressed = true;
-                motionAction = MyMotionEvent.ACTION_DOWN;
-            } else if (action == GLFW_RELEASE) {
-                mousePressed = false;
-                motionAction = MyMotionEvent.ACTION_UP;
-            } else {
+                TouchProcessor.onTouch(mouseTouchEvent.set(motionAction, (float) mouseX, (float) mouseY));
                 return;
             }
 
-            DesktopMotionEventAdapter event =
-                    new DesktopMotionEventAdapter(motionAction, (float) mouseX, (float) mouseY);
-            TouchProcessor.onTouch(event);
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+                TouchProcessor.onRightButtonPressed((float) mouseX, (float) mouseY);
+            } else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+                TouchProcessor.onRightButtonReleased((float) mouseX, (float) mouseY);
+            }
         });
         //touchMoved
         glfwSetCursorPosCallback(window, (w, x, y) -> {
             mouseX = x;
             mouseY = y;
 
+            TouchProcessor.onMouseMoved((float) x, (float) y);
+
             if (!mousePressed) return;
 
-            DesktopMotionEventAdapter event =
-                    new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, (float) x, (float) y);
-
-            TouchProcessor.onTouch(event);
+            TouchProcessor.onTouch(mouseTouchEvent.set(MyMotionEvent.ACTION_MOVE, (float) x, (float) y));
         });
+        glfwSetScrollCallback(window, (w, xoffset, yoffset) ->
+                TouchProcessor.onMouseWheel((float) mouseX, (float) mouseY, (float) xoffset, (float) yoffset)
+        );
     }
 
     private void goBoardLessMode(long window) {
@@ -331,6 +349,9 @@ public class DesktopLauncher {
             glfwPollEvents();
 
         }
-        AudioPLayerDesktop.stopAll();
+        try {
+            com.nikitos.CoreRenderer.engine.getPlatformBridge().getAudioPlayer().stopMusic();
+        } catch (Exception ignored) {
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.nikitos.main.shaders;
 
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.main.debugger.BSODScreen;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.platformBridge.ShaderBridge;
@@ -66,7 +67,6 @@ public class ShaderUtils {
         final int shaderId = shaderBridge.glCreateShader(type);
         if (shaderId == 0) {
             platformBridge.log_e("Load Shader Failed" + shaderText, "loading\n" + shaderBridge.glGetShaderInfoLog(shaderId));
-
             return 0;
         }
         shaderBridge.glShaderSource(shaderId, shaderText);

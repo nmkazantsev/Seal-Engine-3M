@@ -38,7 +38,7 @@ This page-scoping behavior is one of the most important architectural constraint
 ### 3.2 Platform bridge pattern
 
 - `core` stays platform-agnostic by depending on platform bridge interfaces.
-- `desktop` and `android` provide concrete implementations for GL calls/constants, images/fonts, asset loading, audio, and error/logging.
+- `desktop` and `android` provide concrete implementations for GL calls/constants, images/fonts, asset loading, runtime filesystem, mouse/window control, audio, and error/logging.
 
 Key packages:
 
@@ -65,6 +65,9 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 - `core/src/main/java/com/nikitos/Engine.java`
 - `core/src/main/java/com/nikitos/GamePageClass.java`
 - `core/src/main/java/com/nikitos/platformBridge/LauncherParams.java`
+- `core/src/main/java/com/nikitos/platformBridge/AudioPlayer.java` (music + one-shot SFX; `resume()` continues after pause; no 3D audio API)
+- `core/src/main/java/com/nikitos/platformBridge/RuntimeFileBridge.java` (shared runtime path semantics; relative-path root supplied by platform)
+- `core/src/main/java/com/nikitos/platformBridge/MouseControlBridge.java` (desktop window mouse control API; safe no-op on Android)
 - `core/src/main/java/com/nikitos/main/camera/*` (camera/projection)
 - `core/src/main/java/com/nikitos/main/images/*` (`PImage`, `PFont`, image/font bridges)
 - `core/src/main/java/com/nikitos/main/vertices/*` (`Shape`, `Polygon`, `SimplePolygon`, `SkyBox`, etc.)
@@ -86,11 +89,22 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 
 - Desktop:
   - `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java`
+  - `desktop/src/main/java/com/nikitos/platform/DesktopBridge.java`
+  - `desktop/src/main/java/com/nikitos/platform/DesktopRuntimeFileBridge.java`
+  - `desktop/src/main/java/com/nikitos/platform/DesktopMouseControlBridge.java`
   - desktop GL/touch/audio/adapters under `desktop/src/main/java/...`
+  - audio implementation: `desktop/src/main/java/com/nikitos/platform/AudioPlayerDesktop.java`
+  - desktop audio smoke test main: `desktop/src/test/java/AudioSmokeTestMain.java` (plain `main()`, default package)
 - Android:
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidLauncher.java`
+  - `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java`
+  - `android/src/main/java/com/seal/gl_engine/platform/AndroidRuntimeFileBridge.java`
+  - `android/src/main/java/com/seal/gl_engine/platform/AndroidMouseControlBridge.java`
   - `android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java` (GLSurfaceView renderer adapter)
   - `android/src/main/java/com/seal/gl_engine/touch/AndroidMotionEventAdapter.java`
+  - audio implementation: `android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java`
+    - music: `MediaPlayer`
+    - SFX: `SoundPool` (async load; play is triggered on `OnLoadComplete`), MP3 SFX fallback to short-lived `MediaPlayer`
 
 ## 5. Subsystem Notes (What To Expect Internally)
 
@@ -125,6 +139,49 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 - Platform forwarding:
   - Desktop: `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java` forwards GLFW key press/release.
   - Android: `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java` forwards key events from the `GLSurfaceView` (focus required).
+
+### 5.6 Runtime filesystem and mouse control
+
+- Public API entry point is `Engine`; game code should not branch on platform for standard runtime file operations.
+- `RuntimeFileBridge` centralizes path semantics for all runtime file methods:
+  - absolute paths use `File.isAbsolute()`
+  - relative paths resolve against a platform-defined runtime root, are normalized, and may not escape that root
+  - `loadTextFile(...)` / `saveTextFile(...)` use UTF-8
+  - `fileExists(...)` only reports regular files
+  - `folderExists(...)` only reports directories
+  - `createFolder(...)` uses recursive directory creation
+  - `saveTextFile(...)` does not auto-create parent directories
+- Platform roots:
+  - Desktop: `System.getProperty("user.dir")`
+  - Android: `Context.getFilesDir()` app-internal persistent files directory
+- Asset loading is still handled separately through `SealAssetManager`; runtime file APIs must not be used as a replacement for packaged resources.
+- Mouse control is routed through `MouseControlBridge`:
+  - Desktop implementation is bound to the actual GLFW window from `DesktopLauncher`
+  - Android implementation is intentionally a safe no-op to keep the API surface stable without affecting touch/input behavior
+
+### 5.7 TouchProcessor desktop mouse extension
+
+- `TouchProcessor` still owns buffered touch delivery and page cleanup on page changes.
+- Desktop mouse callbacks are implemented as a separate path inside `TouchProcessor`, not by mutating touch capture state:
+  - one page-scoped map for left button callbacks
+  - one page-scoped map for right button callbacks
+  - one page-scoped map for mouse moved callbacks
+  - one page-scoped map for mouse wheel callbacks
+- Re-registering the same handler type for the same page overwrites the previous callback.
+- Callback payloads are separate from touch payloads:
+  - `MousePoint` for button/move events
+  - `MouseWheelData` for wheel events
+- Mouse delivery is state-based:
+  - raw desktop callbacks only overwrite the latest mouse coordinates, button flags, and accumulated wheel delta
+  - mouse events are not queued
+  - user mouse callbacks are dispatched at most once per frame from `TouchProcessor.processMotions()`
+  - reusable `MousePoint` / `MouseWheelData` instances are overwritten instead of allocating per raw event
+- Desktop forwarding lives in `DesktopLauncher`:
+  - left button press updates mouse state for both the new mouse path and the existing touch-start path
+  - left button move still feeds the existing touch move path while also overwriting latest mouse position state
+  - right button and wheel events only update the new mouse callback state path
+- Android does not forward any of these mouse callbacks at runtime.
+- Repo-level verification scene: `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` starts a dedicated page with two visible polygons to validate latest-state mouse-move and once-per-frame wheel delivery without touching gameplay code.
 
 ## 6. Dependency and Interaction Maps
 
@@ -173,6 +230,8 @@ High blast-radius code (changes can affect all games/apps and both platforms):
   - `vertex_bueffer` typo in package name
   - `AudioPLayerDesktop` capitalization inconsistency
   - Android package root is `com/seal/gl_engine/*`, not `com/nikitos/*`
+  - Android SFX: `SoundPool.load()` is asynchronous; avoid "load then immediately play" patterns.
+  - Android packaging: if you use `AssetManager.openFd(...)`, the asset must not be compressed (see `android/build.gradle` `aaptOptions.noCompress`).
 
 ## 9. Items That Often Need Verification
 

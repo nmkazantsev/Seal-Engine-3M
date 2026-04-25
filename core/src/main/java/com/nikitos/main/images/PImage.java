@@ -9,18 +9,29 @@ public class PImage {
     private TextAlign textAlign = TextAlign.LEFT;
     private boolean upperText = false;
     private final AbstractImage impl;
+    private static PFont font; //default font
 
     public PImage(AbstractImage impl) {
         this.impl = impl;
+        applyDefaultFont();
     }
 
     public PImage() {
         this.impl = CoreRenderer.engine.getPlatformBridge().getAbstractImage();
+        applyDefaultFont();
     }
 
     public PImage(float width, float height) {
         this.impl = CoreRenderer.engine.getPlatformBridge().getAbstractImage();
         impl.createBitmap((int) width, (int) height);
+        applyDefaultFont();
+    }
+
+    private void applyDefaultFont() {
+        if (font == null) {
+            font = PFont.fromAsset("default.ttf");
+        }
+        this.impl.setFont(font);
     }
 
 
@@ -179,7 +190,8 @@ public class PImage {
     public void stroke(float r, float g, float b) {
         impl.stroke((int) (r), (int) (g), (int) (b), (int) (g));
     }
-    public void clear(){
+
+    public void clear() {
         impl.clear();
     }
 

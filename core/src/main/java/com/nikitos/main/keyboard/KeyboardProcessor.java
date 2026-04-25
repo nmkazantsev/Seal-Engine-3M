@@ -1,6 +1,7 @@
 package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.main.debugger.BSODScreen;
 
 import java.util.*;
 import java.util.function.Function;
@@ -235,7 +236,15 @@ public class KeyboardProcessor {
         }
 
         private void run() {
-            function.apply(keyName);
+            if(CoreRenderer.engine.getBsodAllowed()){
+                try {
+                    function.apply(keyName);
+                }catch (Exception e){
+                    CoreRenderer.engine.startNewPage(new BSODScreen(e));
+                }
+            }else {
+                function.apply(keyName);
+            }
         }
     }
 }

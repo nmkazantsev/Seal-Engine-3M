@@ -23,6 +23,10 @@ If you are changing the engine itself (this repository), open `ENGINE_INTERNALS_
 
 ## 3. How Consumers Depend On The Engine (Observed Patterns)
 
+### 3.0 Create the app
+
+to create a new template app use the last version of the app generator located at gitHub: gitHub https://github.com/nmkazantsev/seal-app-generator .
+
 ### 3.1 Engine as local JARs (desktop)
 
 Observed in `~/IdeaProjects/Seal_Engine_3-M/Tanki-7.1/build.gradle`:
@@ -51,6 +55,8 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo/src/main/java/com/nikitos/Main.
   - `setStartPage(unused -> new YourStartPage())`
 - Create `DesktopLauncher(launcherParams)` and call `run()`.
 - Keyboard events are captured by the engine’s desktop launcher and routed into the engine keyboard system automatically (no app-side wiring required).
+- Runtime files: relative paths passed to `Engine.loadTextFile(...)`, `saveTextFile(...)`, `fileExists(...)`, `folderExists(...)`, `createFolder(...)` resolve from the current working directory.
+- Mouse control: desktop supports `Engine.disableMouseCursor()`, `enableMouseCursor()`, and `setMousePosition(...)` against the GLFW window.
 
 ### 4.2 Android bootstrap (observed)
 
@@ -68,6 +74,22 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
     - `TouchProcessor.onTouch(new AndroidMotionEventAdapter(event))`
 - In `Activity.onPause()` / `Activity.onResume()` call `engine.onPause()` / `engine.onResume()`.
 - Keyboard: if a hardware keyboard is present, the engine’s returned `GLSurfaceView` is focusable and forwards key events into the engine keyboard system. Ensure the view has focus if your Activity contains other focusable views.
+- Runtime files: relative paths passed to the same `Engine` file API resolve under `Context.getFilesDir()` (typically `/data/user/0/<package>/files`).
+- Mouse control methods are exposed on `Engine` for API consistency, but are safe no-ops on Android.
+
+### 4.3 Runtime files vs packaged assets
+
+- `FileUtils` / `SealAssetManager` remain asset-only APIs for bundled resources.
+- Runtime user files go through `Engine.loadTextFile(...)`, `saveTextFile(...)`, `fileExists(...)`, `folderExists(...)`, `createFolder(...)`.
+- Path contract is unified across platforms:
+  - absolute paths are used directly
+  - relative paths are resolved against the platform runtime root and normalized
+  - normalized relative paths may not escape that runtime root
+  - `fileExists(...)` is true only for regular files
+  - `folderExists(...)` is true only for directories
+  - `createFolder(...)` creates nested directories recursively
+  - `saveTextFile(...)` does not auto-create missing parent directories
+- On Android, the engine now intentionally uses app-internal app-specific files storage for relative runtime files. This is a real writable filesystem directory for runtime-created files and is separate from packaged assets/resources.
 
 ## 5. “Shared Game Module” Pattern (Recommended for real apps)
 
@@ -98,6 +120,11 @@ When asked to modify an application built on Seal Engine, start in this order:
    - resize-dependent initialization tends to live in `onSurfaceChanged(...)`
 5. Assets in the *application* repo:
    - shaders, textures, models, fonts, audio, config
+   - audio note (engine-dev / desktop): assets are loaded from the classpath; for quick verification you can add test files under `core/src/main/resources/`:
+     - `test.mp3` (long music track, optional in this repo)
+     - `bsod.mp3` (short MP3)
+     - `test.wav` (WAV test sound)
+   - Android note: engine module audio assets typically live under `android/src/main/assets/` and are accessed via `AssetManager` APIs (not the desktop classpath).
 
 ## 7. Common App-Level Tasks (Where To Change Code)
 
@@ -112,11 +139,35 @@ When asked to modify an application built on Seal Engine, start in this order:
 - Android first: verify `MotionEvent` is forwarded to `TouchProcessor` using the platform adapter (see Demo-app).
 - Game logic next: find where `TouchProcessor` instances are registered and validate their hitbox logic and coordinate assumptions.
 
+### 7.2.1 Desktop mouse callbacks through `TouchProcessor`
+
+- `TouchProcessor` now also exposes page-scoped desktop mouse callbacks:
+  - `setLeftButtonProcessor(...)`
+  - `setRightButtonProcessor(...)`
+  - `setMouseMovedProcessor(...)`
+  - `setMouseWheelProcessor(...)`
+- These do not replace normal touch processors; they are a separate desktop-only callback path.
+- Each setter stores exactly one callback per page and per handler kind. Re-registering overwrites the previous callback for that page.
+- Mouse input is state-based, not queue-based:
+  - raw platform callbacks overwrite the latest stored mouse state
+  - user callbacks are dispatched at most once per frame
+  - intermediate raw mouse positions may be skipped intentionally
+- Mouse move / button callbacks receive `MousePoint` with the latest mouse coordinates at frame dispatch time.
+- Mouse wheel callbacks receive `MouseWheelData` with the latest coordinates and the accumulated wheel delta since the previous frame dispatch.
+- Android keeps the API surface through `core`, but runtime delivery is intentionally disabled there.
+- For quick desktop verification inside this repo, use `desktop/src/test/java/MouseCallbacksSmokeTestMain.java`. It is an isolated smoke test scene, not application/game logic, and it validates the once-per-frame latest-state mouse model.
+
 ### 7.4 Keyboard input
 
 - In game code: use `KeyListener` / `KeyReleasedListener` (bind by key name, or use `anyKey(...)`).
 - For key combinations: use `KeyComboListener` (its callback is called when all specified keys are pressed together, in any order).
 - For polling: use `KeyboardProcessor.isKeyPressed(...)`, `KeyboardProcessor.getKeysPressedNumber()`, `KeyboardProcessor.getKeyPresedList()`.
+
+### 7.5 Runtime saves / config / logs
+
+- Use the `Engine` runtime file API, not `FileUtils`, when the data must persist after launch.
+- If you need a relative save path, create folders explicitly with `engine.createFolder("saves/slot1")` before calling `engine.saveTextFile(...)`.
+- If you need packaged read-only data, keep using assets/classpath resources.
 
 ### 7.3 Rendering / shader / asset load failures
 

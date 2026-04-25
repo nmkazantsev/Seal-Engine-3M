@@ -43,4 +43,8 @@ public abstract class PlatformBridge {
     public abstract AudioPlayer getAudioPlayer();
 
     public abstract FontBridge getFontBridge();
+
+    public abstract RuntimeFileBridge getRuntimeFileBridge();
+
+    public abstract MouseControlBridge getMouseControlBridge();
 }

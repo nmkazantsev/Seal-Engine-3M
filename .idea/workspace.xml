@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="update docs">
+      <change afterPath="$PROJECT_DIR$/core/src/main/resources/default.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/images/PImage.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/../Demo">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/../Demo">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3CSG1AWFb28sZL85mG8JUuN3p67" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [:desktop:MouseCallbacksSmokeTestMain.main()].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "git-widget-placeholder": "19-bsod",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/core/src/main/resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
+      <module name="Demo.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nikitos.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MouseCallbacksSmokeTestMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MouseCallbacksSmokeTestMain" />
+      <module name="sealEngine_3M.desktop.test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MouseCallbacksSmokeTestMain" />
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
+        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task id="LOCAL-00001" summary="merge master">
+      <option name="closed" value="true" />
+      <created>1776370346499</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776370346499</updated>
+    </task>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="merge master" />
+      <created>1776371347228</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776371347228</updated>
+      <workItem from="1776371349658" duration="1315000" />
+      <workItem from="1776405835529" duration="455000" />
+      <workItem from="1776416323417" duration="196000" />
+      <workItem from="1776427904629" duration="598000" />
+      <workItem from="1777034041004" duration="732000" />
+      <workItem from="1777119137931" duration="1295000" />
+      <workItem from="1777133902438" duration="4051000" />
+      <workItem from="1777141939141" duration="288000" />
+      <workItem from="1777144802809" duration="1640000" />
+    </task>
+    <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
+      <option name="closed" value="true" />
+      <created>1777034576159</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1777034576159</updated>
+    </task>
+    <task id="LOCAL-00003" summary="edit mouse">
+      <option name="closed" value="true" />
+      <created>1777037093156</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1777037093156</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add mouse processors and test for it">
+      <option name="closed" value="true" />
+      <created>1777135096539</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1777135096539</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix mouse and files on android">
+      <option name="closed" value="true" />
+      <created>1777142153087</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1777142153087</updated>
+    </task>
+    <task id="LOCAL-00006" summary="update docs">
+      <option name="closed" value="true" />
+      <created>1777146765412</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1777146765413</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update docs">
+      <option name="closed" value="true" />
+      <created>1777146793264</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1777146793264</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="20-keyboar" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="merge master" />
+    <MESSAGE value="codex adds mouse and files&#10;seems ok" />
+    <MESSAGE value="edit mouse" />
+    <MESSAGE value="add mouse processors and test for it" />
+    <MESSAGE value="fix mouse and files on android" />
+    <MESSAGE value="update docs" />
+    <option name="LAST_COMMIT_MESSAGE" value="update docs" />
+  </component>
+  <component name="com.gk646.codestats.settings.Save">
+    <option name="commitTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1776370346552" />
+          <option name="linesCode" value="20254" />
+          <option name="totalLines" value="55078" />
+          <option name="info" value="merge master" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777034576227" />
+          <option name="linesCode" value="20564" />
+          <option name="totalLines" value="55646" />
+          <option name="info" value="codex adds mouse and files&#10;seems ok" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777037093254" />
+          <option name="linesCode" value="20570" />
+          <option name="totalLines" value="55648" />
+          <option name="info" value="edit mouse" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777135096714" />
+          <option name="linesCode" value="20932" />
+          <option name="totalLines" value="56325" />
+          <option name="info" value="add mouse processors and test for it" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777142153276" />
+          <option name="linesCode" value="21017" />
+          <option name="totalLines" value="55536" />
+          <option name="info" value="fix mouse and files on android" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777146765588" />
+          <option name="linesCode" value="21099" />
+          <option name="totalLines" value="55207" />
+          <option name="info" value="update docs" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777146793329" />
+          <option name="linesCode" value="21099" />
+          <option name="totalLines" value="55207" />
+          <option name="info" value="update docs" />
+        </TimePoint>
+      </list>
+    </option>
+    <option name="genericTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1776370346552" />
+          <option name="linesCode" value="20254" />
+          <option name="totalLines" value="55078" />
+          <option name="info" value="16 Apr 2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777037093254" />
+          <option name="linesCode" value="20570" />
+          <option name="totalLines" value="55648" />
+          <option name="info" value="24 Apr 2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1777146793329" />
+          <option name="linesCode" value="21099" />
+          <option name="totalLines" value="55207" />
+          <option name="info" value="25 Apr 2026" />
+        </TimePoint>
+      </list>
+    </option>
+  </component>
+</project>

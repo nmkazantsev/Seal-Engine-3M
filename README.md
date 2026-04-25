@@ -19,6 +19,12 @@ Android: https://github.com/nmkazantsev/Demo-app
 
 ---
 
+## создание приложений
+
+для создания нового приложения используйте генератор, скачайте последнюю версию с gitHub https://github.com/nmkazantsev/seal-app-generator .
+
+---
+
 ## руководство по созданию страницы движка
 1. создать имплементацию ``GamePageClass``.
 2. В конструкторе (или заранее) загружать тяжелые объекты, такие, как меши и картинки, а также шейдеры и шрифты.
@@ -40,7 +46,42 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `void disableBlend()` – отключает смешивание цветов.
 - `void enableBlend()` – включает смешивание цветов.
 - `Platform getPlatform()` – возвращает платформу (DESKTOP или MOBILE).
+- `String loadTextFile(String path)` – читает UTF-8 текстовый файл из runtime filesystem.
+- `void saveTextFile(String path, String text)` – сохраняет UTF-8 текстовый файл в runtime filesystem. Родительская папка должна уже существовать.
+- `boolean fileExists(String path)` – возвращает true только если путь указывает на существующий обычный файл.
+- `boolean folderExists(String path)` – возвращает true только если путь указывает на существующую папку.
+- `boolean createFolder(String path)` – рекурсивно создаёт папку и недостающие родительские папки.
+- `void disableMouseCursor()` – скрывает/захватывает курсор мыши на desktop; на Android безопасный no-op.
+- `void enableMouseCursor()` – возвращает обычный курсор мыши на desktop; на Android безопасный no-op.
+- `void setMousePosition(float x, float y)` – устанавливает позицию курсора в координатах окна на desktop; на Android безопасный no-op.
 - `float fps` – публичное поле, содержащее текущий FPS.
+
+**Правила путей для runtime filesystem (`Engine.*File*` / `createFolder`)**
+- Эти методы работают только с runtime filesystem и не используют assets / classpath ресурсы.
+- Все текстовые операции используют UTF-8.
+- Абсолютный путь определяется платформенным `File.isAbsolute()` и используется как есть.
+- Относительный путь всегда сначала привязывается к platform-specific runtime root, затем нормализуется (`.` / `..`), и не может выйти за пределы этого root.
+- Пустой или пробельный путь считается невалидным.
+- Если путь существует, но имеет неверный тип, поведение строгое:
+  - `fileExists(...)` вернёт `false` для папки
+  - `folderExists(...)` вернёт `false` для обычного файла
+  - `loadTextFile(...)` и `saveTextFile(...)` выбросят `RuntimeException`
+  - `createFolder(...)` вернёт `false`, если по этому пути уже существует обычный файл
+- `saveTextFile(...)` не создаёт родительские папки автоматически; для этого сначала вызовите `createFolder(...)`.
+
+**Platform-specific runtime root для относительных путей**
+- Desktop: текущая рабочая директория приложения (`System.getProperty("user.dir")`).
+- Android: internal app files directory, возвращаемая `Context.getFilesDir()`, обычно путь вида `/data/user/0/<package>/files` или `/data/data/<package>/files`.
+- Android note: relative runtime files теперь сознательно мапятся в реальную writable app-internal directory. Это не `assets`, не classpath resources и не external/shared storage. Все операции `save/load/fileExists/folderExists/createFolder` используют этот же root и те же path rules.
+
+**BSOD / Crash Screen**
+- Если BSOD support включён через `LauncherParams.setUseBSOD(true)` во время запуска, движок инициализирует automatic crash-screen handling при старте.
+- При исключении внутри пользовательского приложения движок автоматически показывает `BSODScreen`.
+- Экран отображает информацию об ошибке на экране и параллельно сохраняет её в текстовый файл.
+- Crash log locations:
+  - Desktop: `crashes` folder inside the application folder
+  - Android: `Android/data/<app>/files/crashes`
+- Crash log сохраняется как `.txt` файл; имя файла содержит дату и время ошибки.
 
 ### GamePageClass
 Абстрактный класс, от которого должны наследоваться все игровые страницы.
@@ -627,12 +668,51 @@ img.text("Hello, World!", 100, 100);
 - `boolean getTouchAlive()` – true, если касание активно.
 - `void terminate()` – принудительно завершает обработку касания.
 - `void delete()` – удаляет процессор.
+- `static void setLeftButtonProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик нажатия левой кнопки мыши для страницы.
+- `static void setRightButtonProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик нажатия правой кнопки мыши для страницы.
+- `static void setMouseMovedProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик движения мыши для страницы.
+- `static void setMouseWheelProcessor(Function<MouseWheelData, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик колеса мыши для страницы.
+
+**Семантика mouse callbacks:**
+- Для каждого типа обработчика хранится ровно один callback на страницу.
+- Повторный вызов того же setter для той же страницы перезаписывает предыдущий callback.
+- `creatorPage` должен быть задан явно; mouse processors не регистрируются как global handlers.
+- Хранилище разделено по типам:
+  - page -> left button processor
+  - page -> right button processor
+  - page -> mouse moved processor
+  - page -> mouse wheel processor
+- Raw platform mouse events могут приходить много раз за кадр, но движок не строит очередь mouse events.
+- Вместо этого движок хранит только latest mouse state в переиспользуемых полях/объектах и перезаписывает его при новых platform callbacks.
+- User mouse callbacks вызываются не чаще одного раза за кадр, из frame update / render-thread dispatch.
+- Из-за этого промежуточные raw mouse positions и wheel events внутри одного кадра могут быть пропущены намеренно. Для этого теста и для engine-style input это корректно.
+- Desktop runtime behavior:
+  - platform callback только обновляет stored mouse state
+  - `setLeftButtonProcessor(...)` вызывается не чаще одного раза за кадр, если с прошлого frame dispatch была зафиксирована левая кнопка (`GLFW_PRESS`)
+  - `setRightButtonProcessor(...)` вызывается не чаще одного раза за кадр, если с прошлого frame dispatch была зафиксирована правая кнопка (`GLFW_PRESS`)
+  - `setMouseMovedProcessor(...)` вызывается не чаще одного раза за кадр и получает latest mouse coordinates
+  - `setMouseWheelProcessor(...)` вызывается не чаще одного раза за кадр и получает latest mouse coordinates плюс накопленный за кадр wheel delta
+- Android runtime behavior: эти callbacks никогда не вызываются и не эмулируются через touch/gesture input.
+- Для быстрой ручной проверки в `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` добавлена standalone desktop test scene с двумя полигонами: один следует за мышью через latest mouse-move state, второй двигается по Y через once-per-frame wheel delivery. Это debug/smoke test, а не gameplay feature.
 
 ### TouchPoint
 Простой класс, хранящий координаты касания.
 
 **Поля:**
 - `float touchX`, `touchY`
+
+### MousePoint
+Переиспользуемый snapshot координат мыши.
+
+**Поля:**
+- `float mouseX`, `mouseY`
+
+### MouseWheelData
+Переиспользуемый snapshot события колеса мыши.
+
+**Поля:**
+- `float mouseX`, `mouseY` – текущие координаты курсора в момент wheel event.
+- `float wheelX`, `wheelY` – scroll delta, передаваемая desktop platform layer.
 
 ### MyMotionEvent
 Интерфейс, абстрагирующий платформенное событие касания. Константы `ACTION_DOWN`, `ACTION_UP`, `ACTION_MOVE`, `ACTION_POINTER_DOWN`, `ACTION_POINTER_UP`. Пользователь не реализует напрямую.
@@ -671,6 +751,19 @@ img.text("Hello, World!", 100, 100);
 - `static int getKeysPressedNumber()` – сколько клавиш нажато сейчас.
 - `static List<String> getKeyPresedList()` – список нажатых клавиш сейчас (имена нормализованы, uppercase).
 
+### Desktop Mouse Control
+
+Mouse control exposed through `Engine` and implemented only on desktop.
+
+**Публичные методы:**
+- `void disableMouseCursor()`
+- `void enableMouseCursor()`
+- `void setMousePosition(float x, float y)` – координаты внутри окна в пикселях.
+
+**Поведение по платформам:**
+- Desktop: использует окно GLFW, не меняя существующий keyboard/touch pipeline.
+- Android: все методы безопасно ничего не делают.
+
 ### KeyComboListener (комбинации клавиш)
 
 Слушатель, у которого коллбэк вызывается только если **все** указанные клавиши нажаты одновременно (порядок нажатия не важен). Коллбэк вызывается **один раз** на активацию комбинации; после отпускания любой клавиши комбинация сбрасывается и может сработать снова.
@@ -691,9 +784,23 @@ img.text("Hello, World!", 100, 100);
 
 **Публичные методы:**
 - `void playMusic(String path, boolean loop)`
-- `void stopMusic()`, `void pauseMusic()` - методы управления воспроизведением музыки
+- `void stopMusic()`, `void pauseMusic()`, `void resume()` - управление воспроизведением музыки (resume = продолжить после паузы)
+- `void playSound(String path)` – проиграть одноразовый звук (SFX), не влияя на состояние музыки
 - `void setVolume(float volume)` – устанавливает громкость музыки и звуков (диапазон 0.0 – 1.0).
 - `float getVolume()` – возвращает текущую громкость.
+
+**Примечания по формату (desktop):**
+- Для коротких звуковых эффектов рекомендуется `WAV` (наиболее предсказуемо для SFX).
+- `MP3` поддерживается; но для очень коротких эффектов `WAV` обычно надежнее (задержка/паддинг кодека MP3).
+
+**Примечания по Android SFX:**
+- Для одноразовых звуков используется `SoundPool`, который **грузит сэмплы асинхронно**. Поэтому корректная реализация должна запускать `play()` после `OnLoadComplete`.
+- Для `MP3` SFX на некоторых устройствах `SoundPool` работает нестабильно; в движке есть fallback на короткоживущий `MediaPlayer` для `*.mp3` SFX.
+- Если используете `AssetManager.openFd(...)` (как в реализации движка), убедитесь что `wav/ogg/mp3` не сжимаются при упаковке (см. `android/build.gradle` `aaptOptions.noCompress`).
+
+**Быстрая проверка (desktop):**
+- Запуск: `desktop/src/test/java/AudioSmokeTestMain.java` (main-класс `AudioSmokeTestMain`)
+- Использует ресурсы на classpath: `bsod.mp3`, `test.wav`, и опционально `test.mp3`.
 
 ---
 
@@ -722,6 +829,8 @@ img.text("Hello, World!", 100, 100);
 
 ### FileUtils
 Утилита для работы с файлами из assets.
+
+Для runtime user files используйте `Engine.loadTextFile(...)`, `Engine.saveTextFile(...)`, `Engine.fileExists(...)`, `Engine.folderExists(...)`, `Engine.createFolder(...)`.
 
 **Конструктор:**
 - `FileUtils()`

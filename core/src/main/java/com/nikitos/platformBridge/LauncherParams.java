@@ -13,6 +13,8 @@ public class LauncherParams {
     protected boolean MSAA = false;
     protected boolean isDesktop = true;
 
+    protected boolean useBSOD = false;
+
     protected boolean fullScreen = true;
 
     protected String windowTitle = "Seal Engine 3-M";
@@ -35,6 +37,15 @@ public class LauncherParams {
     public LauncherParams setMSAA(boolean MSAA) {
         this.MSAA = MSAA;
         return this;
+    }
+
+    public LauncherParams setUseBSOD(boolean useBSOD) {
+        this.useBSOD = useBSOD;
+        return this;
+    }
+
+    public boolean getUseBSOD() {
+        return useBSOD;
     }
 
     protected LauncherParams setIsDesktop(boolean isDesktop) {
