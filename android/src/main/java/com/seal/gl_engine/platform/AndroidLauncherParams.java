@@ -29,6 +29,12 @@ public class AndroidLauncherParams extends LauncherParams {
         return this;
     }
 
+
+    public AndroidLauncherParams setUseBSOD(boolean useBSOD) {
+        super.setUseBSOD(useBSOD);
+        return this;
+    }
+
     public AndroidLauncherParams setStartPage(Function<Void, GamePageClass> startPage) {
         this.startPage = startPage;
         return this;

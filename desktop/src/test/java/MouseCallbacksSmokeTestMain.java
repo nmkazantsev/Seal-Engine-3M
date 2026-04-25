@@ -133,8 +133,8 @@ public final class MouseCallbacksSmokeTestMain {
         }
 
         private Void onMouseMoved(MousePoint mousePoint) {
-            mousePolygonX = mousePoint.mouseX/2;
-            mousePolygonY = mousePoint.mouseY/2;
+            mousePolygonX = mousePoint.mouseX;
+            mousePolygonY = mousePoint.mouseY;
             return null;
         }
 

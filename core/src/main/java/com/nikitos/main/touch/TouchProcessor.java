@@ -24,6 +24,15 @@ public class TouchProcessor {
     private static final HashMap<Class<?>, Function<MousePoint, Void>> rightButtonProcessors = new HashMap<>();
     private static final HashMap<Class<?>, Function<MousePoint, Void>> mouseMovedProcessors = new HashMap<>();
     private static final HashMap<Class<?>, Function<MouseWheelData, Void>> mouseWheelProcessors = new HashMap<>();
+    private static final MousePoint mousePointState = new MousePoint();
+    private static final MouseWheelData mouseWheelState = new MouseWheelData();
+    private static boolean mouseMovedDirty = false;
+    private static boolean leftButtonPressedPending = false;
+    private static boolean rightButtonPressedPending = false;
+    private static boolean leftButtonDown = false;
+    private static boolean rightButtonDown = false;
+    private static float accumulatedWheelX = 0;
+    private static float accumulatedWheelY = 0;
     private static boolean pageChanged = false;
     private final Class<?> creatorClassName;
     private final Function<TouchPoint, Boolean> checkHitboxCallback;
@@ -183,37 +192,46 @@ public class TouchProcessor {
 
     public static void onLeftButtonPressed(float mouseX, float mouseY) {
         synchronized (commandQueue) {
-            Function<MousePoint, Void> processor = getProcessorForCurrentPage(leftButtonProcessors);
-            if (processor != null) {
-                commandQueue.add(new MousePointCommand(new MousePoint(mouseX, mouseY), processor));
-            }
+            mousePointState.set(mouseX, mouseY);
+            leftButtonDown = true;
+            leftButtonPressedPending = true;
         }
     }
 
     public static void onRightButtonPressed(float mouseX, float mouseY) {
         synchronized (commandQueue) {
-            Function<MousePoint, Void> processor = getProcessorForCurrentPage(rightButtonProcessors);
-            if (processor != null) {
-                commandQueue.add(new MousePointCommand(new MousePoint(mouseX, mouseY), processor));
-            }
+            mousePointState.set(mouseX, mouseY);
+            rightButtonDown = true;
+            rightButtonPressedPending = true;
+        }
+    }
+
+    public static void onLeftButtonReleased(float mouseX, float mouseY) {
+        synchronized (commandQueue) {
+            mousePointState.set(mouseX, mouseY);
+            leftButtonDown = false;
+        }
+    }
+
+    public static void onRightButtonReleased(float mouseX, float mouseY) {
+        synchronized (commandQueue) {
+            mousePointState.set(mouseX, mouseY);
+            rightButtonDown = false;
         }
     }
 
     public static void onMouseMoved(float mouseX, float mouseY) {
         synchronized (commandQueue) {
-            Function<MousePoint, Void> processor = getProcessorForCurrentPage(mouseMovedProcessors);
-            if (processor != null) {
-                commandQueue.add(new MousePointCommand(new MousePoint(mouseX, mouseY), processor));
-            }
+            mousePointState.set(mouseX, mouseY);
+            mouseMovedDirty = true;
         }
     }
 
     public static void onMouseWheel(float mouseX, float mouseY, float wheelX, float wheelY) {
         synchronized (commandQueue) {
-            Function<MouseWheelData, Void> processor = getProcessorForCurrentPage(mouseWheelProcessors);
-            if (processor != null) {
-                commandQueue.add(new MouseWheelCommand(new MouseWheelData(mouseX, mouseY, wheelX, wheelY), processor));
-            }
+            mousePointState.set(mouseX, mouseY);
+            accumulatedWheelX += wheelX;
+            accumulatedWheelY += wheelY;
         }
     }
 
@@ -232,8 +250,13 @@ public class TouchProcessor {
                 }
                 iterator.remove();//no need in this event to be buffered anymore
             }
+            if (pageChanged) {
+                clearPendingMouseSignals();
+                pageChanged = false;
+                return;
+            }
+            dispatchMouseCallbacks();
         }
-        pageChanged = false;
     }
 
     public void delete() {
@@ -322,6 +345,9 @@ public class TouchProcessor {
             removeInactivePageProcessors(rightButtonProcessors);
             removeInactivePageProcessors(mouseMovedProcessors);
             removeInactivePageProcessors(mouseWheelProcessors);
+            clearPendingMouseSignals();
+            leftButtonDown = false;
+            rightButtonDown = false;
         }
     }
 
@@ -363,66 +389,13 @@ public class TouchProcessor {
         }
     }
 
-    private static class MousePointCommand implements BufferedCommand {
-        private final MousePoint mousePoint;
-        private final Function<MousePoint, Void> function;
-
-        private MousePointCommand(MousePoint mousePoint, Function<MousePoint, Void> function) {
-            this.mousePoint = mousePoint;
-            this.function = function;
-        }
-
-        @Override
-        public boolean shouldRun() {
-            return true;
-        }
-
-        @Override
-        public void run() {
-            if (CoreRenderer.engine.getBsodAllowed()) {
-                try {
-                    function.apply(mousePoint);
-                } catch (Exception e) {
-                    CoreRenderer.engine.startNewPage(new BSODScreen(e));
-                }
-            } else {
-                function.apply(mousePoint);
-            }
-        }
-    }
-
-    private static class MouseWheelCommand implements BufferedCommand {
-        private final MouseWheelData mouseWheelData;
-        private final Function<MouseWheelData, Void> function;
-
-        private MouseWheelCommand(MouseWheelData mouseWheelData, Function<MouseWheelData, Void> function) {
-            this.mouseWheelData = mouseWheelData;
-            this.function = function;
-        }
-
-        @Override
-        public boolean shouldRun() {
-            return true;
-        }
-
-        @Override
-        public void run() {
-            if (CoreRenderer.engine.getBsodAllowed()) {
-                try {
-                    function.apply(mouseWheelData);
-                } catch (Exception e) {
-                    CoreRenderer.engine.startNewPage(new BSODScreen(e));
-                }
-            } else {
-                function.apply(mouseWheelData);
-            }
-        }
-    }
-
     private static <T> void setProcessor(HashMap<Class<?>, Function<T, Void>> processors,
                                          Function<T, Void> processor,
                                          GamePageClass creatorPage) {
-        Class<?> key = creatorPage == null ? null : creatorPage.getClass();
+        if (creatorPage == null) {
+            throw new IllegalArgumentException("creatorPage can not be null for mouse processors");
+        }
+        Class<?> key = creatorPage.getClass();
         if (processor == null) {
             processors.remove(key);
         } else {
@@ -432,10 +405,10 @@ public class TouchProcessor {
 
     private static <T> Function<T, Void> getProcessorForCurrentPage(HashMap<Class<?>, Function<T, Void>> processors) {
         Class<?> currentPage = safeGetCurrentPageClass();
-        if (currentPage != null && processors.containsKey(currentPage)) {
-            return processors.get(currentPage);
+        if (currentPage == null) {
+            return null;
         }
-        return processors.get(null);
+        return processors.get(currentPage);
     }
 
     private static <T> void removeInactivePageProcessors(HashMap<Class<?>, Function<T, Void>> processors) {
@@ -451,6 +424,68 @@ public class TouchProcessor {
             return CoreRenderer.engine.getPageClass();
         } catch (Throwable ignored) {
             return null;
+        }
+    }
+
+    private static void dispatchMouseCallbacks() {
+        dispatchMousePointProcessor(leftButtonProcessors, leftButtonPressedPending);
+        dispatchMousePointProcessor(rightButtonProcessors, rightButtonPressedPending);
+        dispatchMousePointProcessor(mouseMovedProcessors, mouseMovedDirty);
+
+        if (accumulatedWheelX != 0 || accumulatedWheelY != 0) {
+            Function<MouseWheelData, Void> processor = getProcessorForCurrentPage(mouseWheelProcessors);
+            if (processor != null) {
+                mouseWheelState.set(mousePointState.mouseX, mousePointState.mouseY, accumulatedWheelX, accumulatedWheelY);
+                invokeMouseWheelProcessor(processor);
+            }
+        }
+
+        mouseMovedDirty = false;
+        leftButtonPressedPending = false;
+        rightButtonPressedPending = false;
+        accumulatedWheelX = 0;
+        accumulatedWheelY = 0;
+    }
+
+    private static void clearPendingMouseSignals() {
+        mouseMovedDirty = false;
+        leftButtonPressedPending = false;
+        rightButtonPressedPending = false;
+        accumulatedWheelX = 0;
+        accumulatedWheelY = 0;
+    }
+
+    private static void dispatchMousePointProcessor(HashMap<Class<?>, Function<MousePoint, Void>> processors, boolean shouldDispatch) {
+        if (!shouldDispatch) {
+            return;
+        }
+        Function<MousePoint, Void> processor = getProcessorForCurrentPage(processors);
+        if (processor != null) {
+            invokeMousePointProcessor(processor);
+        }
+    }
+
+    private static void invokeMousePointProcessor(Function<MousePoint, Void> processor) {
+        if (CoreRenderer.engine.getBsodAllowed()) {
+            try {
+                processor.apply(mousePointState);
+            } catch (Exception e) {
+                CoreRenderer.engine.startNewPage(new BSODScreen(e));
+            }
+        } else {
+            processor.apply(mousePointState);
+        }
+    }
+
+    private static void invokeMouseWheelProcessor(Function<MouseWheelData, Void> processor) {
+        if (CoreRenderer.engine.getBsodAllowed()) {
+            try {
+                processor.apply(mouseWheelState);
+            } catch (Exception e) {
+                CoreRenderer.engine.startNewPage(new BSODScreen(e));
+            }
+        } else {
+            processor.apply(mouseWheelState);
         }
     }
 }

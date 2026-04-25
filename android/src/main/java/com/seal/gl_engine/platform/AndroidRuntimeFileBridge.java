@@ -15,6 +15,6 @@ public class AndroidRuntimeFileBridge extends RuntimeFileBridge {
 
     @Override
     protected File getRelativeRoot() {
-        return context.getExternalFilesDir(null);
+        return context.getFilesDir();
     }
 }

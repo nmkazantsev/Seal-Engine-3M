@@ -1,14 +1,21 @@
 package com.nikitos.main.touch;
 
-/**
- * Simple immutable mouse position snapshot.
- */
 public class MousePoint {
-    public final float mouseX;
-    public final float mouseY;
+    public float mouseX;
+    public float mouseY;
+
+    public MousePoint() {
+        this(0, 0);
+    }
 
     public MousePoint(float mouseX, float mouseY) {
         this.mouseX = mouseX;
         this.mouseY = mouseY;
+    }
+
+    public MousePoint set(float mouseX, float mouseY) {
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+        return this;
     }
 }

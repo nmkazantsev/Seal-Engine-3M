@@ -1,6 +1,7 @@
 package com.nikitos.main.debugger;
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.Engine;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.camera.Camera;
 import com.nikitos.main.images.PFont;
@@ -15,6 +16,7 @@ import com.nikitos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,6 +35,16 @@ public class BSODScreen extends GamePageClass {
     public BSODScreen(Exception e) {
         Debugger.setEnabled(false);
         errorText = e.getMessage() + "\n at: " + Arrays.toString(e.getStackTrace());
+        //save error msg
+        new Thread(() -> {
+            Engine engine = CoreRenderer.engine;
+            if (!engine.folderExists("crashes")) {
+                engine.createFolder("crashes");
+            }
+            Date date = new Date();
+            String data = date.toString();
+            engine.saveTextFile("crashes/" + data + ".txt", errorText);
+        }).start();
         player = CoreRenderer.engine.getPlatformBridge().getAudioPlayer();
         player.stopMusic();
         player.playSound("bsod_engine.wav");

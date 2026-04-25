@@ -74,7 +74,7 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
     - `TouchProcessor.onTouch(new AndroidMotionEventAdapter(event))`
 - In `Activity.onPause()` / `Activity.onResume()` call `engine.onPause()` / `engine.onResume()`.
 - Keyboard: if a hardware keyboard is present, the engine’s returned `GLSurfaceView` is focusable and forwards key events into the engine keyboard system. Ensure the view has focus if your Activity contains other focusable views.
-- Runtime files: relative paths passed to the same `Engine` file API resolve under `Context.getExternalFilesDir(null)` (typically `/storage/emulated/0/Android/data/<package>/files`).
+- Runtime files: relative paths passed to the same `Engine` file API resolve under `Context.getFilesDir()` (typically `/data/user/0/<package>/files`).
 - Mouse control methods are exposed on `Engine` for API consistency, but are safe no-ops on Android.
 
 ### 4.3 Runtime files vs packaged assets
@@ -89,7 +89,7 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
   - `folderExists(...)` is true only for directories
   - `createFolder(...)` creates nested directories recursively
   - `saveTextFile(...)` does not auto-create missing parent directories
-- On modern Android, the engine intentionally uses app-specific external/shared storage for relative runtime files instead of assets or private internal storage.
+- On Android, the engine now intentionally uses app-internal app-specific files storage for relative runtime files. This is a real writable filesystem directory for runtime-created files and is separate from packaged assets/resources.
 
 ## 5. “Shared Game Module” Pattern (Recommended for real apps)
 
@@ -148,10 +148,14 @@ When asked to modify an application built on Seal Engine, start in this order:
   - `setMouseWheelProcessor(...)`
 - These do not replace normal touch processors; they are a separate desktop-only callback path.
 - Each setter stores exactly one callback per page and per handler kind. Re-registering overwrites the previous callback for that page.
-- Mouse move / button callbacks receive `MousePoint` with current mouse coordinates.
-- Mouse wheel callbacks receive `MouseWheelData` with current coordinates and wheel deltas.
+- Mouse input is state-based, not queue-based:
+  - raw platform callbacks overwrite the latest stored mouse state
+  - user callbacks are dispatched at most once per frame
+  - intermediate raw mouse positions may be skipped intentionally
+- Mouse move / button callbacks receive `MousePoint` with the latest mouse coordinates at frame dispatch time.
+- Mouse wheel callbacks receive `MouseWheelData` with the latest coordinates and the accumulated wheel delta since the previous frame dispatch.
 - Android keeps the API surface through `core`, but runtime delivery is intentionally disabled there.
-- For quick desktop verification inside this repo, use `desktop/src/test/java/MouseCallbacksSmokeTestMain.java`. It is an isolated smoke test scene, not application/game logic.
+- For quick desktop verification inside this repo, use `desktop/src/test/java/MouseCallbacksSmokeTestMain.java`. It is an isolated smoke test scene, not application/game logic, and it validates the once-per-frame latest-state mouse model.
 
 ### 7.4 Keyboard input
 

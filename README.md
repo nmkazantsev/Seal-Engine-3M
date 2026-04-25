@@ -71,8 +71,8 @@ Android: https://github.com/nmkazantsev/Demo-app
 
 **Platform-specific runtime root для относительных путей**
 - Desktop: текущая рабочая директория приложения (`System.getProperty("user.dir")`).
-- Android: app-specific external files directory, возвращаемая `Context.getExternalFilesDir(null)`, обычно путь вида `/storage/emulated/0/Android/data/<package>/files`.
-- Android note: это не `assets` и не private internal files dir. Это современный безопасный вариант для пользовательских runtime-файлов без общего storage permission. Доступность для пользователя зависит от версии Android и файлового менеджера, но файлы остаются в shared/external app-specific storage и доступны, например, через USB / adb / совместимые файловые менеджеры.
+- Android: internal app files directory, возвращаемая `Context.getFilesDir()`, обычно путь вида `/data/user/0/<package>/files` или `/data/data/<package>/files`.
+- Android note: relative runtime files теперь сознательно мапятся в реальную writable app-internal directory. Это не `assets`, не classpath resources и не external/shared storage. Все операции `save/load/fileExists/folderExists/createFolder` используют этот же root и те же path rules.
 
 ### GamePageClass
 Абстрактный класс, от которого должны наследоваться все игровые страницы.
@@ -667,19 +667,24 @@ img.text("Hello, World!", 100, 100);
 **Семантика mouse callbacks:**
 - Для каждого типа обработчика хранится ровно один callback на страницу.
 - Повторный вызов того же setter для той же страницы перезаписывает предыдущий callback.
+- `creatorPage` должен быть задан явно; mouse processors не регистрируются как global handlers.
 - Хранилище разделено по типам:
   - page -> left button processor
   - page -> right button processor
   - page -> mouse moved processor
   - page -> mouse wheel processor
-- Callbacks буферизуются и выполняются позже в render thread, как и обычные touch callbacks.
+- Raw platform mouse events могут приходить много раз за кадр, но движок не строит очередь mouse events.
+- Вместо этого движок хранит только latest mouse state в переиспользуемых полях/объектах и перезаписывает его при новых platform callbacks.
+- User mouse callbacks вызываются не чаще одного раза за кадр, из frame update / render-thread dispatch.
+- Из-за этого промежуточные raw mouse positions и wheel events внутри одного кадра могут быть пропущены намеренно. Для этого теста и для engine-style input это корректно.
 - Desktop runtime behavior:
-  - `setLeftButtonProcessor(...)` вызывается при `GLFW_PRESS` левой кнопки
-  - `setRightButtonProcessor(...)` вызывается при `GLFW_PRESS` правой кнопки
-  - `setMouseMovedProcessor(...)` вызывается на каждом desktop cursor move
-  - `setMouseWheelProcessor(...)` вызывается на каждом desktop wheel event
+  - platform callback только обновляет stored mouse state
+  - `setLeftButtonProcessor(...)` вызывается не чаще одного раза за кадр, если с прошлого frame dispatch была зафиксирована левая кнопка (`GLFW_PRESS`)
+  - `setRightButtonProcessor(...)` вызывается не чаще одного раза за кадр, если с прошлого frame dispatch была зафиксирована правая кнопка (`GLFW_PRESS`)
+  - `setMouseMovedProcessor(...)` вызывается не чаще одного раза за кадр и получает latest mouse coordinates
+  - `setMouseWheelProcessor(...)` вызывается не чаще одного раза за кадр и получает latest mouse coordinates плюс накопленный за кадр wheel delta
 - Android runtime behavior: эти callbacks никогда не вызываются и не эмулируются через touch/gesture input.
-- Для быстрой ручной проверки в `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` добавлена standalone desktop test scene с двумя полигонами: один следует за мышью через mouse-move callback, второй двигается по Y через mouse-wheel callback. Это debug/smoke test, а не gameplay feature.
+- Для быстрой ручной проверки в `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` добавлена standalone desktop test scene с двумя полигонами: один следует за мышью через latest mouse-move state, второй двигается по Y через once-per-frame wheel delivery. Это debug/smoke test, а не gameplay feature.
 
 ### TouchPoint
 Простой класс, хранящий координаты касания.
@@ -688,13 +693,13 @@ img.text("Hello, World!", 100, 100);
 - `float touchX`, `touchY`
 
 ### MousePoint
-Простой immutable snapshot координат мыши.
+Переиспользуемый snapshot координат мыши.
 
 **Поля:**
 - `float mouseX`, `mouseY`
 
 ### MouseWheelData
-Immutable snapshot события колеса мыши.
+Переиспользуемый snapshot события колеса мыши.
 
 **Поля:**
 - `float mouseX`, `mouseY` – текущие координаты курсора в момент wheel event.

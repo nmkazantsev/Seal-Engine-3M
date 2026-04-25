@@ -47,6 +47,7 @@ public class DesktopLauncher {
     private boolean mousePressed = false;
     private double mouseX = 0;
     private double mouseY = 0;
+    private final DesktopMotionEventAdapter mouseTouchEvent = new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, 0, 0);
 
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
@@ -262,19 +263,20 @@ public class DesktopLauncher {
                     motionAction = MyMotionEvent.ACTION_DOWN;
                 } else if (action == GLFW_RELEASE) {
                     mousePressed = false;
+                    TouchProcessor.onLeftButtonReleased((float) mouseX, (float) mouseY);
                     motionAction = MyMotionEvent.ACTION_UP;
                 } else {
                     return;
                 }
 
-                DesktopMotionEventAdapter event =
-                        new DesktopMotionEventAdapter(motionAction, (float) mouseX, (float) mouseY);
-                TouchProcessor.onTouch(event);
+                TouchProcessor.onTouch(mouseTouchEvent.set(motionAction, (float) mouseX, (float) mouseY));
                 return;
             }
 
             if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
                 TouchProcessor.onRightButtonPressed((float) mouseX, (float) mouseY);
+            } else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+                TouchProcessor.onRightButtonReleased((float) mouseX, (float) mouseY);
             }
         });
         //touchMoved
@@ -286,10 +288,7 @@ public class DesktopLauncher {
 
             if (!mousePressed) return;
 
-            DesktopMotionEventAdapter event =
-                    new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, (float) x, (float) y);
-
-            TouchProcessor.onTouch(event);
+            TouchProcessor.onTouch(mouseTouchEvent.set(MyMotionEvent.ACTION_MOVE, (float) x, (float) y));
         });
         glfwSetScrollCallback(window, (w, xoffset, yoffset) ->
                 TouchProcessor.onMouseWheel((float) mouseX, (float) mouseY, (float) xoffset, (float) yoffset)

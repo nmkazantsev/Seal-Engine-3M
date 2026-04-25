@@ -153,7 +153,7 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   - `saveTextFile(...)` does not auto-create parent directories
 - Platform roots:
   - Desktop: `System.getProperty("user.dir")`
-  - Android: `Context.getExternalFilesDir(null)` app-specific external/shared storage
+  - Android: `Context.getFilesDir()` app-internal persistent files directory
 - Asset loading is still handled separately through `SealAssetManager`; runtime file APIs must not be used as a replacement for packaged resources.
 - Mouse control is routed through `MouseControlBridge`:
   - Desktop implementation is bound to the actual GLFW window from `DesktopLauncher`
@@ -171,12 +171,17 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 - Callback payloads are separate from touch payloads:
   - `MousePoint` for button/move events
   - `MouseWheelData` for wheel events
+- Mouse delivery is state-based:
+  - raw desktop callbacks only overwrite the latest mouse coordinates, button flags, and accumulated wheel delta
+  - mouse events are not queued
+  - user mouse callbacks are dispatched at most once per frame from `TouchProcessor.processMotions()`
+  - reusable `MousePoint` / `MouseWheelData` instances are overwritten instead of allocating per raw event
 - Desktop forwarding lives in `DesktopLauncher`:
-  - left button press queues both the new mouse callback and the existing touch-start path
-  - left button move still feeds the existing touch move path while independently queuing mouse-move callbacks
-  - right button and wheel events only feed the new mouse callback path
+  - left button press updates mouse state for both the new mouse path and the existing touch-start path
+  - left button move still feeds the existing touch move path while also overwriting latest mouse position state
+  - right button and wheel events only update the new mouse callback state path
 - Android does not forward any of these mouse callbacks at runtime.
-- Repo-level verification scene: `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` starts a dedicated page with two visible polygons to validate mouse-move and wheel delivery without touching gameplay code.
+- Repo-level verification scene: `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` starts a dedicated page with two visible polygons to validate latest-state mouse-move and once-per-frame wheel delivery without touching gameplay code.
 
 ## 6. Dependency and Interaction Maps
 
