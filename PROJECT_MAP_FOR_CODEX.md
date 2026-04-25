@@ -56,7 +56,7 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo/src/main/java/com/nikitos/Main.
 - Create `DesktopLauncher(launcherParams)` and call `run()`.
 - Keyboard events are captured by the engine’s desktop launcher and routed into the engine keyboard system automatically (no app-side wiring required).
 - Runtime files: relative paths passed to `Engine.loadTextFile(...)`, `saveTextFile(...)`, `fileExists(...)`, `folderExists(...)`, `createFolder(...)` resolve from the current working directory.
-- Mouse control: desktop supports `Engine.hideMouseCursor()`, `showMouseCursor()`, and `setMousePosition(...)` against the GLFW window.
+- Mouse control: desktop supports `Engine.disableMouseCursor()`, `enableMouseCursor()`, and `setMousePosition(...)` against the GLFW window.
 
 ### 4.2 Android bootstrap (observed)
 

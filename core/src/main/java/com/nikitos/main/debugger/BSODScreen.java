@@ -11,12 +11,15 @@ import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.shaders.default_adaptors.MainShaderAdaptor;
 import com.nikitos.main.vertices.SimplePolygon;
 import com.nikitos.maths.Matrix;
+import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.AudioPlayer;
 import com.nikitos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Function;
 
@@ -38,12 +41,13 @@ public class BSODScreen extends GamePageClass {
         //save error msg
         new Thread(() -> {
             Engine engine = CoreRenderer.engine;
-            if (!engine.folderExists("crashes")) {
-                engine.createFolder("crashes");
+            String crashesFolder = getCrashFolderPath(engine);
+            if (!engine.folderExists(crashesFolder)) {
+                engine.createFolder(crashesFolder);
             }
             Date date = new Date();
             String data = date.toString();
-            engine.saveTextFile("crashes/" + data + ".txt", errorText);
+            engine.saveTextFile(crashesFolder + "/" + data + ".txt", errorText);
         }).start();
         player = CoreRenderer.engine.getPlatformBridge().getAudioPlayer();
         player.stopMusic();
@@ -195,5 +199,24 @@ public class BSODScreen extends GamePageClass {
         }
 
         line.append(chunk);
+    }
+
+    private static String getCrashFolderPath(Engine engine) {
+        if (engine.getPlatform() == Platform.MOBILE) {
+            try {
+                Object bridge = engine.getPlatformBridge();
+                Method getContext = bridge.getClass().getMethod("getContext");
+                Object context = getContext.invoke(bridge);
+                if (context != null) {
+                    Method getExternalFilesDir = context.getClass().getMethod("getExternalFilesDir", String.class);
+                    Object externalRoot = getExternalFilesDir.invoke(context, new Object[]{null});
+                    if (externalRoot instanceof File file) {
+                        return new File(file, "crashes").getAbsolutePath();
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return "crashes";
     }
 }

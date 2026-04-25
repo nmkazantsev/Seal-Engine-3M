@@ -51,8 +51,8 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `boolean fileExists(String path)` – возвращает true только если путь указывает на существующий обычный файл.
 - `boolean folderExists(String path)` – возвращает true только если путь указывает на существующую папку.
 - `boolean createFolder(String path)` – рекурсивно создаёт папку и недостающие родительские папки.
-- `void hideMouseCursor()` – скрывает курсор мыши на desktop; на Android безопасный no-op.
-- `void showMouseCursor()` – показывает курсор мыши на desktop; на Android безопасный no-op.
+- `void disableMouseCursor()` – скрывает/захватывает курсор мыши на desktop; на Android безопасный no-op.
+- `void enableMouseCursor()` – возвращает обычный курсор мыши на desktop; на Android безопасный no-op.
 - `void setMousePosition(float x, float y)` – устанавливает позицию курсора в координатах окна на desktop; на Android безопасный no-op.
 - `float fps` – публичное поле, содержащее текущий FPS.
 
@@ -73,6 +73,15 @@ Android: https://github.com/nmkazantsev/Demo-app
 - Desktop: текущая рабочая директория приложения (`System.getProperty("user.dir")`).
 - Android: internal app files directory, возвращаемая `Context.getFilesDir()`, обычно путь вида `/data/user/0/<package>/files` или `/data/data/<package>/files`.
 - Android note: relative runtime files теперь сознательно мапятся в реальную writable app-internal directory. Это не `assets`, не classpath resources и не external/shared storage. Все операции `save/load/fileExists/folderExists/createFolder` используют этот же root и те же path rules.
+
+**BSOD / Crash Screen**
+- Если BSOD support включён через `LauncherParams.setUseBSOD(true)` во время запуска, движок инициализирует automatic crash-screen handling при старте.
+- При исключении внутри пользовательского приложения движок автоматически показывает `BSODScreen`.
+- Экран отображает информацию об ошибке на экране и параллельно сохраняет её в текстовый файл.
+- Crash log locations:
+  - Desktop: `crashes` folder inside the application folder
+  - Android: `Android/data/<app>/files/crashes`
+- Crash log сохраняется как `.txt` файл; имя файла содержит дату и время ошибки.
 
 ### GamePageClass
 Абстрактный класс, от которого должны наследоваться все игровые страницы.
@@ -747,8 +756,8 @@ img.text("Hello, World!", 100, 100);
 Mouse control exposed through `Engine` and implemented only on desktop.
 
 **Публичные методы:**
-- `void hideMouseCursor()`
-- `void showMouseCursor()`
+- `void disableMouseCursor()`
+- `void enableMouseCursor()`
 - `void setMousePosition(float x, float y)` – координаты внутри окна в пикселях.
 
 **Поведение по платформам:**

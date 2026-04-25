@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="fix mouse and files on android">
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +34,11 @@
     </system>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
@@ -119,6 +124,7 @@
       <workItem from="1777119137931" duration="1295000" />
       <workItem from="1777133902438" duration="4051000" />
       <workItem from="1777141939141" duration="288000" />
+      <workItem from="1777144802809" duration="630000" />
     </task>
     <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
       <option name="closed" value="true" />
