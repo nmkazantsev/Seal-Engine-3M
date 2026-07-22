@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="">
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="add getMouseButtonPressed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +29,12 @@
         <task path="$PROJECT_DIR$/../Demo">
           <activation />
         </task>
-        <projects_view />
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
       </state>
     </system>
   </component>
@@ -56,6 +61,7 @@
     &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Demo [:desktop:MouseCallbacksSmokeTestMain.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [core:assemble].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -73,7 +79,12 @@
       <recent name="$PROJECT_DIR$/core/src/main/resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="gradle core:assemble" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Gradle.sealEngine_3M [core:assemble]">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
       <module name="Demo.main" />
@@ -94,8 +105,31 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="sealEngine_3M [core:assemble]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="core:assemble" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.sealEngine_3M [core:assemble]" />
         <item itemvalue="Application.MouseCallbacksSmokeTestMain" />
         <item itemvalue="Application.Main" />
       </list>
@@ -141,6 +175,8 @@
       <workItem from="1777566837426" duration="725000" />
       <workItem from="1777574840983" duration="43000" />
       <workItem from="1779215491362" duration="129000" />
+      <workItem from="1784741240845" duration="1803000" />
+      <workItem from="1784912607525" duration="727000" />
     </task>
     <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
       <option name="closed" value="true" />
@@ -190,7 +226,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777146793264</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add getMouseButtonPressed">
+      <option name="closed" value="true" />
+      <created>1784742045869</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1784742045869</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -241,7 +285,8 @@
     <MESSAGE value="add mouse processors and test for it" />
     <MESSAGE value="fix mouse and files on android" />
     <MESSAGE value="update docs" />
-    <option name="LAST_COMMIT_MESSAGE" value="update docs" />
+    <MESSAGE value="add getMouseButtonPressed" />
+    <option name="LAST_COMMIT_MESSAGE" value="add getMouseButtonPressed" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -288,6 +333,12 @@
           <option name="totalLines" value="55207" />
           <option name="info" value="update docs" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1784742046082" />
+          <option name="linesCode" value="21117" />
+          <option name="totalLines" value="56056" />
+          <option name="info" value="add getMouseButtonPressed" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -309,6 +360,12 @@
           <option name="linesCode" value="21099" />
           <option name="totalLines" value="55207" />
           <option name="info" value="25 Apr 2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1784742046082" />
+          <option name="linesCode" value="21117" />
+          <option name="totalLines" value="56056" />
+          <option name="info" value="Jul 22, 2026" />
         </TimePoint>
       </list>
     </option>

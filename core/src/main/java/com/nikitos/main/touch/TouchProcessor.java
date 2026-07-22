@@ -227,6 +227,14 @@ public class TouchProcessor {
         }
     }
 
+    public static boolean getLeftButtonDown() {
+        return leftButtonDown;
+    }
+
+    public static boolean getRightButtonDown() {
+        return rightButtonDown;
+    }
+
     public static void onMouseWheel(float mouseX, float mouseY, float wheelX, float wheelY) {
         synchronized (commandQueue) {
             mousePointState.set(mouseX, mouseY);
