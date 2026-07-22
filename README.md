@@ -13,7 +13,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 
 ## Введение
 
-Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.2.2). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и системы анимации.
+Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.2.4). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и системы анимации.
 
 Документ сгруппирован по функциональным разделам. Для каждого класса приведено краткое описание и список публичных методов, которые могут быть полезны разработчику.
 
@@ -672,6 +672,8 @@ img.text("Hello, World!", 100, 100);
 - `static void setRightButtonProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик нажатия правой кнопки мыши для страницы.
 - `static void setMouseMovedProcessor(Function<MousePoint, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик движения мыши для страницы.
 - `static void setMouseWheelProcessor(Function<MouseWheelData, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик колеса мыши для страницы.
+- `static boolean getLeftButtonDown()`- desktop only, true если левая кнопка мыши зажата, в остальных случаях, включая android, false
+- `static boolean getRightButtonDown()`- desktop only, true если правая кнопка мыши зажата, в остальных случаях, включая android, false
 
 **Семантика mouse callbacks:**
 - Для каждого типа обработчика хранится ровно один callback на страницу.

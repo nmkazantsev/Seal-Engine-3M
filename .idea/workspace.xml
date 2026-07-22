@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +142,7 @@
       <workItem from="1777566837426" duration="725000" />
       <workItem from="1777574840983" duration="43000" />
       <workItem from="1779215491362" duration="129000" />
+      <workItem from="1784741240845" duration="742000" />
     </task>
     <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
       <option name="closed" value="true" />
