@@ -171,6 +171,7 @@ public abstract class GLConstBridge {
     public abstract int GL_COLOR_ATTACHMENT0();
     public abstract int GL_DEPTH_ATTACHMENT();
     public abstract int GL_DEPTH_COMPONENT16();
+    public abstract int GL_DEPTH_COMPONENT32();
     public abstract int GL_RGBA16F();
     public abstract int GL_SRGB();
 }

@@ -437,6 +437,11 @@ public class GLConstBridgeDesktop extends GLConstBridge {
     }
 
     @Override
+    public int GL_DEPTH_COMPONENT32() {
+        return GL33.GL_DEPTH_COMPONENT32;
+    }
+
+    @Override
     public int GL_RGBA16F() {
         return GL33.GL_RGBA16F;
     }

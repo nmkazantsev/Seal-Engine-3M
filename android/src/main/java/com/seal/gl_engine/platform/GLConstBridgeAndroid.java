@@ -422,6 +422,9 @@ public class GLConstBridgeAndroid extends GLConstBridge {
     @Override
     public int GL_DEPTH_COMPONENT16() { return GLES30.GL_DEPTH_COMPONENT16; }
 
+    @Override
+    public int GL_DEPTH_COMPONENT32() { return GLES30.GL_DEPTH_COMPONENT32F; }
+
 
     @Override
     public int GL_RGBA16F() {

@@ -88,7 +88,7 @@
       <command value="gradle core:assemble" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.sealEngine_3M [core:assemble]">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
       <module name="Demo.main" />

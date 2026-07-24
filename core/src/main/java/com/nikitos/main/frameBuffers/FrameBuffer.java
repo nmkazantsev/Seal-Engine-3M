@@ -57,7 +57,7 @@ public class FrameBuffer extends VRAMobject {
         int[] depthBuffer = new int[1];
         gl.genRenderbuffers(1, depthBuffer, 0);
         gl.bindRenderbuffer(glc.GL_RENDERBUFFER(), depthBuffer[0]);
-        gl.renderbufferStorage(glc.GL_RENDERBUFFER(), glc.GL_DEPTH_COMPONENT16(), w, h);
+        gl.renderbufferStorage(glc.GL_RENDERBUFFER(), glc.GL_DEPTH_COMPONENT32(), w, h);
         gl.framebufferRenderbuffer(glc.GL_FRAMEBUFFER(), glc.GL_DEPTH_ATTACHMENT(), glc.GL_RENDERBUFFER(), depthBuffer[0]);
 
         gl.glBindFramebuffer(glc.GL_FRAMEBUFFER(), 0);
