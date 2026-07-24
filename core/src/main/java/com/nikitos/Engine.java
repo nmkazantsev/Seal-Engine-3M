@@ -12,7 +12,7 @@ import com.nikitos.utils.Utils;
 
 public class Engine {
     public static String getVersion() {
-        return "v3.2.4";
+        return "v3.2.5";
     }
 
     public float fps;
