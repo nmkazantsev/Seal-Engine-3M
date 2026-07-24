@@ -674,6 +674,9 @@ img.text("Hello, World!", 100, 100);
 - `static void setMouseWheelProcessor(Function<MouseWheelData, Void> processor, GamePageClass creatorPage)` – регистрирует desktop-only обработчик колеса мыши для страницы.
 - `static boolean getLeftButtonDown()`- desktop only, true если левая кнопка мыши зажата, в остальных случаях, включая android, false
 - `static boolean getRightButtonDown()`- desktop only, true если правая кнопка мыши зажата, в остальных случаях, включая android, false
+- `static void disableAll() / enableAll()` - выключает/включает все обработчики
+- `static void disablePriorities(int min, int max) / enablePriorities(int min, int max)` - выключает / включает все обработчики в диапазоне min - max включительно
+
 
 **Семантика mouse callbacks:**
 - Для каждого типа обработчика хранится ровно один callback на страницу.

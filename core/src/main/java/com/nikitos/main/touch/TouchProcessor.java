@@ -76,6 +76,53 @@ public class TouchProcessor {
         resSortNeeeded = true;
     }
 
+    /**
+     * disables all touch processors
+     */
+    public static void disableAll() {
+        for (TouchProcessor processor : activeProcessors.values()) {
+            processor.block();
+        }
+    }
+
+    /**
+     * enables all touch processors. Also switches off effect from disablePriorities(int, int)
+     */
+    public static void enableAll() {
+        for (TouchProcessor processor : activeProcessors.values()) {
+            processor.unblock();
+        }
+    }
+
+    /**
+     * disable all touch processors with priorities [min:max] (including borders)
+     *
+     * @param min - start of interval
+     * @param max - stop of interval
+     */
+    public static void disablePriorities(int min, int max) {
+        for (TouchProcessor processor : activeProcessors.values()) {
+            if (processor.priority <= max && processor.priority >= min) {
+                processor.block();
+            }
+        }
+    }
+
+    /**
+     * disable all touch processors with priorities [min:max] (including borders)
+     *
+     * @param min - start of interval
+     * @param max - stop of interval
+     */
+    public static void enablePriorities(int min, int max) {
+        for (TouchProcessor processor : activeProcessors.values()) {
+            if (processor.priority <= max && processor.priority >= min) {
+                processor.unblock();
+            }
+        }
+    }
+
+
     public void setPriority(int priority) {
         this.priority = priority;
         resSortNeeeded = true;

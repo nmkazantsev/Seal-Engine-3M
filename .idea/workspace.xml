@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="migrate frame buffer to default 32bit depth">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,25 +61,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Demo [:desktop:MouseCallbacksSmokeTestMain.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.sealEngine_3M [core:assemble].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build Demo.executor": "Run",
+    "Gradle.Build sealEngine_3M.executor": "Run",
+    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
+    "Gradle.Demo [:desktop:MouseCallbacksSmokeTestMain.main()].executor": "Run",
+    "Gradle.sealEngine_3M [core:assemble].executor": "Run",
+    "Gradle.sealEngine_3M [desktop:assemble].executor": "Run",
+    "Gradle.sealEngine_3M [mobile:assemble].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/core/src/main/resources" />
@@ -86,9 +90,11 @@
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="gradle core:assemble" />
+      <command value="gradle desktop:assemble" />
+      <command value="gradle mobile:assemble" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Gradle.sealEngine_3M [mobile:assemble]">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
       <module name="Demo.main" />
@@ -131,8 +137,54 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="sealEngine_3M [desktop:assemble]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="desktop:assemble" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="sealEngine_3M [mobile:assemble]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="mobile:assemble" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.sealEngine_3M [mobile:assemble]" />
+        <item itemvalue="Gradle.sealEngine_3M [desktop:assemble]" />
         <item itemvalue="Gradle.sealEngine_3M [core:assemble]" />
         <item itemvalue="Application.MouseCallbacksSmokeTestMain" />
         <item itemvalue="Application.Main" />
@@ -238,7 +290,23 @@
       <option name="project" value="LOCAL" />
       <updated>1784742045869</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="update version">
+      <option name="closed" value="true" />
+      <created>1784915134134</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1784915134134</updated>
+    </task>
+    <task id="LOCAL-00010" summary="migrate frame buffer to default 32bit depth">
+      <option name="closed" value="true" />
+      <created>1784915272199</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1784915272199</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -290,7 +358,9 @@
     <MESSAGE value="fix mouse and files on android" />
     <MESSAGE value="update docs" />
     <MESSAGE value="add getMouseButtonPressed" />
-    <option name="LAST_COMMIT_MESSAGE" value="add getMouseButtonPressed" />
+    <MESSAGE value="update version" />
+    <MESSAGE value="migrate frame buffer to default 32bit depth" />
+    <option name="LAST_COMMIT_MESSAGE" value="migrate frame buffer to default 32bit depth" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -343,6 +413,18 @@
           <option name="totalLines" value="56056" />
           <option name="info" value="add getMouseButtonPressed" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1784915134271" />
+          <option name="linesCode" value="53643" />
+          <option name="totalLines" value="89321" />
+          <option name="info" value="update version" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1784915272327" />
+          <option name="linesCode" value="53650" />
+          <option name="totalLines" value="89500" />
+          <option name="info" value="migrate frame buffer to default 32bit depth" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -370,6 +452,12 @@
           <option name="linesCode" value="21117" />
           <option name="totalLines" value="56056" />
           <option name="info" value="Jul 22, 2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1784915272327" />
+          <option name="linesCode" value="53650" />
+          <option name="totalLines" value="89500" />
+          <option name="info" value="Jul 24, 2026" />
         </TimePoint>
       </list>
     </option>
