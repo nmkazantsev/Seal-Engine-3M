@@ -57,6 +57,13 @@ public class Engine {
     }
 
     public void onSurfaceChanged(int x, int y) {
+        if (x <= 0 || y <= 0) {
+            platformBridge.log_i(
+                    "engine",
+                    "ignoring non-positive surface size " + x + "x" + y
+            );
+            return;
+        }
         if (gamePage == null) {
             platformBridge.log_e("engine", "on surface changed called, but game page is null");
             return;

@@ -53,6 +53,9 @@ Key packages:
 - `Engine.startNewPage(...)` makes the exact incoming instance current, invokes
   its default-no-op `GamePageClass.onInstalled()`, then invokes its initial
   `onSurfaceChanged(...)` before outgoing registries are cleaned.
+- Non-positive surface callbacks are transient lifecycle signals, not usable
+  render sizes. `Utils` retains the last positive viewport and `Engine` does
+  not forward the invalid callback to the current page.
 
 ### 3.4 GPU resource lifecycle (VRAM)
 

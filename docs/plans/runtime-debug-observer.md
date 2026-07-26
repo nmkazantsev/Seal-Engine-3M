@@ -47,6 +47,9 @@ Add capture and deterministic desktop-window capabilities behind platform-neutra
 - Use the binary-compatible default-no-op `GamePageClass.onInstalled()` hook
   for application boundaries that must run only after the exact page is
   current. Candidate construction remains lifecycle-neutral.
+- Preserve the last positive viewport across transient non-positive surface
+  callbacks so reset while minimized cannot initialize page resources at
+  `0x0`; test `positive -> 0x0 -> install/draw -> positive`.
 - Add tests for defaults, validation, capability behavior, orientation conversion, and no-readback when capture is not requested.
 
 Verification:

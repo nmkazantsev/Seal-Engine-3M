@@ -86,6 +86,59 @@ class RuntimeObserverLifecycleTest {
     }
 
     @Test
+    void zeroSurfaceKeepsLastUsableViewportAcrossPageInstallAndDraw() {
+        List<String> events = new ArrayList<>();
+        Engine engine = new Engine(new DesktopBridge(), new LauncherParams());
+        CoreRenderer.engine = engine;
+        Utils.setDim(1280, 720, 1, 1);
+        GamePageClass current = recordingSurfacePage("current", events);
+        engine.startNewPage(current);
+        events.clear();
+
+        Utils.setDim(0, 0, 0, 0);
+        engine.onSurfaceChanged(0, 0);
+        GamePageClass candidate = recordingSurfacePage("candidate", events);
+        engine.startNewPage(candidate);
+        candidate.draw();
+        Utils.setDim(1024, 576, 0.8f, 0.8f);
+        engine.onSurfaceChanged(1024, 576);
+
+        assertEquals(
+                List.of(
+                        "surface:candidate:1280x720",
+                        "draw:candidate",
+                        "surface:candidate:1024x576"
+                ),
+                events
+        );
+    }
+
+    private static GamePageClass recordingSurfacePage(
+            String name,
+            List<String> events
+    ) {
+        return new GamePageClass() {
+            @Override
+            public void onSurfaceChanged(int x, int y) {
+                events.add("surface:" + name + ":" + x + "x" + y);
+            }
+
+            @Override
+            public void draw() {
+                events.add("draw:" + name);
+            }
+
+            @Override
+            public void onResume() {
+            }
+
+            @Override
+            public void onPause() {
+            }
+        };
+    }
+
+    @Test
     void engineReportsInitialAndSubsequentTransitionsAfterCompletion() {
         List<String> events = new ArrayList<>();
         RecordingObserver observer = new RecordingObserver(events);
