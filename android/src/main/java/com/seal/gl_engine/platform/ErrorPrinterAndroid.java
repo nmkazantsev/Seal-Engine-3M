@@ -1,6 +1,7 @@
 package com.seal.gl_engine.platform;
 
 import android.opengl.GLES30;
+import android.util.Log;
 import com.nikitos.platformBridge.ErrorPrinter;
 
 import java.nio.FloatBuffer;
@@ -81,7 +82,7 @@ public class ErrorPrinterAndroid extends ErrorPrinter {
         while ((error = GLES30.glGetError()) != GLES30.GL_NO_ERROR) {
             foundError = true;
             String errorMsg = getGLErrorString(error);
-            System.err.println("Ошибка OpenGL в " + location + ": " + errorMsg +
+            Log.e("engine", "Ошибка OpenGL в " + location + ": " + errorMsg +
                     " (код 0x" + Integer.toHexString(error) + ")");
         }
     }

@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="migrate frame buffer to default 32bit depth">
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="fix race when touch is held and page changed">
+      <change afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/GameResultRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/touch/TouchProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/ErrorPrinterAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/seal/gl_engine/platform/ErrorPrinterAndroid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/nikitos/main/vertices/Shape.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +51,7 @@
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="ProjectColorInfo">{
@@ -101,7 +103,20 @@
       <command value="gradle core:assemble" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.sealEngine_3M [core:assemble]">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nikitos.Main" />
+      <module name="Demo.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nikitos.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="sealEngine_3M [android:bundleReleaseAar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -190,35 +205,13 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="sealEngine_3M [mobile:assemble]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="mobile:assemble" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Gradle.sealEngine_3M [core:assemble]" />
         <item itemvalue="Gradle.sealEngine_3M [android:bundleReleaseAar]" />
         <item itemvalue="Gradle.sealEngine_3M [android:release]" />
         <item itemvalue="Gradle.sealEngine_3M [desktop:assemble]" />
-        <item itemvalue="Gradle.sealEngine_3M [core:assemble]" />
-        <item itemvalue="Gradle.sealEngine_3M [mobile:assemble]" />
       </list>
     </recent_temporary>
   </component>
@@ -265,7 +258,7 @@
       <workItem from="1784741240845" duration="1803000" />
       <workItem from="1784912607525" duration="727000" />
       <workItem from="1784916734649" duration="683000" />
-      <workItem from="1785049580887" duration="1228000" />
+      <workItem from="1785049580887" duration="7658000" />
     </task>
     <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
       <option name="closed" value="true" />
@@ -339,7 +332,23 @@
       <option name="project" value="LOCAL" />
       <updated>1784915272199</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fix race when touch is held and page changed">
+      <option name="closed" value="true" />
+      <created>1785050908111</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1785050908111</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix race when touch is held and page changed">
+      <option name="closed" value="true" />
+      <created>1785050925422</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1785050925422</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -393,7 +402,8 @@
     <MESSAGE value="add getMouseButtonPressed" />
     <MESSAGE value="update version" />
     <MESSAGE value="migrate frame buffer to default 32bit depth" />
-    <option name="LAST_COMMIT_MESSAGE" value="migrate frame buffer to default 32bit depth" />
+    <MESSAGE value="fix race when touch is held and page changed" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix race when touch is held and page changed" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -458,6 +468,18 @@
           <option name="totalLines" value="89500" />
           <option name="info" value="migrate frame buffer to default 32bit depth" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1785050908435" />
+          <option name="linesCode" value="53825" />
+          <option name="totalLines" value="88375" />
+          <option name="info" value="fix race when touch is held and page changed" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1785050925526" />
+          <option name="linesCode" value="53825" />
+          <option name="totalLines" value="88375" />
+          <option name="info" value="fix race when touch is held and page changed" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -491,6 +513,12 @@
           <option name="linesCode" value="53650" />
           <option name="totalLines" value="89500" />
           <option name="info" value="Jul 24, 2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1785050925526" />
+          <option name="linesCode" value="53825" />
+          <option name="totalLines" value="88375" />
+          <option name="info" value="Jul 26, 2026" />
         </TimePoint>
       </list>
     </option>
