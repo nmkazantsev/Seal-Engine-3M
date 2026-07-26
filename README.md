@@ -110,7 +110,12 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `FrameContext` содержит идентификатор кадра, текущую `GamePageClass`, ширину, высоту и `Platform`.
 - `PageTransition` содержит предыдущую и новую `GamePageClass`.
 - `RuntimeFailure` содержит `Stage`, исходное `Throwable`, а также допускающие `null` `FrameContext` и `GamePageClass`. Возможные стадии: `FRAME_SETUP`, `PAGE_DRAW`, `DEBUGGER_DRAW`, `VERTICES_REDRAW`, `TOUCH_PROCESS`, `KEYBOARD_PROCESS`, `PAGE_TRANSITION`.
-- В этой версии `LauncherParams` только хранит observer; доставка runtime-событий подключается отдельно и не меняет существующий lifecycle кадра, ввода или перехода страниц.
+- `Engine.getRuntimeObserver()` возвращает observer, зафиксированный при создании `Engine`; отдельного runtime setter нет.
+- При установленном observer идентификаторы кадров начинаются с `1`. Порядок вызовов: `beforeFrame` → расчёт FPS / стартовая страница / начало кадра → `GamePageClass.draw()` → `Debugger.draw()` → перерисовка вершин → touch → keyboard → `afterFrame`.
+- После успешного перехода страницы вызывается `onPageChanged`; первый переход передаётся как `null → startPage`. Ошибка перехода передаётся в `onFailure` со стадией `PAGE_TRANSITION`, без `FrameContext`.
+- Ошибка стадии кадра передаётся в `onFailure` с исходной причиной, контекстом кадра и страницей, активной в момент ошибки. Существующее BSOD-поведение ошибки страницы сохраняется, а ошибки после страницы продолжают распространяться вызывающему коду.
+- Если `onFailure` кадра сам выбрасывает исключение, исходная ошибка остаётся основной, а ошибка observer добавляется как suppressed. Ошибки `beforeFrame`, `afterFrame` и `onPageChanged` распространяются напрямую и повторно через `onFailure` не отправляются.
+- При `null` observer выполняется прежний lifecycle без создания runtime DTO, счётчика наблюдаемых кадров и observer callbacks.
 
 ---
 

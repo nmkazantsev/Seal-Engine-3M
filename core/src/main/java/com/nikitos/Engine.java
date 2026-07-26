@@ -8,7 +8,12 @@ import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
 import com.nikitos.platformBridge.*;
+import com.nikitos.runtime.PageTransition;
+import com.nikitos.runtime.RuntimeFailure;
+import com.nikitos.runtime.RuntimeObserver;
 import com.nikitos.utils.Utils;
+
+import java.util.function.Function;
 
 public class Engine {
     public static String getVersion() {
@@ -24,13 +29,25 @@ public class Engine {
     private GamePageClass gamePage;
     private static long prevPageChangeTime = 0;
     private final LauncherParams launcherParams;
+    private final RuntimeObserver runtimeObserver;
+    private final Function<Exception, GamePageClass> bsodPageFactory;
 
     private final GeneralPlatformBridge generalPlatformBridge;
     private final GLConstBridge glconstBridge;
 
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
+        this(platformBridge, launcherParams, null);
+    }
+
+    Engine(
+            PlatformBridge platformBridge,
+            LauncherParams launcherParams,
+            Function<Exception, GamePageClass> bsodPageFactory
+    ) {
         this.platformBridge = platformBridge;
         this.launcherParams = launcherParams;
+        this.runtimeObserver = launcherParams.getRuntimeObserver();
+        this.bsodPageFactory = bsodPageFactory;
         this.generalPlatformBridge = platformBridge.getGeneralPlatformBridge();
         this.glconstBridge = platformBridge.getGLConstBridge();
         Matrix.init(platformBridge);
@@ -81,6 +98,11 @@ public class Engine {
     private boolean switching = false;
 
     public void startNewPage(GamePageClass newPage) {
+        startNewPage(newPage, false);
+    }
+
+    private void startNewPage(GamePageClass newPage, boolean markObserverFailures) {
+        GamePageClass previousPage = gamePage;
         try {
             switching = true;
             platformBridge.log_i("engine", "start new page");
@@ -97,11 +119,29 @@ public class Engine {
             KeyboardProcessor.onPageChange();
             switching = false;
         } catch (Exception e) {
+            if (runtimeObserver != null) {
+                notifyObserver(markObserverFailures, () -> runtimeObserver.onFailure(new RuntimeFailure(
+                        RuntimeFailure.Stage.PAGE_TRANSITION,
+                        e,
+                        null,
+                        newPage
+                )));
+            }
             if (launcherParams.getUseBSOD()) {
-                startNewPage(new BSODScreen(e));
+                startNewPage(createBsodPage(e), markObserverFailures);
+                return;
             } else {
+                if (markObserverFailures && runtimeObserver != null) {
+                    throw new ObservedLifecycleException(e);
+                }
                 throw e;
             }
+        }
+        if (runtimeObserver != null) {
+            notifyObserver(
+                    markObserverFailures,
+                    () -> runtimeObserver.onPageChanged(new PageTransition(previousPage, gamePage))
+            );
         }
     }
 
@@ -113,14 +153,51 @@ public class Engine {
             platformBridge.log_i("engine", "asked to start default page, but it exists");
             return;
         }
+        GamePageClass defaultPage;
         try {
-            startNewPage(launcherParams.getStartPage().apply(null));
+            defaultPage = launcherParams.getStartPage().apply(null);
         } catch (Exception e) {
             if (launcherParams.getUseBSOD()) {
-                startNewPage(new BSODScreen(e));
+                startNewPage(createBsodPage(e), true);
             } else {
                 throw e;
             }
+            return;
+        }
+        startNewPage(defaultPage, true);
+    }
+
+    private GamePageClass createBsodPage(Exception cause) {
+        if (bsodPageFactory != null) {
+            return bsodPageFactory.apply(cause);
+        }
+        return new BSODScreen(cause);
+    }
+
+    private void notifyObserver(boolean markFailure, Runnable callback) {
+        try {
+            callback.run();
+        } catch (RuntimeException | Error observerFailure) {
+            if (markFailure) {
+                throw new ObservedLifecycleException(observerFailure);
+            }
+            throw observerFailure;
+        }
+    }
+
+    static final class ObservedLifecycleException extends RuntimeException {
+        private final Throwable originalFailure;
+
+        private ObservedLifecycleException(Throwable originalFailure) {
+            super(null, null, false, false);
+            this.originalFailure = originalFailure;
+        }
+
+        RuntimeException propagate() {
+            if (originalFailure instanceof RuntimeException runtimeException) {
+                return runtimeException;
+            }
+            throw (Error) originalFailure;
         }
     }
 
@@ -142,6 +219,10 @@ public class Engine {
 
     GamePageClass getGamePage() {
         return gamePage;
+    }
+
+    public RuntimeObserver getRuntimeObserver() {
+        return runtimeObserver;
     }
 
     public PlatformBridge getPlatformBridge() {
