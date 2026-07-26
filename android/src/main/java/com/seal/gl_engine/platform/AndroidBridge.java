@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.nikitos.Engine;
+import com.nikitos.GamePageClass;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.main.keyboard.KeyboardProcessor;
@@ -26,8 +27,15 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import java.util.Locale;
+import java.util.function.Function;
 
 public class AndroidBridge extends PlatformBridge {
+    /**
+     * @deprecated Start-page ownership belongs to the process launch settings.
+     * Kept for source and binary compatibility with existing Android adapters.
+     */
+    @Deprecated
+    protected Function<Void, GamePageClass> startPage;
     private volatile Context context;
     private final AndroidViewBinding<GLSurfaceView> views =
             new AndroidViewBinding<>(
@@ -63,6 +71,7 @@ public class AndroidBridge extends PlatformBridge {
             Engine engine
     ) {
         bindApplicationContext(activityContext);
+        bindLaunchSettings(settings);
         ActivityManager activityManager = (ActivityManager) activityContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
         ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
@@ -111,15 +120,15 @@ public class AndroidBridge extends PlatformBridge {
                 engine.getRuntimeObserver() == null
                         ? null
                         : getAndroidFrameCaptureSource();
+        if (settings.isDebug()) {
+            Debugger.debuggerInit();
+        }
         view.setRenderer(new OpenGLRenderer(
                 widthPixels,
                 heightPixels,
                 engine,
                 captureSource
         ));
-        if (settings.isDebug()) {
-            Debugger.debuggerInit();
-        }
 
         return view;
     }
@@ -154,6 +163,17 @@ public class AndroidBridge extends PlatformBridge {
 
     void detachView(GLSurfaceView expectedView) {
         views.detach(expectedView);
+    }
+
+    void restoreView(
+            GLSurfaceView view,
+            boolean paused
+    ) {
+        views.restore(view, paused);
+    }
+
+    void bindLaunchSettings(AndroidLaunchSettings settings) {
+        startPage = settings.getStartPage();
     }
 
     synchronized void bindApplicationContext(

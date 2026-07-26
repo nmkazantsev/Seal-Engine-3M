@@ -8,8 +8,13 @@ import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.runtime.FrameCaptureSource;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.function.Function;
+
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class AndroidProcessSessionTest {
@@ -75,6 +80,34 @@ public class AndroidProcessSessionTest {
         );
 
         assertSame(firstApplication, bridge.getContext());
+    }
+
+    @Test
+    public void androidBridgeRetainsProtectedStartPageCompatibility()
+            throws Exception {
+        Field field = AndroidBridge.class.getDeclaredField("startPage");
+
+        assertTrue(Modifier.isProtected(field.getModifiers()));
+        assertSame(Function.class, field.getType());
+        assertTrue(field.isAnnotationPresent(Deprecated.class));
+    }
+
+    @Test
+    public void bridgeStartPageMatchesTheProcessSettingsSnapshot() {
+        Context application = new ContextWrapper(null);
+        AndroidLauncherParams params = new AndroidLauncherParams(
+                new ApplicationContextStub(application)
+        );
+        Function<Void, com.nikitos.GamePageClass> startPage =
+                ignored -> null;
+        params.setStartPage(startPage);
+        AndroidLaunchSettings settings =
+                AndroidLaunchSettings.snapshot(params);
+        AndroidBridge bridge = new AndroidBridge(application);
+
+        bridge.bindLaunchSettings(settings);
+
+        assertSame(startPage, bridge.startPage);
     }
 
     private static final class ApplicationContextStub extends ContextWrapper {

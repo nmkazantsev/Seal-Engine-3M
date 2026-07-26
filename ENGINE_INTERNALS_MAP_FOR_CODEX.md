@@ -183,10 +183,15 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   lazy `AndroidFrameCaptureSource`. Engine settings are copied into an
   application-context snapshot; the session does not retain an Activity or the
   caller's mutable `AndroidLauncherParams`.
-- Each Activity creates only its own `GLSurfaceView`. Attaching a new view
-  quiesces the previous view and replaces the bridge's current view without
-  replacing the Engine or capture source. A no-argument `AndroidBridge` lazily
-  binds the first view's application context, never its Activity context.
+- Each Activity creates only its own `GLSurfaceView`. Replacement is a
+  synchronized transaction: the exact previous view is quiesced before
+  construction reaches `setRenderer(...)`, then the new view becomes current.
+  A null/failed construction restores the previous running state, while a
+  process-paused view remains paused. This prevents overlapping GL threads
+  from using the shared Engine/static VRAM state. A no-argument
+  `AndroidBridge` lazily binds the first view's application context, never its
+  Activity context. Its deprecated protected `startPage` field is retained for
+  source/binary compatibility and mirrors the process settings supplier.
 - `AndroidLauncher.onPause(view)`, `onResume(view)`, and `detach(view)` are
   identity-aware and idempotent. Stale callbacks cannot operate on a newer
   Activity's view, and duplicate callbacks do not invoke Engine lifecycle or

@@ -61,6 +61,44 @@ public class AndroidViewBindingTest {
         );
     }
 
+    @Test
+    public void rollbackQuiescesReplacementAndRestoresOldRunningView() {
+        List<String> events = new ArrayList<>();
+        Object oldView = new Object();
+        Object replacement = new Object();
+        AndroidViewBinding<Object> binding = new AndroidViewBinding<>(
+                new AndroidViewBinding.Operations<>() {
+                    @Override
+                    public void pause(Object view) {
+                        events.add(view == oldView
+                                ? "pause-old"
+                                : "pause-replacement");
+                    }
+
+                    @Override
+                    public void resume(Object view) {
+                        events.add(view == oldView
+                                ? "resume-old"
+                                : "resume-replacement");
+                    }
+                }
+        );
+        binding.attach(oldView, false);
+        binding.pause(oldView);
+        binding.attach(replacement, false);
+
+        binding.restore(oldView, false);
+
+        assertEquals(
+                Arrays.asList(
+                        "pause-old",
+                        "pause-replacement",
+                        "resume-old"
+                ),
+                events
+        );
+    }
+
     private static String name(
             Object view,
             Object oldView,

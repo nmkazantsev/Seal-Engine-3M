@@ -13,6 +13,7 @@ final class AndroidProcessSession {
 
     static AndroidProcessSession create(AndroidLaunchSettings settings) {
         AndroidBridge bridge = new AndroidBridge(settings.getContext());
+        bridge.bindLaunchSettings(settings);
         Engine engine = new Engine(bridge, settings);
         return new AndroidProcessSession(settings, bridge, engine);
     }
@@ -53,20 +54,34 @@ final class AndroidProcessSession {
                     public void detach(GLSurfaceView view) {
                         AndroidProcessSession.this.bridge.detachView(view);
                     }
+
+                    @Override
+                    public void quiesce(GLSurfaceView view) {
+                        AndroidProcessSession.this.bridge.pauseView(view);
+                    }
+
+                    @Override
+                    public void restore(
+                            GLSurfaceView view,
+                            boolean paused
+                    ) {
+                        AndroidProcessSession.this.bridge.restoreView(
+                                view,
+                                paused
+                        );
+                    }
                 }
         );
     }
 
     GLSurfaceView launch(Context activityContext) {
-        GLSurfaceView view = bridge.createView(
-                activityContext,
-                settings,
-                engine
+        return lifecycle.replace(
+                () -> bridge.createView(
+                        activityContext,
+                        settings,
+                        engine
+                )
         );
-        if (view != null) {
-            lifecycle.attach(view);
-        }
-        return view;
     }
 
     void onPause(GLSurfaceView expectedView) {

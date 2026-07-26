@@ -78,7 +78,15 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
   ```
   The adapter copies every pointer ID and coordinate and never retains the
   recyclable Android `MotionEvent`.
-- In `Activity.onPause()` / `Activity.onResume()` call `engine.onPause()` / `engine.onResume()`.
+- Keep the exact `GLSurfaceView` returned by `launch()`. In
+  `Activity.onPause()` / `Activity.onResume()` call
+  `androidLauncher.onPause(glSurfaceView)` /
+  `androidLauncher.onResume(glSurfaceView)`, and call
+  `androidLauncher.detach(glSurfaceView)` when that Activity releases the
+  view. These identity-aware callbacks ignore late events from an old Activity
+  after recreation and avoid applying page/time lifecycle twice. Direct
+  `engine.onPause()` / `engine.onResume()` remain compatible for legacy apps,
+  but cannot reject stale Activity callbacks.
 - Keyboard: if a hardware keyboard is present, the engine’s returned `GLSurfaceView` is focusable and forwards key events into the engine keyboard system. Ensure the view has focus if your Activity contains other focusable views.
 - Runtime files: relative paths passed to the same `Engine` file API resolve under `Context.getFilesDir()` (typically `/data/user/0/<package>/files`).
 - Mouse control methods are exposed on `Engine` for API consistency, but are safe no-ops on Android.

@@ -1,5 +1,7 @@
 package com.seal.gl_engine.platform;
 
+import java.util.function.Supplier;
+
 final class AndroidViewLifecycle<T> {
     private final Callbacks<T> callbacks;
     private T current;
@@ -9,12 +11,33 @@ final class AndroidViewLifecycle<T> {
         this.callbacks = callbacks;
     }
 
-    synchronized void attach(T view) {
-        if (view == null) {
-            throw new IllegalArgumentException("Android view cannot be null");
+    synchronized T replace(Supplier<T> replacementFactory) {
+        T previous = current;
+        if (previous != null && !paused) {
+            callbacks.quiesce(previous);
         }
-        current = view;
-        callbacks.attach(view, paused);
+
+        T replacement;
+        try {
+            replacement = replacementFactory.get();
+        } catch (RuntimeException | Error activationFailure) {
+            restore(previous, activationFailure);
+            throw activationFailure;
+        }
+        if (replacement == null) {
+            restore(previous, null);
+            return null;
+        }
+
+        current = replacement;
+        try {
+            callbacks.attach(replacement, paused);
+        } catch (RuntimeException | Error attachFailure) {
+            current = previous;
+            restore(previous, attachFailure);
+            throw attachFailure;
+        }
+        return replacement;
     }
 
     synchronized void pause(T expected) {
@@ -45,6 +68,22 @@ final class AndroidViewLifecycle<T> {
         return current;
     }
 
+    private void restore(T previous, Throwable primaryFailure) {
+        if (previous == null) {
+            return;
+        }
+        try {
+            callbacks.restore(previous, paused);
+        } catch (RuntimeException | Error restoreFailure) {
+            if (primaryFailure == null) {
+                throw restoreFailure;
+            }
+            if (primaryFailure != restoreFailure) {
+                primaryFailure.addSuppressed(restoreFailure);
+            }
+        }
+    }
+
     interface Callbacks<T> {
         void attach(T view, boolean paused);
 
@@ -53,5 +92,9 @@ final class AndroidViewLifecycle<T> {
         void resume(T view);
 
         void detach(T view);
+
+        void quiesce(T view);
+
+        void restore(T view, boolean paused);
     }
 }
