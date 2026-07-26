@@ -2,6 +2,10 @@ The first cross-platform version of https://github.com/nmkazantsev/seal_engine.
 
 All features are suppoerted. Unified for all platforms (Android, Windows, Linux) api was not changed.
 
+GLSL resources are checked out with LF line endings on every platform so the
+reproducible Gradle JAR settings produce the same runtime artifacts on Linux,
+macOS, and Windows.
+
 See example apps:
 Desktop: https://github.com/nmkazantsev/Demo-launcher
 
