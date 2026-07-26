@@ -26,6 +26,7 @@ public class LauncherParams {
     protected Integer windowHeight = null;
     protected boolean maximized = true;
     protected boolean vSync = true;
+    private boolean desktopOpenGl33CoreContext = false;
 
     public LauncherParams setDebug(boolean debug) {
         this.debug = debug;
@@ -90,6 +91,11 @@ public class LauncherParams {
         return this;
     }
 
+    public LauncherParams setDesktopOpenGl33CoreContext(boolean enabled) {
+        desktopOpenGl33CoreContext = enabled;
+        return this;
+    }
+
     public Function<Void, GamePageClass> getStartPage() {
         return startPage;
     }
@@ -116,6 +122,10 @@ public class LauncherParams {
 
     public boolean getVSync() {
         return vSync;
+    }
+
+    public boolean isDesktopOpenGl33CoreContext() {
+        return desktopOpenGl33CoreContext;
     }
 
     public boolean isDebug() {

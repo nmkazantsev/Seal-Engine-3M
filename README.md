@@ -115,10 +115,11 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `LauncherParams setWindowSize(int width, int height)` – задаёт положительные ширину и высоту desktop-окна как одну неделимую настройку.
 - `LauncherParams setMaximized(boolean maximized)` – управляет стартовой максимизацией оконного desktop-режима.
 - `LauncherParams setVSync(boolean vSync)` – задаёт desktop swap interval: `1` при `true` и `0` при `false`.
-- `boolean hasWindowSize()`, `Integer getWindowWidth()`, `Integer getWindowHeight()`, `boolean getMaximized()`, `boolean getVSync()` – геттеры desktop-настроек окна.
+- `LauncherParams setDesktopOpenGl33CoreContext(boolean enabled)` – явно запрашивает desktop-контекст OpenGL 3.3 core profile для диагностических инструментов, которым несовместим legacy-контекст.
+- `boolean hasWindowSize()`, `Integer getWindowWidth()`, `Integer getWindowHeight()`, `boolean getMaximized()`, `boolean getVSync()`, `boolean isDesktopOpenGl33CoreContext()` – геттеры desktop-настроек окна и контекста.
 - `boolean isDebug()`, `boolean getMSAA()`, `boolean isDesktop()`, `String getWindowTitle()`, `boolean getFullScreen()`, `RuntimeObserver getRuntimeObserver()` – остальные геттеры.
 
-Legacy defaults desktop-окна сохранены: явный размер отсутствует, окно максимизируется, VSync включён. Для воспроизводимого оконного запуска 1280×720 без VSync используйте:
+Legacy defaults desktop-окна и OpenGL-контекста сохранены: явный размер отсутствует, окно максимизируется, VSync включён, а запрос OpenGL 3.3 core profile выключен. При значении `false` новый параметр не добавляет GLFW hints и не меняет Android. Для воспроизводимого оконного запуска 1280×720 без VSync используйте:
 
 ```java
 new LauncherParams()

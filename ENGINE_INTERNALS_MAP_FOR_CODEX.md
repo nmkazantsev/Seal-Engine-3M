@@ -99,6 +99,7 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 
 - Desktop:
   - `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java`
+  - `desktop/src/main/java/com/nikitos/platform/DesktopOpenGlContextHints.java`
   - `desktop/src/main/java/com/nikitos/platform/DesktopBridge.java`
   - `desktop/src/main/java/com/nikitos/platform/DesktopRuntimeFileBridge.java`
   - `desktop/src/main/java/com/nikitos/platform/DesktopMouseControlBridge.java`
@@ -136,6 +137,18 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 
 - Lighting/material classes (ambient/directional/point/source light, material, exposure) are primarily shader-uniform carriers.
 - They are typically page-scoped through the shader data forwarding mechanism.
+
+### 5.3.1 Desktop OpenGL context hints
+
+- `LauncherParams.setDesktopOpenGl33CoreContext(true)` is an explicit,
+  desktop-only request for OpenGL 3.3 core profile. Its default is `false`.
+- `DesktopOpenGlContextHints` owns the GLFW-specific mapping so `core` retains
+  no GLFW dependency.
+- `DesktopLauncher` applies the mapping after the existing
+  visibility/resizability/MSAA hints and before the macOS forward-compatible
+  hint and window creation. The default path emits no extra context hints.
+- This option does not alter `CoreRenderer`, timing, FPS, the frame loop, or
+  Android behavior.
 
 ### 5.4 Input/touch threading model
 

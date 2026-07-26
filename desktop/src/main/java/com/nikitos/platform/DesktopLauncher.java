@@ -10,6 +10,7 @@ import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.utils.Utils;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -184,9 +185,8 @@ public class DesktopLauncher {
             glfwWindowHint(GLFW_SAMPLES, 4);
         }
 
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        DesktopOpenGlContextHints.apply(launcherParams, GLFW::glfwWindowHint);
+
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.contains("mac")) {
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
