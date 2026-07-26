@@ -39,6 +39,8 @@ public class DesktopLauncher {
 
     private final DesktopBridge desktopBridge;
 
+    private final DesktopWindowControl windowControl;
+
     private GLFWVidMode vidmode;
 
     private boolean fullScreenOpened = false;
@@ -51,6 +53,7 @@ public class DesktopLauncher {
 
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
+        windowControl = new DesktopWindowControl();
         desktopBridge = new DesktopBridge();
         engine = new Engine(desktopBridge, launcherParams);
         init();
@@ -60,6 +63,32 @@ public class DesktopLauncher {
                 framebufferSize[1],
                 engine
         );
+    }
+
+    /**
+     * Requests a clean exit from the desktop render loop.
+     *
+     * <p>This method must be called on the thread that constructed this
+     * launcher. The GLFW window must still be active; calls after
+     * {@link #run()} returns fail with {@link IllegalStateException}.</p>
+     */
+    public void requestStop() {
+        windowControl.requestStop();
+    }
+
+    /**
+     * Requests a new desktop window content size in screen coordinates.
+     *
+     * <p>This method must be called on the thread that constructed this
+     * launcher. The GLFW window must still be active; calls after
+     * {@link #run()} returns fail with {@link IllegalStateException}.</p>
+     *
+     * @param width positive window content width
+     * @param height positive window content height
+     * @throws IllegalArgumentException if either dimension is not positive
+     */
+    public void requestWindowSize(int width, int height) {
+        windowControl.requestWindowSize(width, height);
     }
 
     private static String glfwKeyToName(int key, int scancode) {
@@ -106,6 +135,7 @@ public class DesktopLauncher {
     public void run() {
         System.out.println("version of LWJGL " + Version.getVersion() + "!");
         loop();
+        windowControl.detachWindow();
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -191,6 +221,7 @@ public class DesktopLauncher {
         if (!launcherParams.getFullScreen() && launcherParams.getMaximized()) {
             glfwMaximizeWindow(window);
         }
+        windowControl.attachWindow(window);
         desktopBridge.attachWindow(window);
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {

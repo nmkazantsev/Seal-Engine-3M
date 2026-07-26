@@ -120,6 +120,17 @@ new LauncherParams()
 
 Размер и максимизация применяются только к оконному desktop-режиму. `CoreRenderer` получает фактический размер framebuffer, который может отличаться от размера окна на HiDPI-системах.
 
+### DesktopLauncher window control
+
+`DesktopLauncher` предоставляет узкий desktop-only API управления уже созданным GLFW-окном:
+
+- `void requestStop()` устанавливает close flag окна. Существующий render loop завершает текущую итерацию, выходит по своему штатному условию и выполняет обычное освобождение callbacks, окна, GLFW и audio; `System.exit` не используется.
+- `void requestWindowSize(int width, int height)` запрашивает положительный размер content area в screen coordinates. Это не размер framebuffer в pixels; фактический framebuffer и `onSurfaceChanged(...)` продолжают обновляться существующим GLFW callback.
+
+Оба метода должны вызываться из того же потока, который создал `DesktopLauncher` и выполняет его render loop. Окно активно после успешного завершения конструктора и до возврата `run()`. Вызов из другого потока или после teardown выбрасывает `IllegalStateException`; неположительный размер выбрасывает `IllegalArgumentException` без native-вызова. Для воспроизводимых resize-сценариев используйте оконный немаксимизированный режим: в full-screen GLFW трактует изменение размера как смену желаемого video mode.
+
+API не меняет launcher defaults, порядок кадра, FPS, `Engine.pageMillis()` или `Utils.millis()` и не добавляет работу в render loop, если методы не вызываются.
+
 ### Runtime Observer API
 `RuntimeObserver` задаёт необязательный API наблюдения за runtime. Его default-методы не выполняют действий: `beforeFrame(FrameContext)`, `afterFrame(FrameContext)`, `afterFrame(FrameContext, FrameCaptureSource)`, `onPageChanged(PageTransition)` и `onFailure(RuntimeFailure)`.
 

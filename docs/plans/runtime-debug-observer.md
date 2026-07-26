@@ -39,6 +39,7 @@ Add capture and deterministic desktop-window capabilities behind platform-neutra
 - Capture occurs only when observer code explicitly calls the source; never pre-capture each frame.
 - Add `LauncherParams` window width, height, maximized, and VSync settings.
 - Preserve legacy defaults exactly. Explicit settings must allow a non-maximized 1280x720 window with VSync disabled.
+- Add render-thread-only `DesktopLauncher.requestStop()` and `requestWindowSize(width, height)` controls for clean debug shutdown and resize scenarios. They must use GLFW lifecycle operations, reject inactive/wrong-thread calls predictably, and never use `System.exit`.
 - Add tests for defaults, validation, capability behavior, orientation conversion, and no-readback when capture is not requested.
 
 Verification:
