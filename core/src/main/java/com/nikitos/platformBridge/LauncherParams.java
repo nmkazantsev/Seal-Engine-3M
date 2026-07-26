@@ -1,6 +1,7 @@
 package com.nikitos.platformBridge;
 
 import com.nikitos.GamePageClass;
+import com.nikitos.runtime.RuntimeObserver;
 
 import java.util.function.Function;
 
@@ -18,6 +19,8 @@ public class LauncherParams {
     protected boolean fullScreen = true;
 
     protected String windowTitle = "Seal Engine 3-M";
+
+    protected RuntimeObserver runtimeObserver = null;
 
     public LauncherParams setDebug(boolean debug) {
         this.debug = debug;
@@ -58,8 +61,17 @@ public class LauncherParams {
         return this;
     }
 
+    public LauncherParams setRuntimeObserver(RuntimeObserver runtimeObserver) {
+        this.runtimeObserver = runtimeObserver;
+        return this;
+    }
+
     public Function<Void, GamePageClass> getStartPage() {
         return startPage;
+    }
+
+    public RuntimeObserver getRuntimeObserver() {
+        return runtimeObserver;
     }
 
     public boolean isDebug() {

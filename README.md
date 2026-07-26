@@ -101,7 +101,16 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `LauncherParams setFullScreen(boolean fullScreen)` – включает/выключает полноэкранный режим.
 - `LauncherParams setMSAA(boolean MSAA)` – включает/выключает мультисэмплинг.
 - `LauncherParams setStartPage(Function<Void, GamePageClass> startPage)` – задаёт поставщик стартовой страницы.
-- `boolean isDebug()`, `boolean getMSAA()`, `boolean isDesktop()`, `String getWindowTitle()`, `boolean getFullScreen()` – геттеры.
+- `LauncherParams setRuntimeObserver(RuntimeObserver runtimeObserver)` – задаёт необязательный runtime observer. По умолчанию значение равно `null`.
+- `boolean isDebug()`, `boolean getMSAA()`, `boolean isDesktop()`, `String getWindowTitle()`, `boolean getFullScreen()`, `RuntimeObserver getRuntimeObserver()` – геттеры.
+
+### Runtime Observer API
+`RuntimeObserver` задаёт необязательный API наблюдения за runtime. Его default-методы не выполняют действий: `beforeFrame(FrameContext)`, `afterFrame(FrameContext)`, `onPageChanged(PageTransition)` и `onFailure(RuntimeFailure)`.
+
+- `FrameContext` содержит идентификатор кадра, текущую `GamePageClass`, ширину, высоту и `Platform`.
+- `PageTransition` содержит предыдущую и новую `GamePageClass`.
+- `RuntimeFailure` содержит `Stage`, исходное `Throwable`, а также допускающие `null` `FrameContext` и `GamePageClass`. Возможные стадии: `FRAME_SETUP`, `PAGE_DRAW`, `DEBUGGER_DRAW`, `VERTICES_REDRAW`, `TOUCH_PROCESS`, `KEYBOARD_PROCESS`, `PAGE_TRANSITION`.
+- В этой версии `LauncherParams` только хранит observer; доставка runtime-событий подключается отдельно и не меняет существующий lifecycle кадра, ввода или перехода страниц.
 
 ---
 
