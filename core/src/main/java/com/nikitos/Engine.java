@@ -12,7 +12,7 @@ import com.nikitos.utils.Utils;
 
 public class Engine {
     public static String getVersion() {
-        return "v3.2.5";
+        return "v3.2.6";
     }
 
     public float fps;
@@ -78,8 +78,11 @@ public class Engine {
         platformBridge.onResume();
     }
 
+    private boolean switching = false;
+
     public void startNewPage(GamePageClass newPage) {
         try {
+            switching = true;
             platformBridge.log_i("engine", "start new page");
             Utils.unfreezeMillis();
             gamePage = null;
@@ -92,6 +95,7 @@ public class Engine {
             Shader.onPageChange();
             TouchProcessor.onPageChange();
             KeyboardProcessor.onPageChange();
+            switching = false;
         } catch (Exception e) {
             if (launcherParams.getUseBSOD()) {
                 startNewPage(new BSODScreen(e));
@@ -120,6 +124,9 @@ public class Engine {
         }
     }
 
+    public boolean switchingNewGamePage(){
+        return switching;
+    }
     public void resetPageMillis() {
         platformBridge.log_i("engine", "reset page millis");
         prevPageChangeTime = Utils.millis();

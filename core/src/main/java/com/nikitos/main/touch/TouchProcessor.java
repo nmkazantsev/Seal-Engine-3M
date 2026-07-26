@@ -198,7 +198,7 @@ public class TouchProcessor {
     public static void onTouch(MyMotionEvent event) {
         synchronized (commandQueue) {
             TouchProcessor t = activeProcessors.getOrDefault(event.getPointerId(event.getActionIndex()), null);
-            if (t != null && !t.blocked) {
+            if (t != null && !t.blocked && !CoreRenderer.engine.switchingNewGamePage()) {
                 if (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) {
                     if (event.getActionMasked() == MyMotionEvent.ACTION_MOVE) {
                         touchMoved(event);
@@ -335,6 +335,26 @@ public class TouchProcessor {
         }
         if (Debugger.getPage() == 0) { //do not process touches when debugger available
             for (TouchProcessor t : allProcessors) {
+                if (!CoreRenderer.engine.switchingNewGamePage()) {
+                    if (t.checkHitbox(new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()))) && (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) && !t.touchAlive && !t.blocked) { //not to start the same processor twice if 2 touches in 1 area
+                        activeProcessors.put(event.getPointerId(event.getActionIndex()), t);
+                        t.lastTouchPoint = new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
+                        t.touchAlive = true;
+                        t.touchId = event.getPointerId(event.getActionIndex());
+                        t.startTime = millis();
+                        if (t.touchStartedCallback != null) {
+                            commandQueue.add(new TouchCommand(t.lastTouchPoint, t.touchStartedCallback, t));
+                            //t.touchStartedCallback.apply(t.lastTouchPoint);
+                        }
+                        return;
+                    }
+                }
+            }
+        } else {
+            //process full screen debugger
+            //touch moves will not be processed if starts are not processed here (blocked by debugger)
+            TouchProcessor t = Debugger.getMainPageTouchProcessor();
+            if (!CoreRenderer.engine.switchingNewGamePage()) {
                 if (t.checkHitbox(new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()))) && (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) && !t.touchAlive && !t.blocked) { //not to start the same processor twice if 2 touches in 1 area
                     activeProcessors.put(event.getPointerId(event.getActionIndex()), t);
                     t.lastTouchPoint = new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
@@ -345,22 +365,6 @@ public class TouchProcessor {
                         commandQueue.add(new TouchCommand(t.lastTouchPoint, t.touchStartedCallback, t));
                         //t.touchStartedCallback.apply(t.lastTouchPoint);
                     }
-                    return;
-                }
-            }
-        } else {
-            //process full screen debugger
-            //touch moves will not be processed if starts are not processed here (blocked by debugger)
-            TouchProcessor t = Debugger.getMainPageTouchProcessor();
-            if (t.checkHitbox(new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()))) && (t.creatorClassName == CoreRenderer.engine.getPageClass() || t.creatorClassName == null) && !t.touchAlive && !t.blocked) { //not to start the same processor twice if 2 touches in 1 area
-                activeProcessors.put(event.getPointerId(event.getActionIndex()), t);
-                t.lastTouchPoint = new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
-                t.touchAlive = true;
-                t.touchId = event.getPointerId(event.getActionIndex());
-                t.startTime = millis();
-                if (t.touchStartedCallback != null) {
-                    commandQueue.add(new TouchCommand(t.lastTouchPoint, t.touchStartedCallback, t));
-                    //t.touchStartedCallback.apply(t.lastTouchPoint);
                 }
             }
         }
