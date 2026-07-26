@@ -177,6 +177,30 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   are suppressed. GLES bottom-left rows are then flipped into the core top-left
   straight-alpha RGBA contract.
 
+### 5.4.2 Android process session and Activity lifecycle
+
+- A synchronized process-wide session owns one `Engine`, `AndroidBridge`, and
+  lazy `AndroidFrameCaptureSource`. Engine settings are copied into an
+  application-context snapshot; the session does not retain an Activity or the
+  caller's mutable `AndroidLauncherParams`.
+- Each Activity creates only its own `GLSurfaceView`. Attaching a new view
+  quiesces the previous view and replaces the bridge's current view without
+  replacing the Engine or capture source. A no-argument `AndroidBridge` lazily
+  binds the first view's application context, never its Activity context.
+- `AndroidLauncher.onPause(view)`, `onResume(view)`, and `detach(view)` are
+  identity-aware and idempotent. Stale callbacks cannot operate on a newer
+  Activity's view, and duplicate callbacks do not invoke Engine lifecycle or
+  time accounting twice. The exact current view is quiesced before page/Utils
+  pause; the later bridge callback from `Engine.onPause()` is an idempotent
+  fallback. Direct Engine lifecycle calls remain compatible.
+- `OpenGLRenderer` construction performs no GL work and creates no
+  `CoreRenderer`. A positive `onSurfaceChanged(...)` callback creates or
+  replaces the local `CoreRenderer` on the current GL thread. Draw callbacks
+  before that initialization return without clearing or drawing.
+- Default `GLSurfaceView` context-preservation behavior is unchanged. Surface
+  recreation still creates a new local `CoreRenderer`, while frame IDs remain
+  owned locally by that renderer.
+
 ### 5.5 Keyboard input model
 
 - `KeyboardProcessor` buffers key callbacks and executes them later from the render thread via `KeyboardProcessor.processKeys()` (called from `CoreRenderer.draw()`).

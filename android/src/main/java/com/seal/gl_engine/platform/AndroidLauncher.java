@@ -1,28 +1,53 @@
 package com.seal.gl_engine.platform;
 
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 
 import com.nikitos.Engine;
 
+import java.lang.ref.WeakReference;
+
 public class AndroidLauncher {
-    private static Engine engine;
-    private final AndroidBridge androidBridge;
-    private final AndroidLauncherParams androidLauncherParams;
+    private static final AndroidSessionRegistry SESSIONS =
+            new AndroidSessionRegistry();
+    private final WeakReference<Context> activityContext;
+    private final AndroidProcessSession session;
 
     public AndroidLauncher(AndroidLauncherParams androidLauncherParams) {
-        androidBridge = new AndroidBridge();
-        if (engine == null) {
-            engine = new Engine(androidBridge, androidLauncherParams);
-        }
-        this.androidLauncherParams = androidLauncherParams;
-
+        activityContext = new WeakReference<>(
+                androidLauncherParams.getContext()
+        );
+        AndroidLaunchSettings settings =
+                AndroidLaunchSettings.snapshot(androidLauncherParams);
+        session = SESSIONS.acquire(
+                settings,
+                AndroidProcessSession::create
+        );
     }
 
     public Engine getEngine() {
-        return engine;
+        return session.getEngine();
     }
 
     public GLSurfaceView launch() {
-        return androidBridge.launch(androidLauncherParams, engine);
+        Context context = activityContext.get();
+        if (context == null) {
+            throw new IllegalStateException(
+                    "Android Activity was released before launch"
+            );
+        }
+        return session.launch(context);
+    }
+
+    public void onPause(GLSurfaceView expectedView) {
+        session.onPause(expectedView);
+    }
+
+    public void onResume(GLSurfaceView expectedView) {
+        session.onResume(expectedView);
+    }
+
+    public void detach(GLSurfaceView expectedView) {
+        session.detach(expectedView);
     }
 }

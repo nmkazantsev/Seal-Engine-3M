@@ -170,6 +170,22 @@ API не меняет launcher defaults, порядок кадра, FPS, `Engine
 - Источник передаётся observer, но не выполняет readback сам. Буферы, массивы и `glReadPixels` появляются только при явном вызове `capture()`. Без observer нулевой путь кадра не запрашивает даже `FrameCaptureSource`.
 - При `null` observer выполняется прежний lifecycle без чтения resource counters, создания runtime DTO, счётчика наблюдаемых кадров и observer callbacks.
 
+**Android Activity recreation**
+
+- Все `AndroidLauncher` внутри одного процесса используют один и тот же `Engine`, `AndroidBridge` и источник кадров. Новая Activity создаёт новый `GLSurfaceView`, который атомарно становится текущим; предыдущий view сначала останавливается. Настройки Engine и bridge хранят только application context и не удерживают первую Activity. Публичный `AndroidBridge()` сохраняет совместимость: application context привязывается при первом создании view.
+- Передавайте точный view, возвращённый `launch()`, в `AndroidLauncher.onPause(view)`, `onResume(view)` и `detach(view)`. Текущий `GLSurfaceView` останавливается до `GamePageClass.onPause()` и `Utils.onPause()`, а повторный вызов bridge из `Engine.onPause()` безопасно игнорируется. Поздний callback старой Activity и повторный callback не меняют lifecycle страницы или учёт игрового времени.
+- `OpenGLRenderer` не создаёт `CoreRenderer` в конструкторе на UI thread. Локальный renderer создаётся или заменяется только в положительном `onSurfaceChanged(...)` на GL thread; `onDrawFrame(...)` до этого безопасно ничего не делает.
+- Существующие `launch()`, `getEngine()` и прямые `Engine.onPause()` / `Engine.onResume()` остаются доступными. Identity-aware методы launcher следует использовать для Activity lifecycle:
+
+```java
+GLSurfaceView gameView = launcher.launch();
+
+// Activity callbacks:
+launcher.onPause(gameView);
+launcher.onResume(gameView);
+launcher.detach(gameView);
+```
+
 ---
 
 ## 2. Математические классы

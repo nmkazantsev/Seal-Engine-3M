@@ -6,8 +6,6 @@ import static android.opengl.GLES20.glViewport;
 import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_BUFFER_BIT;
 
 import android.opengl.GLSurfaceView.Renderer;
-import android.util.Log;
-
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
 import com.seal.gl_engine.platform.AndroidFrameCaptureSource;
@@ -17,9 +15,11 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class OpenGLRenderer implements Renderer {
 
-    private CoreRenderer coreRenderer;
+    private RenderCore coreRenderer;
     private final Engine engine;
     private final AndroidFrameCaptureSource frameCaptureSource;
+    private final CoreRendererFactory coreRendererFactory;
+    private final GlApi gl;
 
     public OpenGLRenderer(float width, float height, Engine engine) {
         this(width, height, engine, null);
@@ -31,35 +31,110 @@ public class OpenGLRenderer implements Renderer {
             Engine engine,
             AndroidFrameCaptureSource frameCaptureSource
     ) {
-        coreRenderer = new CoreRenderer(width, height, engine);
+        this(
+                engine,
+                frameCaptureSource,
+                CoreRendererAdapter::new,
+                new GlesApi()
+        );
+    }
+
+    OpenGLRenderer(
+            Engine engine,
+            AndroidFrameCaptureSource frameCaptureSource,
+            CoreRendererFactory coreRendererFactory,
+            GlApi gl
+    ) {
         this.engine = engine;
         this.frameCaptureSource = frameCaptureSource;
+        this.coreRendererFactory = coreRendererFactory;
+        this.gl = gl;
     }
 
     @Override
     public void onSurfaceCreated(GL10 arg0, EGLConfig arg1) {
+        coreRenderer = null;
         if (frameCaptureSource != null) {
             frameCaptureSource.onSurfaceCreated();
         }
-        coreRenderer.onSurfaceCreated();
-        Log.i("engine", "surface created");
+        gl.log("surface created");
     }
 
     @Override
     public void onSurfaceChanged(GL10 arg0, int width, int height) {
-        glViewport(0, 0, width, height);
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        gl.viewport(width, height);
         if (frameCaptureSource != null) {
             frameCaptureSource.onSurfaceChanged(width, height);
         }
-        Log.i("engine", "\n=========\n\nsurface changed, resolution " + String.valueOf(width) + " " + String.valueOf(height));
-        coreRenderer = new CoreRenderer(width, height, engine);
+        gl.log("\n=========\n\nsurface changed, resolution " + width + " " + height);
+        coreRenderer = coreRendererFactory.create(width, height, engine);
         coreRenderer.onSurfaceCreated();
     }
 
 
     @Override
     public void onDrawFrame(GL10 arg0) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-        coreRenderer.draw();
+        RenderCore currentRenderer = coreRenderer;
+        if (currentRenderer == null) {
+            return;
+        }
+        gl.clear();
+        currentRenderer.draw();
+    }
+
+    interface CoreRendererFactory {
+        RenderCore create(int width, int height, Engine engine);
+    }
+
+    interface RenderCore {
+        void onSurfaceCreated();
+
+        void draw();
+    }
+
+    interface GlApi {
+        void viewport(int width, int height);
+
+        void clear();
+
+        void log(String message);
+    }
+
+    private static final class CoreRendererAdapter implements RenderCore {
+        private final CoreRenderer coreRenderer;
+
+        private CoreRendererAdapter(int width, int height, Engine engine) {
+            coreRenderer = new CoreRenderer(width, height, engine);
+        }
+
+        @Override
+        public void onSurfaceCreated() {
+            coreRenderer.onSurfaceCreated();
+        }
+
+        @Override
+        public void draw() {
+            coreRenderer.draw();
+        }
+    }
+
+    private static final class GlesApi implements GlApi {
+        @Override
+        public void viewport(int width, int height) {
+            glViewport(0, 0, width, height);
+        }
+
+        @Override
+        public void clear() {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        }
+
+        @Override
+        public void log(String message) {
+            android.util.Log.i("engine", message);
+        }
     }
 }
