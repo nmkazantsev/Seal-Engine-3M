@@ -14,6 +14,7 @@ import com.nikitos.runtime.FrameCaptureSource;
 import com.nikitos.runtime.FrameContext;
 import com.nikitos.runtime.RuntimeFailure;
 import com.nikitos.runtime.RuntimeObserver;
+import com.nikitos.runtime.RuntimeResourceSnapshot;
 import com.nikitos.utils.Utils;
 
 import java.util.function.Function;
@@ -121,7 +122,16 @@ public class CoreRenderer {
                 engine.getGamePage(),
                 (int) Utils.getX(),
                 (int) Utils.getY(),
-                engine.getPlatform()
+                engine.getPlatform(),
+                new RuntimeResourceSnapshot(
+                        VRAMobject.getTrackedObjectCount(),
+                        Shader.getTrackedShaderCount(),
+                        TouchProcessor.getTrackedProcessorCount(),
+                        KeyboardProcessor.getPressListenerCount(),
+                        KeyboardProcessor.getReleaseListenerCount(),
+                        KeyboardProcessor.getComboListenerCount(),
+                        TouchProcessor.getDesktopMouseCallbackRegistrationCount()
+                )
         );
         engine.beginObservedFrame();
         try {

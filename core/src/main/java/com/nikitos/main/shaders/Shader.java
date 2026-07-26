@@ -3,6 +3,7 @@ package com.nikitos.main.shaders;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.PageOwnership;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.platformBridge.SealAssetManager;
 import com.nikitos.platformBridge.ShaderBridge;
@@ -18,6 +19,7 @@ public class Shader { //means shader program
     private final String fragment;
     private String geom = null;
     private Class<?> page;
+    private final Object ownershipToken;
     private boolean reloadNeeded = false;
     private final Adaptor adaptor;
     private static Shader activeShader;
@@ -35,6 +37,7 @@ public class Shader { //means shader program
         if (page != null) {
             this.page = page.getClass();
         }
+        ownershipToken = PageOwnership.tokenOf(page);
         allShaders.add(this);
         this.adaptor = adaptor;
         adaptor.setProgramId(link);
@@ -52,6 +55,7 @@ public class Shader { //means shader program
         if (page != null) {
             this.page = page.getClass();
         }
+        ownershipToken = PageOwnership.tokenOf(page);
         allShaders.add(this);
         this.adaptor = adaptor;
         adaptor.setProgramId(link);
@@ -77,11 +81,10 @@ public class Shader { //means shader program
     }
 
     private boolean unneeded() {
-        if (this.page == null) {
+        if (ownershipToken == null) {
             return false;
         }
-        if (!(this.page == CoreRenderer.engine.getPageClass())) {
-            this.delete();
+        if (ownershipToken != PageOwnership.currentToken()) {
             return true;
         }
         return false;
@@ -130,5 +133,9 @@ public class Shader { //means shader program
 
     public static Shader getActiveShader() {
         return activeShader;
+    }
+
+    public static int getTrackedShaderCount() {
+        return allShaders.size();
     }
 }

@@ -2,6 +2,7 @@ package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.PageOwnership;
 
 import java.util.*;
 import java.util.function.Function;
@@ -14,6 +15,7 @@ import static com.nikitos.main.keyboard.KeyboardProcessor.normalizeKeyName;
  */
 public class KeyComboListener {
     private final Class<?> creatorClassName;
+    private final Object ownershipToken;
     private final ArrayList<String> keysSorted;
     private final HashSet<String> keysSet;
     private final String comboName;
@@ -24,6 +26,7 @@ public class KeyComboListener {
 
     public KeyComboListener(String[] keys, Function<String, Void> comboPressedCallback, GamePageClass creatorPage) {
         this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
+        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
         this.comboPressedCallback = comboPressedCallback;
 
         ArrayList<String> normalized = new ArrayList<>();
@@ -69,10 +72,10 @@ public class KeyComboListener {
     }
 
     boolean isActiveForCurrentPage() {
-        if (creatorClassName == null) return true;
+        if (ownershipToken == null) return true;
         if (CoreRenderer.engine == null) return true;
         try {
-            return creatorClassName == CoreRenderer.engine.getPageClass();
+            return ownershipToken == PageOwnership.currentToken();
         } catch (Throwable ignored) {
             return true;
         }
@@ -103,5 +106,9 @@ public class KeyComboListener {
 
     Class<?> getCreatorClassName() {
         return creatorClassName;
+    }
+
+    Object getOwnershipToken() {
+        return ownershipToken;
     }
 }

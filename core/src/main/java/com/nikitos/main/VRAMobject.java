@@ -3,6 +3,7 @@ package com.nikitos.main;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.PageOwnership;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 
@@ -18,12 +19,14 @@ public abstract class VRAMobject {
     protected final GLConstBridge glc;
     protected final Class<?> creator;
     protected final GamePageClass gamePageClass;
+    protected final Object ownershipToken;
     private static final List<VRAMobject> allObjects = new ArrayList<>();//links to all objects
 
     public VRAMobject(GamePageClass creator) {
         gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
         glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
         gamePageClass = creator;
+        ownershipToken = PageOwnership.tokenOf(creator);
         if (creator != null) {
             this.creator = creator.getClass();
         } else {
@@ -37,10 +40,11 @@ public abstract class VRAMobject {
     public abstract void reload();
 
     public static void onPageChange() {
+        Object currentOwnershipToken = PageOwnership.currentToken();
         Iterator<VRAMobject> iterator = allObjects.iterator();
         while (iterator.hasNext()) {
             VRAMobject obj = iterator.next();
-            if (!(obj.creator == CoreRenderer.engine.getPageClass()) && !(obj.creator == null)) {
+            if (obj.ownershipToken != null && obj.ownershipToken != currentOwnershipToken) {
                 obj.delete();
                 iterator.remove();
             }
@@ -51,5 +55,9 @@ public abstract class VRAMobject {
         for (VRAMobject e : allObjects) {
             e.reload();
         }
+    }
+
+    public static int getTrackedObjectCount() {
+        return allObjects.size();
     }
 }

@@ -2,6 +2,7 @@ package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.PageOwnership;
 
 import java.util.*;
 import java.util.function.Function;
@@ -22,6 +23,7 @@ import static com.nikitos.main.keyboard.KeyboardProcessor.normalizeKeyName;
  */
 public class KeyListener {
     private final Class<?> creatorClassName;
+    private final Object ownershipToken;
     private final HashSet<String> keys = new HashSet<>();
     private boolean anyKey = false;
 
@@ -35,6 +37,7 @@ public class KeyListener {
 
     public KeyListener(String key, Function<String, Void> keyPressedCallback, GamePageClass creatorPage) {
         this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
+        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
         this.keyPressedCallback = keyPressedCallback;
         String n = normalizeKeyName(key);
         if (n != null) {
@@ -45,6 +48,7 @@ public class KeyListener {
 
     public KeyListener(String[] keys, Function<String, Void> keyPressedCallback, GamePageClass creatorPage) {
         this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
+        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
         this.keyPressedCallback = keyPressedCallback;
         if (keys != null) {
             for (String k : keys) {
@@ -122,10 +126,10 @@ public class KeyListener {
     }
 
     boolean isActiveForCurrentPage() {
-        if (creatorClassName == null) return true;
+        if (ownershipToken == null) return true;
         if (CoreRenderer.engine == null) return true;
         try {
-            return creatorClassName == CoreRenderer.engine.getPageClass();
+            return ownershipToken == PageOwnership.currentToken();
         } catch (Throwable ignored) {
             return true;
         }
@@ -137,5 +141,9 @@ public class KeyListener {
 
     Class<?> getCreatorClassName() {
         return creatorClassName;
+    }
+
+    Object getOwnershipToken() {
+        return ownershipToken;
     }
 }

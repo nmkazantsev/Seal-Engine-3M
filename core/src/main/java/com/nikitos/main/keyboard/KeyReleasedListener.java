@@ -2,6 +2,7 @@ package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.PageOwnership;
 
 import java.util.HashSet;
 import java.util.function.Function;
@@ -21,6 +22,7 @@ import static com.nikitos.main.keyboard.KeyboardProcessor.normalizeKeyName;
  */
 public class KeyReleasedListener {
     private final Class<?> creatorClassName;
+    private final Object ownershipToken;
     private final HashSet<String> keys = new HashSet<>();
     private boolean anyKey = false;
 
@@ -29,6 +31,7 @@ public class KeyReleasedListener {
 
     public KeyReleasedListener(String key, Function<String, Void> keyReleasedCallback, GamePageClass creatorPage) {
         this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
+        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
         this.keyReleasedCallback = keyReleasedCallback;
         String n = normalizeKeyName(key);
         if (n != null) {
@@ -39,6 +42,7 @@ public class KeyReleasedListener {
 
     public KeyReleasedListener(String[] keys, Function<String, Void> keyReleasedCallback, GamePageClass creatorPage) {
         this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
+        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
         this.keyReleasedCallback = keyReleasedCallback;
         if (keys != null) {
             for (String k : keys) {
@@ -79,10 +83,10 @@ public class KeyReleasedListener {
     }
 
     boolean isActiveForCurrentPage() {
-        if (creatorClassName == null) return true;
+        if (ownershipToken == null) return true;
         if (CoreRenderer.engine == null) return true;
         try {
-            return creatorClassName == CoreRenderer.engine.getPageClass();
+            return ownershipToken == PageOwnership.currentToken();
         } catch (Throwable ignored) {
             return true;
         }
@@ -94,5 +98,9 @@ public class KeyReleasedListener {
 
     Class<?> getCreatorClassName() {
         return creatorClassName;
+    }
+
+    Object getOwnershipToken() {
+        return ownershipToken;
     }
 }

@@ -1,6 +1,7 @@
 package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.PageOwnership;
 import com.nikitos.main.debugger.BSODScreen;
 
 import java.util.*;
@@ -201,10 +202,28 @@ public class KeyboardProcessor {
             if (CoreRenderer.engine == null) {
                 return;
             }
-            Class<?> currentPage = safeGetCurrentPageClass();
-            allKeyListeners.removeIf(e -> e.getCreatorClassName() != null && e.getCreatorClassName() != currentPage);
-            allKeyReleasedListeners.removeIf(e -> e.getCreatorClassName() != null && e.getCreatorClassName() != currentPage);
-            allKeyComboListeners.removeIf(e -> e.getCreatorClassName() != null && e.getCreatorClassName() != currentPage);
+            Object currentPage = PageOwnership.currentToken();
+            allKeyListeners.removeIf(e -> e.getOwnershipToken() != null && e.getOwnershipToken() != currentPage);
+            allKeyReleasedListeners.removeIf(e -> e.getOwnershipToken() != null && e.getOwnershipToken() != currentPage);
+            allKeyComboListeners.removeIf(e -> e.getOwnershipToken() != null && e.getOwnershipToken() != currentPage);
+        }
+    }
+
+    public static int getPressListenerCount() {
+        synchronized (commandQueue) {
+            return allKeyListeners.size();
+        }
+    }
+
+    public static int getReleaseListenerCount() {
+        synchronized (commandQueue) {
+            return allKeyReleasedListeners.size();
+        }
+    }
+
+    public static int getComboListenerCount() {
+        synchronized (commandQueue) {
+            return allKeyComboListeners.size();
         }
     }
 
@@ -213,15 +232,6 @@ public class KeyboardProcessor {
         String t = keyName.trim();
         if (t.isEmpty()) return null;
         return t.toUpperCase(Locale.ROOT);
-    }
-
-    private static Class<?> safeGetCurrentPageClass() {
-        try {
-            if (CoreRenderer.engine == null) return null;
-            return CoreRenderer.engine.getPageClass();
-        } catch (Throwable ignored) {
-            return null;
-        }
     }
 
     private static class Command {

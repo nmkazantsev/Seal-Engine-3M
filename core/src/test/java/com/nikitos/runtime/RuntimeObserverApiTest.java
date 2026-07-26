@@ -66,6 +66,40 @@ class RuntimeObserverApiTest {
     }
 
     @Test
+    void frameContextKeepsLegacyConstructorAndCanExposeResourceCounts() {
+        FrameContext legacy = new FrameContext(1L, null, 640, 480, Platform.DESKTOP);
+        RuntimeResourceSnapshot resources = new RuntimeResourceSnapshot(
+                2,
+                3,
+                5,
+                7,
+                11,
+                13,
+                17
+        );
+        FrameContext observed = new FrameContext(
+                2L,
+                null,
+                1280,
+                720,
+                Platform.DESKTOP,
+                resources
+        );
+
+        assertAll(
+                () -> assertNull(legacy.getResourceSnapshot()),
+                () -> assertSame(resources, observed.getResourceSnapshot()),
+                () -> assertEquals(2, resources.getTrackedVramObjects()),
+                () -> assertEquals(3, resources.getShaders()),
+                () -> assertEquals(5, resources.getTouchProcessors()),
+                () -> assertEquals(7, resources.getKeyboardPressListeners()),
+                () -> assertEquals(11, resources.getKeyboardReleaseListeners()),
+                () -> assertEquals(13, resources.getKeyboardComboListeners()),
+                () -> assertEquals(17, resources.getDesktopMouseCallbackRegistrations())
+        );
+    }
+
+    @Test
     void defaultRuntimeObserverMethodsAreSafeNoOps() {
         RuntimeObserver observer = new RuntimeObserver() {
         };

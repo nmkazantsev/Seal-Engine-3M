@@ -402,11 +402,13 @@ class RuntimeObserverLifecycleTest {
         renderer.draw();
 
         RuntimeFailure failure = observer.failures.get(0);
+        // The test engine swaps the current instance without registry cleanup;
+        // an outgoing page callback must still not dispatch for the BSOD instance.
         assertAll(
                 () -> assertEquals(
                         List.of(
                                 "before:1", "fps", "draw:page", "failure:PAGE_DRAW",
-                                "transition:bsod", "touch", "keyboard", "after:1"
+                                "transition:bsod", "keyboard", "after:1"
                         ),
                         events
                 ),

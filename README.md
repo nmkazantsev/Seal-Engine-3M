@@ -123,7 +123,9 @@ new LauncherParams()
 ### Runtime Observer API
 `RuntimeObserver` задаёт необязательный API наблюдения за runtime. Его default-методы не выполняют действий: `beforeFrame(FrameContext)`, `afterFrame(FrameContext)`, `afterFrame(FrameContext, FrameCaptureSource)`, `onPageChanged(PageTransition)` и `onFailure(RuntimeFailure)`.
 
-- `FrameContext` содержит идентификатор кадра, текущую `GamePageClass`, ширину, высоту и `Platform`.
+- `FrameContext` содержит идентификатор кадра, текущую `GamePageClass`, ширину, высоту, `Platform` и допускающий `null` `RuntimeResourceSnapshot`.
+- `RuntimeResourceSnapshot` неизменно хранит числа отслеживаемых VRAM-объектов, shader-программ, touch processors, keyboard press/release/combo listeners и desktop mouse callback registrations.
+- Snapshot снимается только на observed-пути непосредственно перед `beforeFrame` и согласован с pre-frame значением `FrameContext.getPage()`. Поэтому на первом кадре до создания default page страница равна `null`, а counters описывают состояние до её конструктора.
 - `PageTransition` содержит предыдущую и новую `GamePageClass`.
 - `RuntimeFailure` содержит `Stage`, исходное `Throwable`, а также допускающие `null` `FrameContext` и `GamePageClass`. Возможные стадии: `FRAME_SETUP`, `PAGE_DRAW`, `DEBUGGER_DRAW`, `VERTICES_REDRAW`, `TOUCH_PROCESS`, `KEYBOARD_PROCESS`, `PAGE_TRANSITION`.
 - `Engine.getRuntimeObserver()` возвращает observer, зафиксированный при создании `Engine`; отдельного runtime setter нет.
@@ -141,7 +143,7 @@ new LauncherParams()
 - Desktop-захват разрешён только синхронно из callback render-потока, после полной отрисовки кадра и до `glfwSwapBuffers`. Размер запрашивается через framebuffer pixels, а не через screen coordinates окна.
 - `CapturedFrame` хранит положительные `width`/`height` и ровно `width * height * 4` байта в порядке R, G, B, A. Нулевая строка — верхняя; входной массив и результат `getRgba()` копируются.
 - Источник передаётся observer, но не выполняет readback сам. Буферы, массивы и `glReadPixels` появляются только при явном вызове `capture()`. Без observer нулевой путь кадра не запрашивает даже `FrameCaptureSource`.
-- При `null` observer выполняется прежний lifecycle без создания runtime DTO, счётчика наблюдаемых кадров и observer callbacks.
+- При `null` observer выполняется прежний lifecycle без чтения resource counters, создания runtime DTO, счётчика наблюдаемых кадров и observer callbacks.
 
 ---
 
@@ -462,6 +464,13 @@ img.text("Hello, World!", 100, 100);
 - `abstract void delete()`
 - `abstract void reload()`
 
+**Владение ресурсами страницы:**
+
+- Каждый экземпляр `GamePageClass` получает отдельный стабильный internal ownership token. Ресурсы и input listeners привязаны к экземпляру страницы, а не к её Java-классу.
+- При `Engine.startNewPage(...)` удаляются объекты исходящего экземпляра, включая переход между двумя экземплярами одного класса. Объекты входящей страницы, созданные в её конструкторе и `onSurfaceChanged(...)`, сохраняются.
+- `creator == null` остаётся global ownership: такие VRAM-объекты, shaders, touch processors, keyboard listeners и desktop mouse callbacks переживают переходы страниц.
+- Публичные конструкторы и прежние class-name поля/getters сохранены для source compatibility. Порядок перехода, context redraw и reload retained-объектов не изменён.
+
 ### VerticesShapesManager
 Статический менеджер, управляющий перерисовкой всех `VerticesSet`. Вызывается движком автоматически, но может быть полезен при ручной форсированной перерисовке.
 
@@ -721,7 +730,7 @@ img.text("Hello, World!", 100, 100);
 **Семантика mouse callbacks:**
 - Для каждого типа обработчика хранится ровно один callback на страницу.
 - Повторный вызов того же setter для той же страницы перезаписывает предыдущий callback.
-- `creatorPage` должен быть задан явно; mouse processors не регистрируются как global handlers.
+- `creatorPage == null` регистрирует global handler, который переживает переходы и используется, если для текущей страницы нет собственного callback.
 - Хранилище разделено по типам:
   - page -> left button processor
   - page -> right button processor
