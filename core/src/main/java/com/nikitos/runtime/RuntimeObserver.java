@@ -7,6 +7,13 @@ public interface RuntimeObserver {
     default void afterFrame(FrameContext frameContext) {
     }
 
+    default void afterFrame(
+            FrameContext frameContext,
+            FrameCaptureSource frameCaptureSource
+    ) {
+        afterFrame(frameContext);
+    }
+
     default void onPageChanged(PageTransition pageTransition) {
     }
 

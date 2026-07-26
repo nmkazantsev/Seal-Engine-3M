@@ -102,10 +102,26 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `LauncherParams setMSAA(boolean MSAA)` – включает/выключает мультисэмплинг.
 - `LauncherParams setStartPage(Function<Void, GamePageClass> startPage)` – задаёт поставщик стартовой страницы.
 - `LauncherParams setRuntimeObserver(RuntimeObserver runtimeObserver)` – задаёт необязательный runtime observer. По умолчанию значение равно `null`.
-- `boolean isDebug()`, `boolean getMSAA()`, `boolean isDesktop()`, `String getWindowTitle()`, `boolean getFullScreen()`, `RuntimeObserver getRuntimeObserver()` – геттеры.
+- `LauncherParams setWindowSize(int width, int height)` – задаёт положительные ширину и высоту desktop-окна как одну неделимую настройку.
+- `LauncherParams setMaximized(boolean maximized)` – управляет стартовой максимизацией оконного desktop-режима.
+- `LauncherParams setVSync(boolean vSync)` – задаёт desktop swap interval: `1` при `true` и `0` при `false`.
+- `boolean hasWindowSize()`, `Integer getWindowWidth()`, `Integer getWindowHeight()`, `boolean getMaximized()`, `boolean getVSync()` – геттеры desktop-настроек окна.
+- `boolean isDebug()`, `boolean getMSAA()`, `boolean isDesktop()`, `String getWindowTitle()`, `boolean getFullScreen()`, `RuntimeObserver getRuntimeObserver()` – остальные геттеры.
+
+Legacy defaults desktop-окна сохранены: явный размер отсутствует, окно максимизируется, VSync включён. Для воспроизводимого оконного запуска 1280×720 без VSync используйте:
+
+```java
+new LauncherParams()
+        .setFullScreen(false)
+        .setWindowSize(1280, 720)
+        .setMaximized(false)
+        .setVSync(false);
+```
+
+Размер и максимизация применяются только к оконному desktop-режиму. `CoreRenderer` получает фактический размер framebuffer, который может отличаться от размера окна на HiDPI-системах.
 
 ### Runtime Observer API
-`RuntimeObserver` задаёт необязательный API наблюдения за runtime. Его default-методы не выполняют действий: `beforeFrame(FrameContext)`, `afterFrame(FrameContext)`, `onPageChanged(PageTransition)` и `onFailure(RuntimeFailure)`.
+`RuntimeObserver` задаёт необязательный API наблюдения за runtime. Его default-методы не выполняют действий: `beforeFrame(FrameContext)`, `afterFrame(FrameContext)`, `afterFrame(FrameContext, FrameCaptureSource)`, `onPageChanged(PageTransition)` и `onFailure(RuntimeFailure)`.
 
 - `FrameContext` содержит идентификатор кадра, текущую `GamePageClass`, ширину, высоту и `Platform`.
 - `PageTransition` содержит предыдущую и новую `GamePageClass`.
@@ -117,6 +133,14 @@ Android: https://github.com/nmkazantsev/Demo-app
 - Ошибка стадии кадра передаётся в `onFailure` с исходной причиной, контекстом кадра и страницей, активной в момент ошибки. Существующее BSOD-поведение ошибки страницы сохраняется, а ошибки после страницы продолжают распространяться вызывающему коду.
 - `Error` на наблюдаемом пути также передаётся с точной стадией и затем распространяется напрямую; BSOD создаётся только для прежних `Exception`-сбоев страницы/перехода.
 - Если `onFailure` кадра сам выбрасывает исключение, исходная ошибка остаётся основной, а ошибка observer добавляется как suppressed. Ошибки `beforeFrame`, `afterFrame` и `onPageChanged` распространяются напрямую и повторно через `onFailure` не отправляются.
+
+**On-demand frame capture**
+
+- Движок вызывает двухаргументный `afterFrame(FrameContext, FrameCaptureSource)` в прежней точке окончания кадра. Его default-реализация делегирует старому `afterFrame(FrameContext)`, поэтому существующие observer остаются source-compatible.
+- `FrameCaptureSource.isAvailable()` сообщает о доступности, а `capture()` синхронно захватывает текущий default framebuffer. Desktop-источник доступен после привязки GLFW-окна; Android в этой версии возвращает стабильный unavailable-источник, чей `capture()` явно выбрасывает `UnsupportedOperationException`.
+- Desktop-захват разрешён только синхронно из callback render-потока, после полной отрисовки кадра и до `glfwSwapBuffers`. Размер запрашивается через framebuffer pixels, а не через screen coordinates окна.
+- `CapturedFrame` хранит положительные `width`/`height` и ровно `width * height * 4` байта в порядке R, G, B, A. Нулевая строка — верхняя; входной массив и результат `getRgba()` копируются.
+- Источник передаётся observer, но не выполняет readback сам. Буферы, массивы и `glReadPixels` появляются только при явном вызове `capture()`. Без observer нулевой путь кадра не запрашивает даже `FrameCaptureSource`.
 - При `null` observer выполняется прежний lifecycle без создания runtime DTO, счётчика наблюдаемых кадров и observer callbacks.
 
 ---

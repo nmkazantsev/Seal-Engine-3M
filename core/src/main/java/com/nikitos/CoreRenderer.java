@@ -10,6 +10,7 @@ import com.nikitos.main.vertices.VerticesShapesManager;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.PlatformBridge;
+import com.nikitos.runtime.FrameCaptureSource;
 import com.nikitos.runtime.FrameContext;
 import com.nikitos.runtime.RuntimeFailure;
 import com.nikitos.runtime.RuntimeObserver;
@@ -28,6 +29,7 @@ public class CoreRenderer {
     private final GeneralPlatformBridge gl;
     private final GLConstBridge glc;
     private final RuntimeObserver runtimeObserver;
+    private final FrameCaptureSource frameCaptureSource;
     private final Function<Exception, GamePageClass> bsodPageFactory;
     private long observedFrameId;
 
@@ -37,6 +39,9 @@ public class CoreRenderer {
         gl = pf.getGeneralPlatformBridge();
         glc = pf.getGLConstBridge();
         runtimeObserver = engine.getRuntimeObserver();
+        frameCaptureSource = runtimeObserver == null
+                ? null
+                : pf.getFrameCaptureSource();
         bsodPageFactory = null;
         float x = Utils.getX();
         float y = Utils.getY();
@@ -64,6 +69,9 @@ public class CoreRenderer {
         gl = pf.getGeneralPlatformBridge();
         glc = pf.getGLConstBridge();
         runtimeObserver = engine.getRuntimeObserver();
+        frameCaptureSource = runtimeObserver == null
+                ? null
+                : pf.getFrameCaptureSource();
         this.bsodPageFactory = bsodPageFactory;
     }
 
@@ -218,7 +226,7 @@ public class CoreRenderer {
             throw error;
         }
 
-        runtimeObserver.afterFrame(frameContext);
+        runtimeObserver.afterFrame(frameContext, frameCaptureSource);
     }
 
     private GamePageClass createBsodPage(Exception cause) {

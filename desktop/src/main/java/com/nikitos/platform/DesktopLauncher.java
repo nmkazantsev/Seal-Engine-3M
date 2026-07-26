@@ -54,7 +54,12 @@ public class DesktopLauncher {
         desktopBridge = new DesktopBridge();
         engine = new Engine(desktopBridge, launcherParams);
         init();
-        coreRenderer = new CoreRenderer(vidmode.width(), vidmode.height(), engine);
+        int[] framebufferSize = getFramebufferSize(window);
+        coreRenderer = new CoreRenderer(
+                framebufferSize[0],
+                framebufferSize[1],
+                engine
+        );
     }
 
     private static String glfwKeyToName(int key, int scancode) {
@@ -167,17 +172,25 @@ public class DesktopLauncher {
             }
 
         } else {
+            int windowWidth = launcherParams.hasWindowSize()
+                    ? launcherParams.getWindowWidth()
+                    : vidmode.width();
+            int windowHeight = launcherParams.hasWindowSize()
+                    ? launcherParams.getWindowHeight()
+                    : vidmode.height();
             window = glfwCreateWindow(
-                    vidmode.width(),
-                    vidmode.height(),
+                    windowWidth,
+                    windowHeight,
                     launcherParams.getWindowTitle(),
                     NULL,
                     NULL);
-            glfwMaximizeWindow(window);
         }
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
+        if (!launcherParams.getFullScreen() && launcherParams.getMaximized()) {
+            glfwMaximizeWindow(window);
+        }
         desktopBridge.attachWindow(window);
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -245,8 +258,8 @@ public class DesktopLauncher {
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
-        // Enable v-sync
-        glfwSwapInterval(1);
+        // Enable or disable v-sync for the current context.
+        glfwSwapInterval(launcherParams.getVSync() ? 1 : 0);
 
         // Make the window visible
         glfwShowWindow(window);
@@ -322,6 +335,15 @@ public class DesktopLauncher {
                     (vidmode.height() - pHeight.get(0)) / 2
             );*/
         } // the stack frame is popped automatically
+    }
+
+    private static int[] getFramebufferSize(long window) {
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer width = stack.mallocInt(1);
+            IntBuffer height = stack.mallocInt(1);
+            glfwGetFramebufferSize(window, width, height);
+            return new int[]{width.get(0), height.get(0)};
+        }
     }
 
     private void loop() {

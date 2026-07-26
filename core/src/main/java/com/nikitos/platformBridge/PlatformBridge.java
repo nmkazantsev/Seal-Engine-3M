@@ -1,6 +1,7 @@
 package com.nikitos.platformBridge;
 
 import com.nikitos.main.images.AbstractImage;
+import com.nikitos.runtime.FrameCaptureSource;
 
 /**
  * an abstract class to be implemented by platform - dependent implementations
@@ -47,4 +48,8 @@ public abstract class PlatformBridge {
     public abstract RuntimeFileBridge getRuntimeFileBridge();
 
     public abstract MouseControlBridge getMouseControlBridge();
+
+    public FrameCaptureSource getFrameCaptureSource() {
+        return FrameCaptureSource.unavailable();
+    }
 }

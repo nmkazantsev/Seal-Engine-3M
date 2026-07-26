@@ -2,6 +2,7 @@ package com.nikitos.platform;
 
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.platformBridge.*;
+import com.nikitos.runtime.FrameCaptureSource;
 import main.images.PImageDesktop;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
@@ -12,6 +13,8 @@ public class DesktopBridge extends PlatformBridge {
     private final AudioPlayer audioPlayer = new AudioPlayerDesktop(assetManager);
     private final RuntimeFileBridge runtimeFileBridge = new DesktopRuntimeFileBridge();
     private final DesktopMouseControlBridge mouseControlBridge = new DesktopMouseControlBridge();
+    private final DesktopFrameCaptureSource frameCaptureSource =
+            new DesktopFrameCaptureSource();
 
     @Override
     public void onPause() {
@@ -119,7 +122,13 @@ public class DesktopBridge extends PlatformBridge {
         return mouseControlBridge;
     }
 
+    @Override
+    public FrameCaptureSource getFrameCaptureSource() {
+        return frameCaptureSource;
+    }
+
     public void attachWindow(long window) {
         mouseControlBridge.attachWindow(window);
+        frameCaptureSource.attachWindow(window);
     }
 }
