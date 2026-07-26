@@ -124,7 +124,7 @@ new LauncherParams()
 `RuntimeObserver` задаёт необязательный API наблюдения за runtime. Его default-методы не выполняют действий: `beforeFrame(FrameContext)`, `afterFrame(FrameContext)`, `afterFrame(FrameContext, FrameCaptureSource)`, `onPageChanged(PageTransition)` и `onFailure(RuntimeFailure)`.
 
 - `FrameContext` содержит идентификатор кадра, текущую `GamePageClass`, ширину, высоту, `Platform` и допускающий `null` `RuntimeResourceSnapshot`.
-- `RuntimeResourceSnapshot` неизменно хранит числа отслеживаемых VRAM-объектов, shader-программ, touch processors, keyboard press/release/combo listeners и desktop mouse callback registrations.
+- `RuntimeResourceSnapshot` неизменно хранит числа отслеживаемых VRAM-объектов, shader-программ, `ShaderData`, touch processors, keyboard press/release/combo listeners и desktop mouse callback registrations. Прежний семиаргументный конструктор сохранён; в созданном им snapshot счётчик `ShaderData` равен `0`.
 - Snapshot снимается только на observed-пути непосредственно перед `beforeFrame` и согласован с pre-frame значением `FrameContext.getPage()`. Поэтому на первом кадре до создания default page страница равна `null`, а counters описывают состояние до её конструктора.
 - `PageTransition` содержит предыдущую и новую `GamePageClass`.
 - `RuntimeFailure` содержит `Stage`, исходное `Throwable`, а также допускающие `null` `FrameContext` и `GamePageClass`. Возможные стадии: `FRAME_SETUP`, `PAGE_DRAW`, `DEBUGGER_DRAW`, `VERTICES_REDRAW`, `TOUCH_PROCESS`, `KEYBOARD_PROCESS`, `PAGE_TRANSITION`.
@@ -466,9 +466,9 @@ img.text("Hello, World!", 100, 100);
 
 **Владение ресурсами страницы:**
 
-- Каждый экземпляр `GamePageClass` получает отдельный стабильный internal ownership token. Ресурсы и input listeners привязаны к экземпляру страницы, а не к её Java-классу.
-- При `Engine.startNewPage(...)` удаляются объекты исходящего экземпляра, включая переход между двумя экземплярами одного класса. Объекты входящей страницы, созданные в её конструкторе и `onSurfaceChanged(...)`, сохраняются.
-- `creator == null` остаётся global ownership: такие VRAM-объекты, shaders, touch processors, keyboard listeners и desktop mouse callbacks переживают переходы страниц.
+- Каждый экземпляр `GamePageClass` получает отдельный стабильный internal ownership token. Ресурсы, `ShaderData` и input listeners привязаны к экземпляру страницы, а не к её Java-классу.
+- При `Engine.startNewPage(...)` переходные registry удаляют объекты исходящего экземпляра, включая переход между двумя экземплярами одного класса. Устаревшие `ShaderData` удаляются до обновления locations и передачи данных при следующем `Shader.apply()`. Объекты входящей страницы, созданные в её конструкторе и `onSurfaceChanged(...)`, сохраняются; индексы оставшихся directed/point/source lights пересчитываются.
+- `creator == null` остаётся global ownership: такие VRAM-объекты, shaders, `ShaderData`, touch processors, keyboard listeners и desktop mouse callbacks переживают переходы страниц.
 - Публичные конструкторы и прежние class-name поля/getters сохранены для source compatibility. Порядок перехода, context redraw и reload retained-объектов не изменён.
 
 ### VerticesShapesManager
@@ -515,6 +515,8 @@ img.text("Hello, World!", 100, 100);
 
 ### ShaderData
 Базовый класс для данных, передаваемых в шейдер (например, источники света, материал). Позволяет автоматически обновлять uniform-переменные при смене страницы.
+
+Экземпляры с ненулевой страницей принадлежат конкретному экземпляру `GamePageClass`; данные прежней страницы не передаются даже при переходе между двумя объектами одного Java-класса. `null` задаёт global ownership. Прежний protected-метод `getCreatorClass()` сохранён для source compatibility.
 
 **Методы (реализуются в наследниках):**
 - `protected abstract void getLocations(int programId)`

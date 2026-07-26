@@ -68,7 +68,7 @@ class RuntimeObserverApiTest {
     @Test
     void frameContextKeepsLegacyConstructorAndCanExposeResourceCounts() {
         FrameContext legacy = new FrameContext(1L, null, 640, 480, Platform.DESKTOP);
-        RuntimeResourceSnapshot resources = new RuntimeResourceSnapshot(
+        RuntimeResourceSnapshot legacyResources = new RuntimeResourceSnapshot(
                 2,
                 3,
                 5,
@@ -76,6 +76,16 @@ class RuntimeObserverApiTest {
                 11,
                 13,
                 17
+        );
+        RuntimeResourceSnapshot resources = new RuntimeResourceSnapshot(
+                2,
+                3,
+                5,
+                7,
+                11,
+                13,
+                17,
+                19
         );
         FrameContext observed = new FrameContext(
                 2L,
@@ -88,6 +98,7 @@ class RuntimeObserverApiTest {
 
         assertAll(
                 () -> assertNull(legacy.getResourceSnapshot()),
+                () -> assertEquals(0, legacyResources.getShaderData()),
                 () -> assertSame(resources, observed.getResourceSnapshot()),
                 () -> assertEquals(2, resources.getTrackedVramObjects()),
                 () -> assertEquals(3, resources.getShaders()),
@@ -95,7 +106,8 @@ class RuntimeObserverApiTest {
                 () -> assertEquals(7, resources.getKeyboardPressListeners()),
                 () -> assertEquals(11, resources.getKeyboardReleaseListeners()),
                 () -> assertEquals(13, resources.getKeyboardComboListeners()),
-                () -> assertEquals(17, resources.getDesktopMouseCallbackRegistrations())
+                () -> assertEquals(17, resources.getDesktopMouseCallbackRegistrations()),
+                () -> assertEquals(19, resources.getShaderData())
         );
     }
 

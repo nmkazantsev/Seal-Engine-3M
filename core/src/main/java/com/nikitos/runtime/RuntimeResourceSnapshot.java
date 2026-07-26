@@ -8,6 +8,7 @@ public final class RuntimeResourceSnapshot {
     private final int keyboardReleaseListeners;
     private final int keyboardComboListeners;
     private final int desktopMouseCallbackRegistrations;
+    private final int shaderData;
 
     public RuntimeResourceSnapshot(
             int trackedVramObjects,
@@ -18,6 +19,28 @@ public final class RuntimeResourceSnapshot {
             int keyboardComboListeners,
             int desktopMouseCallbackRegistrations
     ) {
+        this(
+                trackedVramObjects,
+                shaders,
+                touchProcessors,
+                keyboardPressListeners,
+                keyboardReleaseListeners,
+                keyboardComboListeners,
+                desktopMouseCallbackRegistrations,
+                0
+        );
+    }
+
+    public RuntimeResourceSnapshot(
+            int trackedVramObjects,
+            int shaders,
+            int touchProcessors,
+            int keyboardPressListeners,
+            int keyboardReleaseListeners,
+            int keyboardComboListeners,
+            int desktopMouseCallbackRegistrations,
+            int shaderData
+    ) {
         this.trackedVramObjects = trackedVramObjects;
         this.shaders = shaders;
         this.touchProcessors = touchProcessors;
@@ -25,6 +48,7 @@ public final class RuntimeResourceSnapshot {
         this.keyboardReleaseListeners = keyboardReleaseListeners;
         this.keyboardComboListeners = keyboardComboListeners;
         this.desktopMouseCallbackRegistrations = desktopMouseCallbackRegistrations;
+        this.shaderData = shaderData;
     }
 
     public int getTrackedVramObjects() {
@@ -53,5 +77,9 @@ public final class RuntimeResourceSnapshot {
 
     public int getDesktopMouseCallbackRegistrations() {
         return desktopMouseCallbackRegistrations;
+    }
+
+    public int getShaderData() {
+        return shaderData;
     }
 }

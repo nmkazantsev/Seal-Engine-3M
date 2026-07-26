@@ -33,6 +33,10 @@ public class SourceLight extends ShaderData {
     //always use before apply shader
     public void deleteLight() {
         sourceLights.remove(index);
+        reindexLights();
+    }
+
+    private static void reindexLights() {
         for (int i = 0; i < sourceLights.size(); i++) {
             sourceLights.get(i).get().index = i; //locations will be updated when apply shader
         }
@@ -72,5 +76,6 @@ public class SourceLight extends ShaderData {
     @Override
     protected void delete() {
         sourceLights.remove(thisRef);
+        reindexLights();
     }
 }

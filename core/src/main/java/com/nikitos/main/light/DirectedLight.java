@@ -31,6 +31,10 @@ public class DirectedLight extends ShaderData {
     //always use before apply shader
     public void deleteLight() {
         directLights.remove(index);
+        reindexLights();
+    }
+
+    private static void reindexLights() {
         for (int i = 0; i < directLights.size(); i++) {
             directLights.get(i).get().index = i; //locations will be updated when apply shader
         }
@@ -57,5 +61,6 @@ public class DirectedLight extends ShaderData {
     @Override
     protected void delete() {
         directLights.remove(thisRef);
+        reindexLights();
     }
 }

@@ -4,6 +4,7 @@ import com.nikitos.main.VRAMobject;
 import com.nikitos.main.debugger.BSODScreen;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.keyboard.KeyboardProcessor;
+import com.nikitos.main.shaders.Adaptor;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.main.vertices.VerticesShapesManager;
@@ -130,7 +131,8 @@ public class CoreRenderer {
                         KeyboardProcessor.getPressListenerCount(),
                         KeyboardProcessor.getReleaseListenerCount(),
                         KeyboardProcessor.getComboListenerCount(),
-                        TouchProcessor.getDesktopMouseCallbackRegistrationCount()
+                        TouchProcessor.getDesktopMouseCallbackRegistrationCount(),
+                        Adaptor.getTrackedShaderDataCount()
                 )
         );
         engine.beginObservedFrame();

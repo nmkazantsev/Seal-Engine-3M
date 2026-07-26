@@ -2,6 +2,7 @@ package com.nikitos.main.shaders;
 
 
 import com.nikitos.CoreRenderer;
+import com.nikitos.PageOwnership;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
@@ -27,13 +28,19 @@ public abstract class Adaptor {
         Adaptor.shaderData.add(shaderData);
     }
 
+    public static int getTrackedShaderDataCount() {
+        return shaderData.size();
+    }
+
     public static void updateShaderDataLocations() {
         Iterator<ShaderData> iterator = shaderData.iterator();
+        Object currentOwnershipToken = PageOwnership.currentToken();
         while (iterator.hasNext()) {
             ShaderData e = iterator.next();
             if (e == null) {
                 iterator.remove();
-            } else if (e.getCreatorClass() != null && !(e.getCreatorClass() == CoreRenderer.engine.getPageClass())) {
+            } else if (e.getOwnershipToken() != null
+                    && e.getOwnershipToken() != currentOwnershipToken) {
                 e.delete();
                 iterator.remove();
             } else {

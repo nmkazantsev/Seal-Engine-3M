@@ -52,13 +52,13 @@ Verification:
 Correct same-class page cleanup without changing different-class or global ownership behavior.
 
 - Introduce an internal page generation/identity ownership token.
-- Migrate VRAM, Shader, TouchProcessor, and KeyboardProcessor cleanup to the token while retaining source-compatible constructors/APIs.
+- Migrate VRAM, Shader, ShaderData/light registries, TouchProcessor, and KeyboardProcessor cleanup to the token while retaining source-compatible constructors/APIs.
 - `creator == null` remains global and is not deleted by page transitions.
 - Resources created by the incoming page must not be deleted during transition cleanup.
 - Existing different-class transition cleanup remains equivalent.
 - Same-class transition deletes resources/processors owned by the outgoing instance.
 - Add observer-visible resource counters without work when no observer is installed.
-- Add characterization tests for null owner, different-class transition, same-class transition, context redraw, and incoming-resource preservation.
+- Add characterization tests for null owner, different-class transition, same-class transition, context redraw, incoming-resource preservation, ShaderData forwarding, and indexed light compaction.
 - Document the corrected instance ownership lifecycle and compatibility boundary.
 
 Verification:

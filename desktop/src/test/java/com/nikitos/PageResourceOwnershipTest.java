@@ -5,8 +5,15 @@ import com.nikitos.main.keyboard.KeyComboListener;
 import com.nikitos.main.keyboard.KeyListener;
 import com.nikitos.main.keyboard.KeyReleasedListener;
 import com.nikitos.main.keyboard.KeyboardProcessor;
+import com.nikitos.main.light.AmbientLight;
+import com.nikitos.main.light.DirectedLight;
+import com.nikitos.main.light.ExpouseSettings;
+import com.nikitos.main.light.Material;
+import com.nikitos.main.light.PointLight;
+import com.nikitos.main.light.SourceLight;
 import com.nikitos.main.shaders.Adaptor;
 import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.shaders.ShaderData;
 import com.nikitos.main.touch.MyMotionEvent;
 import com.nikitos.main.touch.TouchPoint;
 import com.nikitos.main.touch.TouchProcessor;
@@ -14,6 +21,8 @@ import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
 import com.nikitos.platform.DesktopBridge;
+import com.nikitos.platform.GeneralBridgeDesktop;
+import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.platformBridge.SealAssetManager;
 import com.nikitos.platformBridge.ShaderBridge;
@@ -26,7 +35,9 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,6 +138,7 @@ class PageResourceOwnershipTest {
         int expectedRelease = KeyboardProcessor.getReleaseListenerCount();
         int expectedCombo = KeyboardProcessor.getComboListenerCount();
         int expectedMouse = TouchProcessor.getDesktopMouseCallbackRegistrationCount();
+        int expectedShaderData = Adaptor.getTrackedShaderDataCount();
         CoreRenderer renderer = new CoreRenderer(engine, ignored -> new EmptyPage());
 
         renderer.draw();
@@ -140,7 +152,8 @@ class PageResourceOwnershipTest {
                 () -> assertEquals(expectedPress, snapshot.getKeyboardPressListeners()),
                 () -> assertEquals(expectedRelease, snapshot.getKeyboardReleaseListeners()),
                 () -> assertEquals(expectedCombo, snapshot.getKeyboardComboListeners()),
-                () -> assertEquals(expectedMouse, snapshot.getDesktopMouseCallbackRegistrations())
+                () -> assertEquals(expectedMouse, snapshot.getDesktopMouseCallbackRegistrations()),
+                () -> assertEquals(expectedShaderData, snapshot.getShaderData())
         );
     }
 
@@ -166,6 +179,7 @@ class PageResourceOwnershipTest {
         int expectedRelease = KeyboardProcessor.getReleaseListenerCount();
         int expectedCombo = KeyboardProcessor.getComboListenerCount();
         int expectedMouse = TouchProcessor.getDesktopMouseCallbackRegistrationCount();
+        int expectedShaderData = Adaptor.getTrackedShaderDataCount();
 
         renderer.draw();
 
@@ -180,7 +194,8 @@ class PageResourceOwnershipTest {
                 () -> assertEquals(expectedPress, snapshot.getKeyboardPressListeners()),
                 () -> assertEquals(expectedRelease, snapshot.getKeyboardReleaseListeners()),
                 () -> assertEquals(expectedCombo, snapshot.getKeyboardComboListeners()),
-                () -> assertEquals(expectedMouse, snapshot.getDesktopMouseCallbackRegistrations())
+                () -> assertEquals(expectedMouse, snapshot.getDesktopMouseCallbackRegistrations()),
+                () -> assertEquals(expectedShaderData, snapshot.getShaderData())
         );
     }
 
@@ -272,6 +287,98 @@ class PageResourceOwnershipTest {
                 () -> assertFalse(bridge.shaderBridge.wasDeleted(incoming.shaderProgram)),
                 () -> assertEquals(0, outgoing.callbacks),
                 () -> assertEquals(5, incoming.callbacks)
+        );
+    }
+
+    @Test
+    void sameClassTransitionRemovesOnlyOutgoingShaderDataAndReindexesIncomingLights() {
+        ShaderDataTestContext context = prepareShaderDataTest();
+        SameClassShaderDataPage outgoing = new SameClassShaderDataPage();
+        context.engine.startNewPage(outgoing);
+        SameClassShaderDataPage incoming = new SameClassShaderDataPage();
+
+        context.engine.startNewPage(incoming);
+        context.bridge.generalBridge.clearCalls();
+        incoming.applyShader();
+
+        assertIncomingShaderDataOnly(context, outgoing, incoming);
+    }
+
+    @Test
+    void differentClassTransitionRemovesOnlyOutgoingShaderDataAndReindexesIncomingLights() {
+        ShaderDataTestContext context = prepareShaderDataTest();
+        FirstShaderDataPage outgoing = new FirstShaderDataPage();
+        context.engine.startNewPage(outgoing);
+        SecondShaderDataPage incoming = new SecondShaderDataPage();
+
+        context.engine.startNewPage(incoming);
+        context.bridge.generalBridge.clearCalls();
+        incoming.applyShader();
+
+        assertIncomingShaderDataOnly(context, outgoing, incoming);
+    }
+
+    @Test
+    void globalShaderDataSurvivesPageTransitions() {
+        ShaderDataTestContext context = prepareShaderDataTest();
+        RecordingShaderData global = new RecordingShaderData(null);
+        context.engine.startNewPage(new FirstEmptyPage());
+        SecondEmptyPage currentPage = new SecondEmptyPage();
+        context.engine.startNewPage(currentPage);
+        Shader shader = new Shader("vertex", "fragment", currentPage, new NoOpAdaptor());
+
+        shader.apply();
+
+        assertAll(
+                () -> assertEquals(context.baselineShaderData + 1, Adaptor.getTrackedShaderDataCount()),
+                () -> assertEquals(0, global.deleteCalls),
+                () -> assertEquals(1, global.locationCalls),
+                () -> assertEquals(1, global.forwardCalls)
+        );
+    }
+
+    private static ShaderDataTestContext prepareShaderDataTest() {
+        RecordingBridge bridge = new RecordingBridge();
+        Engine engine = new Engine(bridge, new LauncherParams());
+        CoreRenderer.engine = engine;
+        EmptyPage cleanupPage = new EmptyPage();
+        engine.startNewPage(cleanupPage);
+        new Shader("vertex", "fragment", cleanupPage, new NoOpAdaptor()).apply();
+        return new ShaderDataTestContext(engine, bridge, Adaptor.getTrackedShaderDataCount());
+    }
+
+    private static void assertIncomingShaderDataOnly(
+            ShaderDataTestContext context,
+            ShaderDataOwnedPage outgoing,
+            ShaderDataOwnedPage incoming
+    ) {
+        RecordingGeneralBridge gl = context.bridge.generalBridge;
+        assertAll(
+                () -> assertEquals(
+                        context.baselineShaderData + ShaderDataOwnedPage.OWNED_SHADER_DATA,
+                        Adaptor.getTrackedShaderDataCount()
+                ),
+                () -> assertEquals(1, outgoing.constructorData.deleteCalls),
+                () -> assertEquals(1, outgoing.surfaceData.deleteCalls),
+                () -> assertEquals(0, outgoing.constructorData.forwardCalls),
+                () -> assertEquals(0, outgoing.surfaceData.forwardCalls),
+                () -> assertEquals(0, incoming.constructorData.deleteCalls),
+                () -> assertEquals(0, incoming.surfaceData.deleteCalls),
+                () -> assertEquals(1, incoming.constructorData.forwardCalls),
+                () -> assertEquals(1, incoming.surfaceData.forwardCalls),
+                () -> assertEquals(1, gl.callCount("aLight.color")),
+                () -> assertEquals(1, gl.callCount("exposure")),
+                () -> assertEquals(1, gl.callCount("gamma")),
+                () -> assertEquals(1, gl.requestCount("material.ambient")),
+                () -> assertEquals(1, gl.lastInt("dLightNum")),
+                () -> assertEquals(1, gl.lastInt("pLightNum")),
+                () -> assertEquals(1, gl.lastInt("sLightNum")),
+                () -> assertEquals(1, gl.requestCount("dLights[0].color")),
+                () -> assertEquals(0, gl.requestCount("dLights[1].color")),
+                () -> assertEquals(1, gl.requestCount("pLights[0].color")),
+                () -> assertEquals(0, gl.requestCount("pLights[1].color")),
+                () -> assertEquals(1, gl.requestCount("sLights[0].color")),
+                () -> assertEquals(0, gl.requestCount("sLights[1].color"))
         );
     }
 
@@ -395,6 +502,113 @@ class PageResourceOwnershipTest {
 
         @Override
         public void onPause() {
+        }
+    }
+
+    private abstract static class ShaderDataOwnedPage extends GamePageClass {
+        private static final int OWNED_SHADER_DATA = 8;
+        private final Shader shader;
+        private final RecordingShaderData constructorData;
+        private final AmbientLight ambientLight;
+        private final DirectedLight directedLight;
+        private final PointLight pointLight;
+        private final SourceLight sourceLight;
+        private final ExpouseSettings expouseSettings;
+        private final Material material;
+        private RecordingShaderData surfaceData;
+
+        private ShaderDataOwnedPage() {
+            shader = new Shader("vertex", "fragment", this, new NoOpAdaptor());
+            constructorData = new RecordingShaderData(this);
+            ambientLight = new AmbientLight(this);
+            directedLight = new DirectedLight(this);
+            directedLight.color = vector();
+            directedLight.direction = vector();
+            pointLight = new PointLight(this);
+            pointLight.color = vector();
+            pointLight.position = vector();
+            sourceLight = new SourceLight(this);
+            sourceLight.color = vector();
+            sourceLight.position = vector();
+            sourceLight.direction = vector();
+            expouseSettings = new ExpouseSettings(this);
+            material = new Material(this);
+            material.ambient = vector();
+            material.diffuse = vector();
+            material.specular = vector();
+        }
+
+        private static PVector vector() {
+            return new PVector(1, 2, 3);
+        }
+
+        final void applyShader() {
+            shader.apply();
+        }
+
+        @Override
+        public void onSurfaceChanged(int x, int y) {
+            if (surfaceData == null) {
+                surfaceData = new RecordingShaderData(this);
+            }
+        }
+
+        @Override
+        public void draw() {
+        }
+
+        @Override
+        public void onResume() {
+        }
+
+        @Override
+        public void onPause() {
+        }
+    }
+
+    private static final class SameClassShaderDataPage extends ShaderDataOwnedPage {
+    }
+
+    private static final class FirstShaderDataPage extends ShaderDataOwnedPage {
+    }
+
+    private static final class SecondShaderDataPage extends ShaderDataOwnedPage {
+    }
+
+    private static final class RecordingShaderData extends ShaderData {
+        private int locationCalls;
+        private int forwardCalls;
+        private int deleteCalls;
+
+        private RecordingShaderData(GamePageClass owner) {
+            super(owner);
+        }
+
+        @Override
+        protected void getLocations(int programId) {
+            locationCalls++;
+        }
+
+        @Override
+        protected void forwardData() {
+            forwardCalls++;
+        }
+
+        @Override
+        protected void delete() {
+            deleteCalls++;
+        }
+    }
+
+    private static final class ShaderDataTestContext {
+        private final Engine engine;
+        private final RecordingBridge bridge;
+        private final int baselineShaderData;
+
+        private ShaderDataTestContext(Engine engine, RecordingBridge bridge, int baselineShaderData) {
+            this.engine = engine;
+            this.bridge = bridge;
+            this.baselineShaderData = baselineShaderData;
         }
     }
 
@@ -550,6 +764,7 @@ class PageResourceOwnershipTest {
 
     private static final class RecordingBridge extends DesktopBridge {
         private final RecordingShaderBridge shaderBridge = new RecordingShaderBridge();
+        private final RecordingGeneralBridge generalBridge = new RecordingGeneralBridge();
         private final SealAssetManager assetManager = new SealAssetManager() {
             @Override
             public InputStream load(String path) {
@@ -573,8 +788,75 @@ class PageResourceOwnershipTest {
         }
 
         @Override
+        public GeneralPlatformBridge getGeneralPlatformBridge() {
+            return generalBridge;
+        }
+
+        @Override
         public SealAssetManager getAssetManager() {
             return assetManager;
+        }
+    }
+
+    private static final class RecordingGeneralBridge extends GeneralBridgeDesktop {
+        private int nextLocation = 1;
+        private final Map<String, Integer> locations = new HashMap<>();
+        private final Map<Integer, String> names = new HashMap<>();
+        private final Map<String, Integer> locationRequests = new HashMap<>();
+        private final Map<String, Integer> calls = new HashMap<>();
+        private final Map<String, Integer> lastInts = new HashMap<>();
+
+        @Override
+        public int glGetUniformLocation(int program, String name) {
+            locationRequests.merge(name, 1, Integer::sum);
+            Integer existing = locations.get(name);
+            if (existing != null) {
+                return existing;
+            }
+            int location = nextLocation++;
+            locations.put(name, location);
+            names.put(location, name);
+            return location;
+        }
+
+        @Override
+        public void glUniform3f(int location, float x, float y, float z) {
+            record(location);
+        }
+
+        @Override
+        public void glUniform1f(int location, float val) {
+            record(location);
+        }
+
+        @Override
+        public void glUniform1i(int location, int value) {
+            String name = record(location);
+            lastInts.put(name, value);
+        }
+
+        private String record(int location) {
+            String name = names.get(location);
+            calls.merge(name, 1, Integer::sum);
+            return name;
+        }
+
+        private int requestCount(String name) {
+            return locationRequests.getOrDefault(name, 0);
+        }
+
+        private int callCount(String name) {
+            return calls.getOrDefault(name, 0);
+        }
+
+        private int lastInt(String name) {
+            return lastInts.getOrDefault(name, -1);
+        }
+
+        private void clearCalls() {
+            locationRequests.clear();
+            calls.clear();
+            lastInts.clear();
         }
     }
 

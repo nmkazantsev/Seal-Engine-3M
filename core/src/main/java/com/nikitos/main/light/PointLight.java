@@ -32,6 +32,10 @@ public class PointLight extends ShaderData {
     //always use before apply shader
     public void deleteLight() {
         pointLights.remove(index);
+        reindexLights();
+    }
+
+    private static void reindexLights() {
         for (int i = 0; i < pointLights.size(); i++) {
             pointLights.get(i).get().index = i; //locations will be updated when apply shader
         }
@@ -64,6 +68,7 @@ public class PointLight extends ShaderData {
     @Override
     protected void delete() {
         pointLights.remove(thisRef);
+        reindexLights();
     }
 }
 
