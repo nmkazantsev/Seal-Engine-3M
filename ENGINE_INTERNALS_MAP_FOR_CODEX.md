@@ -157,8 +157,12 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 - An observer's explicit `capture()` call runs synchronously on the registered
   `GLSurfaceView` GL thread after the existing frame body and before swap. It
   validates the current EGL context and surface dimensions, reads the default
-  framebuffer, restores read-framebuffer and pack-alignment state, and flips
-  GLES bottom-left rows into the core top-left straight-alpha RGBA contract.
+  framebuffer from `GL_BACK` with a tightly packed client target. It temporarily
+  unbinds any pixel-pack buffer, clears row/skip pack parameters, and restores
+  read framebuffer/buffer plus every affected pack state with independent
+  best-effort operations. A read failure remains primary and restore failures
+  are suppressed. GLES bottom-left rows are then flipped into the core top-left
+  straight-alpha RGBA contract.
 
 ### 5.5 Keyboard input model
 

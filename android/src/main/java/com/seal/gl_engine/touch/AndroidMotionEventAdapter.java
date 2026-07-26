@@ -12,18 +12,7 @@ public final class AndroidMotionEventAdapter implements MyMotionEvent {
     private final float[] ys;
 
     public AndroidMotionEventAdapter(android.view.MotionEvent event) {
-        Objects.requireNonNull(event, "event");
-        actionMasked = event.getActionMasked();
-        actionIndex = event.getActionIndex();
-        int pointerCount = event.getPointerCount();
-        pointerIds = new int[pointerCount];
-        xs = new float[pointerCount];
-        ys = new float[pointerCount];
-        for (int index = 0; index < pointerCount; index++) {
-            pointerIds[index] = event.getPointerId(index);
-            xs[index] = event.getX(index);
-            ys[index] = event.getY(index);
-        }
+        this(new MotionEventView(event));
     }
 
     AndroidMotionEventAdapter(MyMotionEvent event) {
@@ -69,5 +58,43 @@ public final class AndroidMotionEventAdapter implements MyMotionEvent {
     @Override
     public float getY(int index) {
         return ys[index];
+    }
+
+    private static final class MotionEventView implements MyMotionEvent {
+        private final android.view.MotionEvent event;
+
+        private MotionEventView(android.view.MotionEvent event) {
+            this.event = Objects.requireNonNull(event, "event");
+        }
+
+        @Override
+        public int getActionMasked() {
+            return event.getActionMasked();
+        }
+
+        @Override
+        public int getActionIndex() {
+            return event.getActionIndex();
+        }
+
+        @Override
+        public int getPointerId(int index) {
+            return event.getPointerId(index);
+        }
+
+        @Override
+        public int getPointerCount() {
+            return event.getPointerCount();
+        }
+
+        @Override
+        public float getX(int index) {
+            return event.getX(index);
+        }
+
+        @Override
+        public float getY(int index) {
+            return event.getY(index);
+        }
     }
 }

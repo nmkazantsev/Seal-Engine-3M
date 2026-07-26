@@ -63,30 +63,92 @@ public final class AndroidFrameCaptureSource implements FrameCaptureSource {
                 gl.getInteger(GLES30.GL_READ_FRAMEBUFFER_BINDING);
         int previousPackAlignment =
                 gl.getInteger(GLES30.GL_PACK_ALIGNMENT);
+        int previousPackRowLength =
+                gl.getInteger(GLES30.GL_PACK_ROW_LENGTH);
+        int previousPackSkipRows =
+                gl.getInteger(GLES30.GL_PACK_SKIP_ROWS);
+        int previousPackSkipPixels =
+                gl.getInteger(GLES30.GL_PACK_SKIP_PIXELS);
+        int previousPixelPackBuffer =
+                gl.getInteger(GLES30.GL_PIXEL_PACK_BUFFER_BINDING);
+
+        int previousReadBuffer = GLES30.GL_NONE;
+        boolean readBufferCaptured = false;
+        Throwable failure = null;
         try {
             gl.bindFramebuffer(GLES30.GL_READ_FRAMEBUFFER, 0);
-            try {
-                gl.pixelStore(GLES30.GL_PACK_ALIGNMENT, 1);
-                gl.readPixels(
-                        0,
-                        0,
-                        captureWidth,
-                        captureHeight,
-                        GLES30.GL_RGBA,
-                        GLES30.GL_UNSIGNED_BYTE,
-                        bottomLeftRgba
-                );
-            } finally {
-                gl.pixelStore(
+            previousReadBuffer = gl.getInteger(GLES30.GL_READ_BUFFER);
+            readBufferCaptured = true;
+            gl.readBuffer(GLES30.GL_BACK);
+            gl.pixelStore(GLES30.GL_PACK_ALIGNMENT, 1);
+            gl.pixelStore(GLES30.GL_PACK_ROW_LENGTH, 0);
+            gl.pixelStore(GLES30.GL_PACK_SKIP_ROWS, 0);
+            gl.pixelStore(GLES30.GL_PACK_SKIP_PIXELS, 0);
+            gl.bindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, 0);
+            gl.readPixels(
+                    0,
+                    0,
+                    captureWidth,
+                    captureHeight,
+                    GLES30.GL_RGBA,
+                    GLES30.GL_UNSIGNED_BYTE,
+                    bottomLeftRgba
+            );
+        } catch (RuntimeException | Error operationFailure) {
+            failure = operationFailure;
+        }
+
+        if (readBufferCaptured) {
+            int capturedReadBuffer = previousReadBuffer;
+            failure = attemptRestore(
+                    failure,
+                    () -> gl.readBuffer(capturedReadBuffer)
+            );
+        }
+        failure = attemptRestore(
+                failure,
+                () -> gl.pixelStore(
                         GLES30.GL_PACK_ALIGNMENT,
                         previousPackAlignment
-                );
-            }
-        } finally {
-            gl.bindFramebuffer(
-                    GLES30.GL_READ_FRAMEBUFFER,
-                    previousReadFramebuffer
-            );
+                )
+        );
+        failure = attemptRestore(
+                failure,
+                () -> gl.pixelStore(
+                        GLES30.GL_PACK_ROW_LENGTH,
+                        previousPackRowLength
+                )
+        );
+        failure = attemptRestore(
+                failure,
+                () -> gl.pixelStore(
+                        GLES30.GL_PACK_SKIP_ROWS,
+                        previousPackSkipRows
+                )
+        );
+        failure = attemptRestore(
+                failure,
+                () -> gl.pixelStore(
+                        GLES30.GL_PACK_SKIP_PIXELS,
+                        previousPackSkipPixels
+                )
+        );
+        failure = attemptRestore(
+                failure,
+                () -> gl.bindBuffer(
+                        GLES30.GL_PIXEL_PACK_BUFFER,
+                        previousPixelPackBuffer
+                )
+        );
+        failure = attemptRestore(
+                failure,
+                () -> gl.bindFramebuffer(
+                        GLES30.GL_READ_FRAMEBUFFER,
+                        previousReadFramebuffer
+                )
+        );
+        if (failure != null) {
+            rethrow(failure);
         }
 
         return new CapturedFrame(
@@ -145,6 +207,30 @@ public final class AndroidFrameCaptureSource implements FrameCaptureSource {
         return topLeftRgba;
     }
 
+    private static Throwable attemptRestore(
+            Throwable existingFailure,
+            Runnable restore
+    ) {
+        try {
+            restore.run();
+        } catch (RuntimeException | Error restoreFailure) {
+            if (existingFailure == null) {
+                return restoreFailure;
+            }
+            if (existingFailure != restoreFailure) {
+                existingFailure.addSuppressed(restoreFailure);
+            }
+        }
+        return existingFailure;
+    }
+
+    private static void rethrow(Throwable failure) {
+        if (failure instanceof RuntimeException) {
+            throw (RuntimeException) failure;
+        }
+        throw (Error) failure;
+    }
+
     private void requireGlThread() {
         if (glThread == null) {
             throw new IllegalStateException(
@@ -165,7 +251,11 @@ public final class AndroidFrameCaptureSource implements FrameCaptureSource {
 
         void bindFramebuffer(int target, int framebuffer);
 
+        void readBuffer(int buffer);
+
         void pixelStore(int name, int value);
+
+        void bindBuffer(int target, int buffer);
 
         void readPixels(
                 int x,
@@ -198,8 +288,18 @@ public final class AndroidFrameCaptureSource implements FrameCaptureSource {
         }
 
         @Override
+        public void readBuffer(int buffer) {
+            GLES30.glReadBuffer(buffer);
+        }
+
+        @Override
         public void pixelStore(int name, int value) {
             GLES30.glPixelStorei(name, value);
+        }
+
+        @Override
+        public void bindBuffer(int target, int buffer) {
+            GLES30.glBindBuffer(target, buffer);
         }
 
         @Override

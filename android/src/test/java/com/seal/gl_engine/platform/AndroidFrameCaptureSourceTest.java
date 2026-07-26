@@ -6,6 +6,11 @@ import com.nikitos.runtime.FrameCaptureSource;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -41,13 +46,35 @@ public class AndroidFrameCaptureSourceTest {
         );
         assertEquals(1, gl.readCount);
         assertEquals(0, gl.framebufferDuringRead);
+        assertEquals(GLES30.GL_BACK, gl.readBufferDuringRead);
         assertEquals(1, gl.packAlignmentDuringRead);
+        assertEquals(0, gl.packRowLengthDuringRead);
+        assertEquals(0, gl.packSkipRowsDuringRead);
+        assertEquals(0, gl.packSkipPixelsDuringRead);
+        assertEquals(0, gl.pixelPackBufferDuringRead);
         assertEquals(17, gl.readFramebuffer);
+        assertEquals(GLES30.GL_NONE, gl.readBuffer);
         assertEquals(8, gl.packAlignment);
+        assertEquals(7, gl.packRowLength);
+        assertEquals(3, gl.packSkipRows);
+        assertEquals(2, gl.packSkipPixels);
+        assertEquals(99, gl.pixelPackBuffer);
+        assertEquals(
+                Arrays.asList(
+                        "readBuffer",
+                        "packAlignment",
+                        "packRowLength",
+                        "packSkipRows",
+                        "packSkipPixels",
+                        "pixelPackBuffer",
+                        "readFramebuffer"
+                ),
+                gl.restoreAttempts
+        );
     }
 
     @Test
-    public void captureRestoresFramebufferAndPackAlignmentWhenReadbackFails() {
+    public void captureRestoresAllReadbackStateWhenReadbackFails() {
         FakeGl gl = new FakeGl(new byte[4]);
         RuntimeException failure = new RuntimeException("readback failed");
         gl.readFailure = failure;
@@ -60,8 +87,122 @@ public class AndroidFrameCaptureSourceTest {
             assertSame(failure, thrown);
         }
 
+        assertEquals(0, gl.framebufferDuringRead);
+        assertEquals(GLES30.GL_BACK, gl.readBufferDuringRead);
+        assertEquals(1, gl.packAlignmentDuringRead);
+        assertEquals(0, gl.packRowLengthDuringRead);
+        assertEquals(0, gl.packSkipRowsDuringRead);
+        assertEquals(0, gl.packSkipPixelsDuringRead);
+        assertEquals(0, gl.pixelPackBufferDuringRead);
         assertEquals(17, gl.readFramebuffer);
+        assertEquals(GLES30.GL_NONE, gl.readBuffer);
         assertEquals(8, gl.packAlignment);
+        assertEquals(7, gl.packRowLength);
+        assertEquals(3, gl.packSkipRows);
+        assertEquals(2, gl.packSkipPixels);
+        assertEquals(99, gl.pixelPackBuffer);
+        assertEquals(
+                Arrays.asList(
+                        "readBuffer",
+                        "packAlignment",
+                        "packRowLength",
+                        "packSkipRows",
+                        "packSkipPixels",
+                        "pixelPackBuffer",
+                        "readFramebuffer"
+                ),
+                gl.restoreAttempts
+        );
+    }
+
+    @Test
+    public void capturePreservesReadFailureAndAttemptsEveryRestore() {
+        FakeGl gl = new FakeGl(new byte[4]);
+        RuntimeException readFailure =
+                new RuntimeException("readback failed");
+        RuntimeException rowLengthRestoreFailure =
+                new RuntimeException("row length restore failed");
+        RuntimeException framebufferRestoreFailure =
+                new RuntimeException("framebuffer restore failed");
+        gl.readFailure = readFailure;
+        gl.restoreFailures.put(
+                "packRowLength",
+                rowLengthRestoreFailure
+        );
+        gl.restoreFailures.put(
+                "readFramebuffer",
+                framebufferRestoreFailure
+        );
+        AndroidFrameCaptureSource source = readySource(gl, 1, 1);
+
+        try {
+            source.capture();
+            fail("Expected readback failure");
+        } catch (RuntimeException thrown) {
+            assertSame(readFailure, thrown);
+            assertArrayEquals(
+                    new Throwable[]{
+                            rowLengthRestoreFailure,
+                            framebufferRestoreFailure
+                    },
+                    thrown.getSuppressed()
+            );
+        }
+
+        assertEquals(
+                Arrays.asList(
+                        "readBuffer",
+                        "packAlignment",
+                        "packRowLength",
+                        "packSkipRows",
+                        "packSkipPixels",
+                        "pixelPackBuffer",
+                        "readFramebuffer"
+                ),
+                gl.restoreAttempts
+        );
+    }
+
+    @Test
+    public void captureThrowsFirstRestoreFailureAndSuppressesLaterOnes() {
+        FakeGl gl = new FakeGl(new byte[4]);
+        RuntimeException readBufferRestoreFailure =
+                new RuntimeException("read buffer restore failed");
+        RuntimeException pixelBufferRestoreFailure =
+                new RuntimeException("pixel buffer restore failed");
+        gl.restoreFailures.put(
+                "readBuffer",
+                readBufferRestoreFailure
+        );
+        gl.restoreFailures.put(
+                "pixelPackBuffer",
+                pixelBufferRestoreFailure
+        );
+        AndroidFrameCaptureSource source = readySource(gl, 1, 1);
+
+        try {
+            source.capture();
+            fail("Expected restoration failure");
+        } catch (RuntimeException thrown) {
+            assertSame(readBufferRestoreFailure, thrown);
+            assertArrayEquals(
+                    new Throwable[]{pixelBufferRestoreFailure},
+                    thrown.getSuppressed()
+            );
+        }
+
+        assertEquals(
+                Arrays.asList(
+                        "readBuffer",
+                        "packAlignment",
+                        "packRowLength",
+                        "packSkipRows",
+                        "packSkipPixels",
+                        "pixelPackBuffer",
+                        "readFramebuffer"
+                ),
+                gl.restoreAttempts
+        );
     }
 
     @Test
@@ -174,12 +315,27 @@ public class AndroidFrameCaptureSourceTest {
         private final byte[] pixels;
         private boolean contextCurrent = true;
         private int readFramebuffer = 17;
+        private int readBuffer = GLES30.GL_NONE;
         private int packAlignment = 8;
+        private int packRowLength = 7;
+        private int packSkipRows = 3;
+        private int packSkipPixels = 2;
+        private int pixelPackBuffer = 99;
         private int framebufferDuringRead = -1;
+        private int readBufferDuringRead = -1;
         private int packAlignmentDuringRead = -1;
+        private int packRowLengthDuringRead = -1;
+        private int packSkipRowsDuringRead = -1;
+        private int packSkipPixelsDuringRead = -1;
+        private int pixelPackBufferDuringRead = -1;
         private int stateQueryCount;
         private int readCount;
+        private boolean readAttempted;
         private RuntimeException readFailure;
+        private final List<String> restoreAttempts =
+                new ArrayList<>();
+        private final Map<String, RuntimeException> restoreFailures =
+                new HashMap<>();
 
         private FakeGl(byte[] pixels) {
             this.pixels = pixels;
@@ -196,8 +352,24 @@ public class AndroidFrameCaptureSourceTest {
             if (name == GLES30.GL_READ_FRAMEBUFFER_BINDING) {
                 return readFramebuffer;
             }
+            if (name == GLES30.GL_READ_BUFFER) {
+                assertEquals(0, readFramebuffer);
+                return readBuffer;
+            }
             if (name == GLES30.GL_PACK_ALIGNMENT) {
                 return packAlignment;
+            }
+            if (name == GLES30.GL_PACK_ROW_LENGTH) {
+                return packRowLength;
+            }
+            if (name == GLES30.GL_PACK_SKIP_ROWS) {
+                return packSkipRows;
+            }
+            if (name == GLES30.GL_PACK_SKIP_PIXELS) {
+                return packSkipPixels;
+            }
+            if (name == GLES30.GL_PIXEL_PACK_BUFFER_BINDING) {
+                return pixelPackBuffer;
             }
             throw new AssertionError("Unexpected GL state query: " + name);
         }
@@ -205,13 +377,46 @@ public class AndroidFrameCaptureSourceTest {
         @Override
         public void bindFramebuffer(int target, int framebuffer) {
             assertEquals(GLES30.GL_READ_FRAMEBUFFER, target);
+            restore("readFramebuffer", framebuffer == 17);
             readFramebuffer = framebuffer;
         }
 
         @Override
+        public void readBuffer(int buffer) {
+            restore("readBuffer", buffer == GLES30.GL_NONE);
+            readBuffer = buffer;
+        }
+
+        @Override
         public void pixelStore(int name, int value) {
-            assertEquals(GLES30.GL_PACK_ALIGNMENT, name);
-            packAlignment = value;
+            if (name == GLES30.GL_PACK_ALIGNMENT) {
+                restore("packAlignment", value == 8);
+                packAlignment = value;
+                return;
+            }
+            if (name == GLES30.GL_PACK_ROW_LENGTH) {
+                restore("packRowLength", value == 7);
+                packRowLength = value;
+                return;
+            }
+            if (name == GLES30.GL_PACK_SKIP_ROWS) {
+                restore("packSkipRows", value == 3);
+                packSkipRows = value;
+                return;
+            }
+            if (name == GLES30.GL_PACK_SKIP_PIXELS) {
+                restore("packSkipPixels", value == 2);
+                packSkipPixels = value;
+                return;
+            }
+            throw new AssertionError("Unexpected pixel-store state: " + name);
+        }
+
+        @Override
+        public void bindBuffer(int target, int buffer) {
+            assertEquals(GLES30.GL_PIXEL_PACK_BUFFER, target);
+            restore("pixelPackBuffer", buffer == 99);
+            pixelPackBuffer = buffer;
         }
 
         @Override
@@ -225,8 +430,14 @@ public class AndroidFrameCaptureSourceTest {
                 ByteBuffer target
         ) {
             readCount++;
+            readAttempted = true;
             framebufferDuringRead = readFramebuffer;
+            readBufferDuringRead = readBuffer;
             packAlignmentDuringRead = packAlignment;
+            packRowLengthDuringRead = packRowLength;
+            packSkipRowsDuringRead = packSkipRows;
+            packSkipPixelsDuringRead = packSkipPixels;
+            pixelPackBufferDuringRead = pixelPackBuffer;
             assertEquals(0, x);
             assertEquals(0, y);
             assertEquals(GLES30.GL_RGBA, format);
@@ -237,6 +448,17 @@ public class AndroidFrameCaptureSourceTest {
             assertEquals(pixels.length, width * height * 4);
             for (int index = 0; index < pixels.length; index++) {
                 target.put(index, pixels[index]);
+            }
+        }
+
+        private void restore(String state, boolean isOriginalValue) {
+            if (!readAttempted || !isOriginalValue) {
+                return;
+            }
+            restoreAttempts.add(state);
+            RuntimeException failure = restoreFailures.get(state);
+            if (failure != null) {
+                throw failure;
             }
         }
     }

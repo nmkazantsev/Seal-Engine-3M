@@ -37,8 +37,10 @@ Add capture and deterministic desktop-window capabilities behind platform-neutra
 - Desktop readback uses the current default framebuffer after `CoreRenderer.draw()` and before swap. It must preserve prior GL pack state and restore it.
 - Android readback uses the current default framebuffer from the observer
   `afterFrame` callback on the `GLSurfaceView` GL thread, before
-  `CoreRenderer.draw()` returns and before swap. It preserves read framebuffer
-  and pack-alignment state, survives surface recreation, and converts
+  `CoreRenderer.draw()` returns and before swap. It selects `GL_BACK`, uses a
+  tightly packed client target with no pixel-pack buffer, and preserves read
+  framebuffer/buffer plus alignment, row-length, and row/pixel-skip pack state
+  with best-effort restoration. It survives surface recreation and converts
   bottom-left GLES rows to the shared top-left RGBA contract.
 - Capture occurs only when observer code explicitly calls the source; never pre-capture each frame.
 - Add `LauncherParams` window width, height, maximized, and VSync settings.
