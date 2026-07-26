@@ -1,12 +1,13 @@
 package com.seal.gl_engine.platform;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Build;
 
 import com.nikitos.platformBridge.SealAssetManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -14,61 +15,75 @@ import java.util.Objects;
 
 public class AndroidSealAssetManager implements SealAssetManager {
 
-    private final AssetManager assets;
+    private final AssetStreamResolver streams;
 
     public AndroidSealAssetManager(Context context) {
-        this.assets = context.getAssets();
+        Context applicationContext =
+                Objects.requireNonNull(context, "context").getApplicationContext();
+        if (applicationContext == null) {
+            if (context instanceof Application) {
+                applicationContext = context;
+            } else {
+                throw new IllegalArgumentException(
+                        "Android Context must expose an application context"
+                );
+            }
+        }
+
+        AssetManager assets = applicationContext.getAssets();
+        ClassLoader classLoader = Objects.requireNonNull(
+                AndroidSealAssetManager.class.getClassLoader(),
+                "classLoader"
+        );
+        streams = new AssetStreamResolver(
+                assets::open,
+                path -> {
+                    InputStream stream = classLoader.getResourceAsStream(path);
+                    if (stream == null) {
+                        throw new FileNotFoundException(
+                                "Classpath resource not found: " + path
+                        );
+                    }
+                    return stream;
+                }
+        );
+    }
+
+    AndroidSealAssetManager(AssetStreamResolver streams) {
+        this.streams = Objects.requireNonNull(streams, "streams");
     }
 
     @Override
     public InputStream load(String path) {
-        InputStream is = Objects.requireNonNull(getClass()
-                        .getClassLoader())
-                .getResourceAsStream(path);
-
-        if (is == null) {
-            throw new RuntimeException("Asset not found: " + path);
-        }
-
-        return is;
+        return streams.open(path);
     }
 
     @Override
     public String loadText(String path) {
-        try (InputStream is = load(path);
-             ByteArrayOutputStream result = new ByteArrayOutputStream()) {
-
-            byte[] buffer = new byte[4096];
-            int length;
-
-            while ((length = is.read(buffer)) != -1) {
-                result.write(buffer, 0, length);
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                return result.toString(StandardCharsets.UTF_8);
-            }
+        try (InputStream stream = load(path)) {
+            return new String(readAllBytes(stream), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to read asset text: " + path, e);
         }
-        return null;
     }
 
     @Override
     public byte[] loadBytes(String path) {
-        try (InputStream is = load(path);
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-
-            byte[] data = new byte[4096];
-            int nRead;
-
-            while ((nRead = is.read(data)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-
-            return buffer.toByteArray();
+        try (InputStream stream = load(path)) {
+            return readAllBytes(stream);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to read asset bytes: " + path, e);
+        }
+    }
+
+    private static byte[] readAllBytes(InputStream stream) throws IOException {
+        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
+            byte[] chunk = new byte[4096];
+            int count;
+            while ((count = stream.read(chunk)) != -1) {
+                bytes.write(chunk, 0, count);
+            }
+            return bytes.toByteArray();
         }
     }
 }

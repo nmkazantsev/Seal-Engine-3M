@@ -952,6 +952,14 @@ Mouse control exposed through `Engine` and implemented only on desktop.
 ### SealAssetManager
 Интерфейс для загрузки ресурсов из assets. Реализуется платформой.
 
+На Android поиск сначала выполняется в `AssetManager` приложения. Только если
+упакованный asset отсутствует, используется classpath fallback для ресурсов
+движка из JAR. Ошибка открытия или чтения существующего упакованного asset не
+маскируется fallback-ресурсом. `loadText(...)` декодирует UTF-8 на всех
+поддерживаемых Android API (minSdk 24). Поток, возвращённый `load(...)`, остаётся
+открытым и принадлежит вызывающему коду; `loadText(...)` и `loadBytes(...)`
+закрывают открытый ими поток.
+
 **Методы:**
 - `InputStream load(String path)`
 - `String loadText(String path)`

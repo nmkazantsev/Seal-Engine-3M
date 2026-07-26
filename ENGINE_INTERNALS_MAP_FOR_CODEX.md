@@ -230,6 +230,14 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   - Desktop: `System.getProperty("user.dir")`
   - Android: `Context.getFilesDir()` app-internal persistent files directory
 - Asset loading is still handled separately through `SealAssetManager`; runtime file APIs must not be used as a replacement for packaged resources.
+- Android asset lookup is application-`AssetManager` first. A classloader
+  fallback is attempted only after the packaged path reports
+  `FileNotFoundException`, preserving Engine/JAR resources without masking an
+  existing packaged asset's open/read failure. The Android manager retains no
+  `Context`; its stream source owns only the application package's
+  `AssetManager`. `load(...)` transfers stream ownership to its caller, while
+  `loadText(...)` and `loadBytes(...)` close streams and decode text as UTF-8
+  without API-level branching.
 - Mouse control is routed through `MouseControlBridge`:
   - Desktop implementation is bound to the actual GLFW window from `DesktopLauncher`
   - Android implementation is intentionally a safe no-op to keep the API surface stable without affecting touch/input behavior
