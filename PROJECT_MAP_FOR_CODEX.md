@@ -133,6 +133,9 @@ When asked to modify an application built on Seal Engine, start in this order:
 - Implement a new `GamePageClass`.
 - Switch to it via `engine.startNewPage(new YourPage())`.
 - Ensure the new page creates heavy assets once (constructor) and recreates size-dependent resources in `onSurfaceChanged(...)`.
+- Resize an existing `FrameBuffer` with `FrameBuffer.resize(...)`; do not
+  replace its tracked wrapper or its dimension-independent fullscreen-quad VBO
+  on every surface callback.
 
 ### 7.2 Touch issues
 

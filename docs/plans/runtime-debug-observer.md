@@ -40,6 +40,10 @@ Add capture and deterministic desktop-window capabilities behind platform-neutra
 - Add `LauncherParams` window width, height, maximized, and VSync settings.
 - Preserve legacy defaults exactly. Explicit settings must allow a non-maximized 1280x720 window with VSync disabled.
 - Add render-thread-only `DesktopLauncher.requestStop()` and `requestWindowSize(width, height)` controls for clean debug shutdown and resize scenarios. They must use GLFW lifecycle operations, reject inactive/wrong-thread calls predictably, and never use `System.exit`.
+- Add render-thread-only `DesktopLauncher.requestPage(page)` for synchronous
+  coordinator resets without exposing `Engine` or introducing a command queue.
+  It shares the active-window/owner-thread boundary and preserves exact
+  `PageTransition` instances.
 - Add tests for defaults, validation, capability behavior, orientation conversion, and no-readback when capture is not requested.
 
 Verification:
@@ -60,6 +64,9 @@ Correct same-class page cleanup without changing different-class or global owner
 - Same-class transition deletes resources/processors owned by the outgoing instance.
 - Add observer-visible resource counters without work when no observer is installed.
 - Add characterization tests for null owner, different-class transition, same-class transition, context redraw, incoming-resource preservation, ShaderData forwarding, and indexed light compaction.
+- Keep `FrameBuffer` and its lazily-created child `VertexBuffer` under one
+  stable page lifecycle: resize reallocates only attachments, context redraw
+  regenerates the existing VBO wrapper once, and deletion is idempotent.
 - Document the corrected instance ownership lifecycle and compatibility boundary.
 
 Verification:

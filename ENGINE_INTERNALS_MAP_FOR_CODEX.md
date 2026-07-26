@@ -55,6 +55,10 @@ Key packages:
 
 - `VRAMobject` is the base for GPU-backed resources tracked globally.
 - The system supports deletion and reload (e.g., on page changes or GL context recreation).
+- `FrameBuffer.resize(...)` retains its dimension-independent child
+  `VertexBuffer` while reallocating only framebuffer attachments. Page deletion
+  deletes that child idempotently; context reload regenerates the existing
+  `VertexBuffer` wrapper instead of registering a replacement.
 
 This is a high-risk area: memory leaks, stale GL handles, and “works on desktop but not Android” bugs often originate here.
 

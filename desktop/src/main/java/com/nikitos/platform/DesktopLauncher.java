@@ -2,6 +2,7 @@ package com.nikitos.platform;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
+import com.nikitos.GamePageClass;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.main.touch.MyMotionEvent;
@@ -41,6 +42,8 @@ public class DesktopLauncher {
 
     private final DesktopWindowControl windowControl;
 
+    private final DesktopPageControl pageControl;
+
     private GLFWVidMode vidmode;
 
     private boolean fullScreenOpened = false;
@@ -56,6 +59,7 @@ public class DesktopLauncher {
         windowControl = new DesktopWindowControl();
         desktopBridge = new DesktopBridge();
         engine = new Engine(desktopBridge, launcherParams);
+        pageControl = new DesktopPageControl(windowControl, engine);
         init();
         int[] framebufferSize = getFramebufferSize(window);
         coreRenderer = new CoreRenderer(
@@ -89,6 +93,20 @@ public class DesktopLauncher {
      */
     public void requestWindowSize(int width, int height) {
         windowControl.requestWindowSize(width, height);
+    }
+
+    /**
+     * Performs an immediate engine page transition for desktop coordinators.
+     *
+     * <p>This method must be called on the thread that constructed this
+     * launcher while its GLFW window is active. It does not enqueue work;
+     * calls from another thread or after {@link #run()} returns fail with
+     * {@link IllegalStateException}.</p>
+     *
+     * @param page non-null page to install
+     */
+    public void requestPage(GamePageClass page) {
+        pageControl.requestPage(page);
     }
 
     private static String glfwKeyToName(int key, int scancode) {

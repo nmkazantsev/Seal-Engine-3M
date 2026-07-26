@@ -56,6 +56,10 @@ final class DesktopWindowControl {
         nativeWindow.setWindowSize(activeWindow, width, height);
     }
 
+    void requireActiveOwnerThread() {
+        requireActiveWindow();
+    }
+
     private long requireActiveWindow() {
         requireOwnerThread();
         if (window == 0L) {

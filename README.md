@@ -126,8 +126,9 @@ new LauncherParams()
 
 - `void requestStop()` устанавливает close flag окна. Существующий render loop завершает текущую итерацию, выходит по своему штатному условию и выполняет обычное освобождение callbacks, окна, GLFW и audio; `System.exit` не используется.
 - `void requestWindowSize(int width, int height)` запрашивает положительный размер content area в screen coordinates. Это не размер framebuffer в pixels; фактический framebuffer и `onSurfaceChanged(...)` продолжают обновляться существующим GLFW callback.
+- `void requestPage(GamePageClass page)` синхронно делегирует точный экземпляр страницы в `Engine.startNewPage(...)`. Метод предназначен для render-thread coordinator: он не раскрывает `Engine`, не создаёт очередь и сохраняет обычный `PageTransition`, включая переходы между разными экземплярами одного класса.
 
-Оба метода должны вызываться из того же потока, который создал `DesktopLauncher` и выполняет его render loop. Окно активно после успешного завершения конструктора и до возврата `run()`. Вызов из другого потока или после teardown выбрасывает `IllegalStateException`; неположительный размер выбрасывает `IllegalArgumentException` без native-вызова. Для воспроизводимых resize-сценариев используйте оконный немаксимизированный режим: в full-screen GLFW трактует изменение размера как смену желаемого video mode.
+Все три метода должны вызываться из того же потока, который создал `DesktopLauncher` и выполняет его render loop. Окно активно после успешного завершения конструктора и до возврата `run()`. Вызов из другого потока или после teardown выбрасывает `IllegalStateException`; неположительный размер выбрасывает `IllegalArgumentException` без native-вызова. Для воспроизводимых resize-сценариев используйте оконный немаксимизированный режим: в full-screen GLFW трактует изменение размера как смену желаемого video mode.
 
 API не меняет launcher defaults, порядок кадра, FPS, `Engine.pageMillis()` или `Utils.millis()` и не добавляет работу в render loop, если методы не вызываются.
 
@@ -931,9 +932,10 @@ Mouse control exposed through `Engine` and implemented only on desktop.
 **Публичные методы:**
 - `void drawTexture(PVector a, PVector b, PVector d)` – отрисовывает содержимое буфера как текстуру на прямоугольник.
 - `int getFrameBuffer()`, `int getDepth()`, `int getTexture()`, `int getWidth()`, `int getHeight()`
+- `void resize(int width, int height)` – переаллоцирует только зависящие от размера framebuffer/texture/depth attachments и сохраняет уже созданный fullscreen-quad VBO.
 - `void apply()` – активирует этот буфер для рендеринга.
 - `void connectDefaultFrameBuffer()` – переключает обратно на экранный буфер.
-- `void delete()`
+- `void delete()` – идемпотентно удаляет attachments и принадлежащий framebuffer fullscreen-quad VBO.
 
 ### SectionPolygon
 Утилитный класс для отрисовки отрезков (линий) через шейдер.

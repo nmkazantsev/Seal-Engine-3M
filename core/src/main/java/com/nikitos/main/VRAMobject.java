@@ -23,6 +23,14 @@ public abstract class VRAMobject {
     private static final List<VRAMobject> allObjects = new ArrayList<>();//links to all objects
 
     public VRAMobject(GamePageClass creator) {
+        this(creator, true);
+    }
+
+    /**
+     * Creates a GPU resource whose lifecycle may be owned by another tracked
+     * resource.
+     */
+    protected VRAMobject(GamePageClass creator, boolean registerForLifecycle) {
         gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
         glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
         gamePageClass = creator;
@@ -32,7 +40,9 @@ public abstract class VRAMobject {
         } else {
             this.creator = null;
         }
-        allObjects.add(this);
+        if (registerForLifecycle) {
+            allObjects.add(this);
+        }
     }
 
     public abstract void delete();

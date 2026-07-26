@@ -1,6 +1,7 @@
 package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
+import com.nikitos.main.frameBuffers.FrameBuffer;
 import com.nikitos.main.keyboard.KeyComboListener;
 import com.nikitos.main.keyboard.KeyListener;
 import com.nikitos.main.keyboard.KeyReleasedListener;
@@ -26,6 +27,7 @@ import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.platformBridge.SealAssetManager;
 import com.nikitos.platformBridge.ShaderBridge;
+import com.nikitos.platformBridge.VertexBridge;
 import com.nikitos.runtime.FrameContext;
 import com.nikitos.runtime.RuntimeObserver;
 import com.nikitos.runtime.RuntimeResourceSnapshot;
@@ -34,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PageResourceOwnershipTest {
@@ -154,6 +158,101 @@ class PageResourceOwnershipTest {
                 () -> assertEquals(expectedCombo, snapshot.getKeyboardComboListeners()),
                 () -> assertEquals(expectedMouse, snapshot.getDesktopMouseCallbackRegistrations()),
                 () -> assertEquals(expectedShaderData, snapshot.getShaderData())
+        );
+    }
+
+    @Test
+    void framebufferResizeAfterDrawReusesItsTrackedVertexBufferAndDeletesItOnce() {
+        RecordingBridge bridge = new RecordingBridge();
+        Engine engine = new Engine(bridge, new LauncherParams());
+        CoreRenderer.engine = engine;
+        EmptyPage owner = new EmptyPage();
+        engine.startNewPage(owner);
+        Shader shader = new Shader("vertex", "fragment", owner, new NoOpAdaptor());
+        shader.apply();
+        FrameBuffer frameBuffer = new FrameBuffer(640, 360, owner);
+        int trackedBeforeFirstDraw = VRAMobject.getTrackedObjectCount();
+
+        frameBuffer.drawTexture(
+                new PVector(0, 0, 1),
+                new PVector(640, 0, 1),
+                new PVector(0, 360, 1)
+        );
+        int trackedAfterFirstDraw = VRAMobject.getTrackedObjectCount();
+        int bufferAllocationsAfterFirstDraw = bridge.vertexBridge().bufferAllocations;
+        int arrayAllocationsAfterFirstDraw = bridge.vertexBridge().arrayAllocations;
+        int framebufferBeforeInvalidResize = frameBuffer.getFrameBuffer();
+        assertEquals(trackedBeforeFirstDraw, trackedAfterFirstDraw);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> frameBuffer.resize(0, 720)
+        );
+        assertAll(
+                () -> assertEquals(640, frameBuffer.getWidth()),
+                () -> assertEquals(360, frameBuffer.getHeight()),
+                () -> assertEquals(
+                        framebufferBeforeInvalidResize,
+                        frameBuffer.getFrameBuffer()
+                ),
+                () -> assertEquals(trackedAfterFirstDraw, VRAMobject.getTrackedObjectCount())
+        );
+
+        frameBuffer.resize(1280, 720);
+        frameBuffer.drawTexture(
+                new PVector(0, 0, 1),
+                new PVector(1280, 0, 1),
+                new PVector(0, 720, 1)
+        );
+
+        assertAll(
+                () -> assertEquals(1280, frameBuffer.getWidth()),
+                () -> assertEquals(720, frameBuffer.getHeight()),
+                () -> assertEquals(trackedAfterFirstDraw, VRAMobject.getTrackedObjectCount()),
+                () -> assertEquals(
+                        bufferAllocationsAfterFirstDraw,
+                        bridge.vertexBridge().bufferAllocations
+                ),
+                () -> assertEquals(
+                        arrayAllocationsAfterFirstDraw,
+                        bridge.vertexBridge().arrayAllocations
+                )
+        );
+
+        VRAMobject.onRedraw();
+        assertAll(
+                () -> assertEquals(trackedAfterFirstDraw, VRAMobject.getTrackedObjectCount()),
+                () -> assertEquals(
+                        bufferAllocationsAfterFirstDraw + 1,
+                        bridge.vertexBridge().bufferAllocations
+                ),
+                () -> assertEquals(
+                        arrayAllocationsAfterFirstDraw + 1,
+                        bridge.vertexBridge().arrayAllocations
+                )
+        );
+        frameBuffer.drawTexture(
+                new PVector(0, 0, 1),
+                new PVector(1280, 0, 1),
+                new PVector(0, 720, 1)
+        );
+        assertAll(
+                () -> assertEquals(
+                        bufferAllocationsAfterFirstDraw + 1,
+                        bridge.vertexBridge().bufferAllocations
+                ),
+                () -> assertEquals(
+                        arrayAllocationsAfterFirstDraw + 1,
+                        bridge.vertexBridge().arrayAllocations
+                )
+        );
+
+        frameBuffer.delete();
+        engine.startNewPage(new FirstEmptyPage());
+
+        assertAll(
+                () -> assertEquals(1, bridge.vertexBridge().bufferDeletions),
+                () -> assertEquals(1, bridge.vertexBridge().arrayDeletions)
         );
     }
 
@@ -765,6 +864,7 @@ class PageResourceOwnershipTest {
     private static final class RecordingBridge extends DesktopBridge {
         private final RecordingShaderBridge shaderBridge = new RecordingShaderBridge();
         private final RecordingGeneralBridge generalBridge = new RecordingGeneralBridge();
+        private RecordingVertexBridge vertexBridge;
         private final SealAssetManager assetManager = new SealAssetManager() {
             @Override
             public InputStream load(String path) {
@@ -793,12 +893,25 @@ class PageResourceOwnershipTest {
         }
 
         @Override
+        public VertexBridge getVertexBridge() {
+            return vertexBridge();
+        }
+
+        private RecordingVertexBridge vertexBridge() {
+            if (vertexBridge == null) {
+                vertexBridge = new RecordingVertexBridge();
+            }
+            return vertexBridge;
+        }
+
+        @Override
         public SealAssetManager getAssetManager() {
             return assetManager;
         }
     }
 
     private static final class RecordingGeneralBridge extends GeneralBridgeDesktop {
+        private int nextObject = 1;
         private int nextLocation = 1;
         private final Map<String, Integer> locations = new HashMap<>();
         private final Map<Integer, String> names = new HashMap<>();
@@ -857,6 +970,140 @@ class PageResourceOwnershipTest {
             locationRequests.clear();
             calls.clear();
             lastInts.clear();
+        }
+
+        @Override
+        public void glGenTextures(int number, int[] textureIds, int offset) {
+            fillIds(number, textureIds, offset);
+        }
+
+        @Override
+        public void glGenFramebuffers(int number, int[] buffers, int offset) {
+            fillIds(number, buffers, offset);
+        }
+
+        @Override
+        public void genRenderbuffers(int number, int[] buffers, int offset) {
+            fillIds(number, buffers, offset);
+        }
+
+        private void fillIds(int number, int[] ids, int offset) {
+            for (int index = 0; index < number; index++) {
+                ids[offset + index] = nextObject++;
+            }
+        }
+
+        @Override
+        public void glActiveTexture(int texture) {
+        }
+
+        @Override
+        public void glBindTexture(int texture, int location) {
+        }
+
+        @Override
+        public void glTexImage2D(
+                int type,
+                int level,
+                int internalFormat,
+                int width,
+                int height,
+                int border,
+                int texType,
+                int localDataType,
+                FloatBuffer pixels
+        ) {
+        }
+
+        @Override
+        public void texParameterf(int target, int pname, float param) {
+        }
+
+        @Override
+        public void glBindFramebuffer(int type, int id) {
+        }
+
+        @Override
+        public void framebufferTexture2D(
+                int target,
+                int attachment,
+                int textarget,
+                int texture,
+                int level
+        ) {
+        }
+
+        @Override
+        public void bindRenderbuffer(int target, int renderbuffer) {
+        }
+
+        @Override
+        public void renderbufferStorage(int target, int internalformat, int width, int height) {
+        }
+
+        @Override
+        public void framebufferRenderbuffer(
+                int target,
+                int attachment,
+                int renderbufferTarget,
+                int renderbuffer
+        ) {
+        }
+
+        @Override
+        public void glDeleteTextures(int number, int[] ids, int offset) {
+        }
+
+        @Override
+        public void glDeleteFramebuffers(int number, int[] framebuffers, int offset) {
+        }
+
+        @Override
+        public void glDeleteRenderbuffers(int number, int[] buffers, int offset) {
+        }
+
+        @Override
+        public void glDrawArrays(int type, int offset, int count) {
+        }
+    }
+
+    private static final class RecordingVertexBridge extends VertexBridge {
+        private int nextObject = 1;
+        private int bufferAllocations;
+        private int arrayAllocations;
+        private int bufferDeletions;
+        private int arrayDeletions;
+
+        @Override
+        public void glGenBuffers(int number, int[] buffers, int offset) {
+            bufferAllocations++;
+            fillIds(number, buffers, offset);
+        }
+
+        @Override
+        public void glDeleteBuffers(int number, int[] buffers, int offset) {
+            bufferDeletions++;
+        }
+
+        @Override
+        public void glGenVertexArrays(int number, int[] arrays, int offset) {
+            arrayAllocations++;
+            fillIds(number, arrays, offset);
+        }
+
+        @Override
+        public void glBindVertexArray(int array) {
+        }
+
+        @Override
+        public void glDeleteVertexArrays(int number, int[] arrays, int offset) {
+            arrayDeletions++;
+        }
+
+        private void fillIds(int number, int[] ids, int offset) {
+            for (int index = 0; index < number; index++) {
+                ids[offset + index] = nextObject++;
+            }
         }
     }
 

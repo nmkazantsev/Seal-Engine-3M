@@ -22,6 +22,7 @@ public class FrameBuffer extends VRAMobject {
 
     private boolean vboCreated = false;
     private VertexBuffer vertexBuffer;
+    private boolean framebufferAllocated;
 
     // https://www.programcreek.com/java-api-examples/?class=android.opengl.glc.method=glBindFramebuffer
     public FrameBuffer(int width, int height, GamePageClass page) {
@@ -34,7 +35,6 @@ public class FrameBuffer extends VRAMobject {
     }
 
     public void onRedrawSetup() {
-        vboCreated = false;
         int[] frameBuffers = new int[1];
         int[] frameBufferTextures = new int[1];
         gl.glGenFramebuffers(1, frameBuffers, 0);
@@ -65,6 +65,7 @@ public class FrameBuffer extends VRAMobject {
         frameBuffer = frameBuffers[0];
         depth = depthBuffer[0];
         texture = frameBufferTextures[0];
+        framebufferAllocated = true;
     }
 
     public void drawTexture(PVector a, PVector b, PVector d) {
@@ -113,9 +114,9 @@ public class FrameBuffer extends VRAMobject {
                         new PVector(0, 0, 1),
                         new PVector(0, 0, 1),
                         new PVector(0, 0, 1),
-                });
+        });
         if (!vboCreated) {
-            vertexBuffer = new VertexBuffer(5, gamePageClass); //5 because 5 types of coordinates so we need 5 buffers
+            vertexBuffer = new FrameBufferVertexBuffer(5, gamePageClass);
             vertexBuffer.setDynamicDraw(true);
         }
         Shader.getActiveShader().getAdaptor().bindData(new Face[]{face1, face2}, vertexBuffer, false);
@@ -157,14 +158,50 @@ public class FrameBuffer extends VRAMobject {
     }
 
     public void delete() {
+        deleteFramebufferStorage();
+        if (vertexBuffer != null) {
+            vertexBuffer.delete();
+        }
+    }
+
+    private void deleteFramebufferStorage() {
+        if (!framebufferAllocated) {
+            return;
+        }
         gl.glDeleteFramebuffers(1, new int[]{getFrameBuffer()}, 0);
         gl.glDeleteRenderbuffers(1, new int[]{getDepth()}, 0);
         gl.glDeleteTextures(1, new int[]{getTexture()}, 0);
+        framebufferAllocated = false;
+    }
+
+    /**
+     * Reallocates only the size-dependent framebuffer attachments.
+     *
+     * <p>The lazily-created fullscreen quad vertex buffer is independent of
+     * framebuffer dimensions and remains registered under the same page
+     * ownership token.</p>
+     */
+    public void resize(int width, int height) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException(
+                    "Framebuffer width and height must be positive"
+            );
+        }
+        if (framebufferAllocated && w == width && h == height) {
+            return;
+        }
+        deleteFramebufferStorage();
+        w = width;
+        h = height;
+        onRedrawSetup();
     }
 
     @Override
     public void reload() {
         onRedrawSetup();
+        if (vertexBuffer != null) {
+            vertexBuffer.reload();
+        }
     }
 
     public void apply() {
@@ -176,5 +213,16 @@ public class FrameBuffer extends VRAMobject {
         // switch to the buffer
         gl.glBindFramebuffer(glc.GL_FRAMEBUFFER(), 0);
         gl.glClear(glc.GL_COLOR_BUFFER_BIT() | glc.GL_DEPTH_BUFFER_BIT());
+    }
+
+    private static final class FrameBufferVertexBuffer extends VertexBuffer {
+        private FrameBufferVertexBuffer(int vboNum, GamePageClass owner) {
+            super(vboNum, owner, false);
+        }
+
+        @Override
+        public void reload() {
+            allocate();
+        }
     }
 }
