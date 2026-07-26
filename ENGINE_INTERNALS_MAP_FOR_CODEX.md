@@ -50,6 +50,9 @@ Key packages:
 
 - `CoreRenderer` is the platform-independent render-loop driver.
 - Changes here affect every platform and every frame.
+- `Engine.startNewPage(...)` makes the exact incoming instance current, invokes
+  its default-no-op `GamePageClass.onInstalled()`, then invokes its initial
+  `onSurfaceChanged(...)` before outgoing registries are cleaned.
 
 ### 3.4 GPU resource lifecycle (VRAM)
 

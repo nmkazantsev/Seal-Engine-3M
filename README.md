@@ -87,6 +87,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 Абстрактный класс, от которого должны наследоваться все игровые страницы.
 
 **Публичные методы:**
+- `void onInstalled()` – lifecycle hook, вызываемый `Engine.startNewPage(...)` после установки точного экземпляра страницы, до первого `onSurfaceChanged(...)` и до очистки реестров исходящей страницы. Реализация по умолчанию ничего не делает.
 - `abstract void onSurfaceChanged(int x, int y)` – вызывается при изменении размеров экрана.
 - `abstract void draw()` – основной метод отрисовки, вызывается каждый кадр.
 - `abstract void onResume()` – вызывается при возврате приложения на передний план.
@@ -479,7 +480,7 @@ img.text("Hello, World!", 100, 100);
 **Владение ресурсами страницы:**
 
 - Каждый экземпляр `GamePageClass` получает отдельный стабильный internal ownership token. Ресурсы, `ShaderData` и input listeners привязаны к экземпляру страницы, а не к её Java-классу.
-- При `Engine.startNewPage(...)` переходные registry удаляют объекты исходящего экземпляра, включая переход между двумя экземплярами одного класса. Устаревшие `ShaderData` удаляются до обновления locations и передачи данных при следующем `Shader.apply()`. Объекты входящей страницы, созданные в её конструкторе и `onSurfaceChanged(...)`, сохраняются; индексы оставшихся directed/point/source lights пересчитываются.
+- При `Engine.startNewPage(...)` точный входящий экземпляр сначала становится текущей страницей, затем получает `onInstalled()` и первый `onSurfaceChanged(...)`, после чего переходные registry удаляют объекты исходящего экземпляра, включая переход между двумя экземплярами одного класса. Устаревшие `ShaderData` удаляются до обновления locations и передачи данных при следующем `Shader.apply()`. Объекты входящей страницы, созданные в её конструкторе, `onInstalled()` и `onSurfaceChanged(...)`, сохраняются; индексы оставшихся directed/point/source lights пересчитываются.
 - `creator == null` остаётся global ownership: такие VRAM-объекты, shaders, `ShaderData`, touch processors, keyboard listeners и desktop mouse callbacks переживают переходы страниц.
 - Публичные конструкторы и прежние class-name поля/getters сохранены для source compatibility. Порядок перехода, context redraw и reload retained-объектов не изменён.
 

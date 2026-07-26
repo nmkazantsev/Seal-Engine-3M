@@ -112,6 +112,7 @@ public class Engine {
             System.gc();
             gamePage = newPage;
             resetPageMillis();
+            newPage.onInstalled();
             newPage.onSurfaceChanged((int) Utils.getX(), (int) Utils.getY());
             Debugger.onResChange((int) Utils.getX(), (int) Utils.getY());
             VRAMobject.onPageChange();

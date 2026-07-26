@@ -44,6 +44,9 @@ Add capture and deterministic desktop-window capabilities behind platform-neutra
   coordinator resets without exposing `Engine` or introducing a command queue.
   It shares the active-window/owner-thread boundary and preserves exact
   `PageTransition` instances.
+- Use the binary-compatible default-no-op `GamePageClass.onInstalled()` hook
+  for application boundaries that must run only after the exact page is
+  current. Candidate construction remains lifecycle-neutral.
 - Add tests for defaults, validation, capability behavior, orientation conversion, and no-readback when capture is not requested.
 
 Verification:

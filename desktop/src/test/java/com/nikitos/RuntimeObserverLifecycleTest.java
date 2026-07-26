@@ -51,6 +51,41 @@ class RuntimeObserverLifecycleTest {
     }
 
     @Test
+    void engineInstallsExactPageBeforeItsFirstSurfaceCallback() {
+        List<String> events = new ArrayList<>();
+        Engine engine = new Engine(new DesktopBridge(), new LauncherParams());
+        CoreRenderer.engine = engine;
+        GamePageClass candidate = new GamePageClass() {
+            @Override
+            public void onInstalled() {
+                events.add("installed");
+            }
+
+            @Override
+            public void onSurfaceChanged(int x, int y) {
+                events.add("surface");
+            }
+
+            @Override
+            public void draw() {
+            }
+
+            @Override
+            public void onResume() {
+            }
+
+            @Override
+            public void onPause() {
+            }
+        };
+
+        assertTrue(events.isEmpty(), "construction must be lifecycle-neutral");
+        engine.startNewPage(candidate);
+
+        assertEquals(List.of("installed", "surface"), events);
+    }
+
+    @Test
     void engineReportsInitialAndSubsequentTransitionsAfterCompletion() {
         List<String> events = new ArrayList<>();
         RecordingObserver observer = new RecordingObserver(events);
