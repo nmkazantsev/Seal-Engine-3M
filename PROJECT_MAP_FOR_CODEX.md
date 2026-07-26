@@ -70,8 +70,14 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
   - create `AndroidLauncher(androidLauncherParams)`
   - keep the `Engine`: `engine = androidLauncher.getEngine()`
   - set content view to the returned `GLSurfaceView`: `setContentView(androidLauncher.launch())`
-- forward touch events into the engine input system:
-    - `TouchProcessor.onTouch(new AndroidMotionEventAdapter(event))`
+- Snapshot touch events on the UI thread, then forward the detached data through
+  the `GLSurfaceView` queue:
+  ```java
+  AndroidMotionEventAdapter snapshot = new AndroidMotionEventAdapter(event);
+  glSurfaceView.queueEvent(() -> TouchProcessor.onTouch(snapshot));
+  ```
+  The adapter copies every pointer ID and coordinate and never retains the
+  recyclable Android `MotionEvent`.
 - In `Activity.onPause()` / `Activity.onResume()` call `engine.onPause()` / `engine.onResume()`.
 - Keyboard: if a hardware keyboard is present, the engine’s returned `GLSurfaceView` is focusable and forwards key events into the engine keyboard system. Ensure the view has focus if your Activity contains other focusable views.
 - Runtime files: relative paths passed to the same `Engine` file API resolve under `Context.getFilesDir()` (typically `/data/user/0/<package>/files`).

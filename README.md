@@ -161,8 +161,10 @@ API не меняет launcher defaults, порядок кадра, FPS, `Engine
 **On-demand frame capture**
 
 - Движок вызывает двухаргументный `afterFrame(FrameContext, FrameCaptureSource)` в прежней точке окончания кадра. Его default-реализация делегирует старому `afterFrame(FrameContext)`, поэтому существующие observer остаются source-compatible.
-- `FrameCaptureSource.isAvailable()` сообщает о доступности, а `capture()` синхронно захватывает текущий default framebuffer. Desktop-источник доступен после привязки GLFW-окна; Android в этой версии возвращает стабильный unavailable-источник, чей `capture()` явно выбрасывает `UnsupportedOperationException`.
+- `FrameCaptureSource.isAvailable()` сообщает о доступности, а `capture()` синхронно захватывает текущий default framebuffer. Desktop-источник доступен после привязки GLFW-окна. Android-источник доступен только в callback потока `GLSurfaceView.Renderer`, когда EGL context current и поверхность имеет положительный размер.
 - Desktop-захват разрешён только синхронно из callback render-потока, после полной отрисовки кадра и до `glfwSwapBuffers`. Размер запрашивается через framebuffer pixels, а не через screen coordinates окна.
+- Android-захват выполняет `GLES30.glReadPixels(...)` в том же месте `afterFrame`, до возврата из `onDrawFrame(...)` и автоматического swap. Для чтения временно подключается default read framebuffer и `GL_PACK_ALIGNMENT = 1`; прежние read-framebuffer binding и pack alignment восстанавливаются даже при ошибке.
+- После Android surface/context recreation источник остаётся тем же объектом, но временно недоступен до следующего положительного `onSurfaceChanged(...)`. `capture()` отклоняет вызов вне зарегистрированного GL thread, без current EGL context, с неположительными или переполняющими Java-массив размерами.
 - `CapturedFrame` хранит положительные `width`/`height` и ровно `width * height * 4` байта в порядке R, G, B, A. Нулевая строка — верхняя; входной массив и результат `getRgba()` копируются.
 - Источник передаётся observer, но не выполняет readback сам. Буферы, массивы и `glReadPixels` появляются только при явном вызове `capture()`. Без observer нулевой путь кадра не запрашивает даже `FrameCaptureSource`.
 - При `null` observer выполняется прежний lifecycle без чтения resource counters, создания runtime DTO, счётчика наблюдаемых кадров и observer callbacks.
@@ -794,6 +796,15 @@ img.text("Hello, World!", 100, 100);
 
 ### MyMotionEvent
 Интерфейс, абстрагирующий платформенное событие касания. Константы `ACTION_DOWN`, `ACTION_UP`, `ACTION_MOVE`, `ACTION_POINTER_DOWN`, `ACTION_POINTER_UP`. Пользователь не реализует напрямую.
+
+`AndroidMotionEventAdapter` при создании копирует action, action index, IDs и
+координаты всех pointers. Он не хранит исходный recyclable `MotionEvent`,
+поэтому snapshot можно безопасно передать из UI thread в render thread:
+
+```java
+AndroidMotionEventAdapter snapshot = new AndroidMotionEventAdapter(event);
+glSurfaceView.queueEvent(() -> TouchProcessor.onTouch(snapshot));
+```
 
 ---
 

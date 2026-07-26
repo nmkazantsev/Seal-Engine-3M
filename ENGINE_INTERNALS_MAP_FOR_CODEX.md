@@ -110,6 +110,7 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java`
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidRuntimeFileBridge.java`
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidMouseControlBridge.java`
+  - `android/src/main/java/com/seal/gl_engine/platform/AndroidFrameCaptureSource.java`
   - `android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java` (GLSurfaceView renderer adapter)
   - `android/src/main/java/com/seal/gl_engine/touch/AndroidMotionEventAdapter.java`
   - audio implementation: `android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java`
@@ -140,6 +141,24 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 
 - `TouchProcessor` buffers callbacks and processes them later (render-thread oriented).
 - This design avoids GL-thread/context issues but means “touch happens later” is normal.
+- `AndroidMotionEventAdapter` is a detached immutable snapshot of action metadata,
+  every pointer ID, and every pointer coordinate. Create it before
+  `GLSurfaceView.queueEvent(...)`; queued engine input never retains the live
+  recyclable `MotionEvent`.
+
+### 5.4.1 Android observer frame capture
+
+- `AndroidBridge` exposes one stable `AndroidFrameCaptureSource` when the engine
+  observer path requests it. The no-observer frame path still does not request a
+  source.
+- `OpenGLRenderer` only updates source lifecycle state from
+  `onSurfaceCreated(...)` and `onSurfaceChanged(...)`; it performs no per-frame
+  capture work.
+- An observer's explicit `capture()` call runs synchronously on the registered
+  `GLSurfaceView` GL thread after the existing frame body and before swap. It
+  validates the current EGL context and surface dimensions, reads the default
+  framebuffer, restores read-framebuffer and pack-alignment state, and flips
+  GLES bottom-left rows into the core top-left straight-alpha RGBA contract.
 
 ### 5.5 Keyboard input model
 

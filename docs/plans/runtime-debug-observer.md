@@ -35,7 +35,11 @@ Add capture and deterministic desktop-window capabilities behind platform-neutra
 - Add `FrameCaptureSource` and immutable `CapturedFrame` in `core`; RGBA byte order and top-left orientation are part of the contract.
 - Extend the platform bridge with capability reporting and on-demand RGBA readback.
 - Desktop readback uses the current default framebuffer after `CoreRenderer.draw()` and before swap. It must preserve prior GL pack state and restore it.
-- Android implementation may report capture unavailable in this version but must compile against the same contract.
+- Android readback uses the current default framebuffer from the observer
+  `afterFrame` callback on the `GLSurfaceView` GL thread, before
+  `CoreRenderer.draw()` returns and before swap. It preserves read framebuffer
+  and pack-alignment state, survives surface recreation, and converts
+  bottom-left GLES rows to the shared top-left RGBA contract.
 - Capture occurs only when observer code explicitly calls the source; never pre-capture each frame.
 - Add `LauncherParams` window width, height, maximized, and VSync settings.
 - Preserve legacy defaults exactly. Explicit settings must allow a non-maximized 1280x720 window with VSync disabled.

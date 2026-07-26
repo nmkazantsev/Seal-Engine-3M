@@ -16,6 +16,7 @@ import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.images.AbstractImage;
 import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.platformBridge.*;
+import com.nikitos.runtime.FrameCaptureSource;
 import com.nikitos.utils.Utils;
 import com.seal.gl_engine.OpenGLRenderer;
 import com.seal.gl_engine.engine.main.images.PImageAndroid;
@@ -35,6 +36,7 @@ public class AndroidBridge extends PlatformBridge {
     private AudioPlayer audioPlayer;
     private RuntimeFileBridge runtimeFileBridge;
     private final MouseControlBridge mouseControlBridge = new AndroidMouseControlBridge();
+    private AndroidFrameCaptureSource frameCaptureSource;
 
     GLSurfaceView launch(AndroidLauncherParams androidLauncherParams, Engine engine) {
         startPage = androidLauncherParams.getStartPage();
@@ -91,7 +93,16 @@ public class AndroidBridge extends PlatformBridge {
             glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
         }*/
 
-        glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
+        AndroidFrameCaptureSource captureSource =
+                engine.getRuntimeObserver() == null
+                        ? null
+                        : getAndroidFrameCaptureSource();
+        glSurfaceView.setRenderer(new OpenGLRenderer(
+                widthPixels,
+                heightPixels,
+                engine,
+                captureSource
+        ));
         if (androidLauncherParams.isDebug()) {
             Debugger.debuggerInit();
         }
@@ -257,5 +268,17 @@ public class AndroidBridge extends PlatformBridge {
     @Override
     public MouseControlBridge getMouseControlBridge() {
         return mouseControlBridge;
+    }
+
+    @Override
+    public FrameCaptureSource getFrameCaptureSource() {
+        return getAndroidFrameCaptureSource();
+    }
+
+    private AndroidFrameCaptureSource getAndroidFrameCaptureSource() {
+        if (frameCaptureSource == null) {
+            frameCaptureSource = new AndroidFrameCaptureSource();
+        }
+        return frameCaptureSource;
     }
 }
