@@ -214,6 +214,133 @@ class RuntimeObserverLifecycleTest {
         );
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void inFrameTransitionFailureIsReportedOnceAsPageTransition(boolean bsodAllowed) {
+        List<String> events = new ArrayList<>();
+        RecordingObserver observer = new RecordingObserver(events);
+        IllegalStateException cause = new IllegalStateException("surface failed");
+        TestPage targetPage = new TestPage("target", events, cause);
+        TestPage bsodPage = new TestPage("bsod", events, null);
+        Engine[] engineRef = new Engine[1];
+        TestPage currentPage = new TestPage(
+                "current",
+                events,
+                null,
+                () -> engineRef[0].startNewPage(targetPage)
+        );
+        LauncherParams params = new LauncherParams()
+                .setRuntimeObserver(observer)
+                .setUseBSOD(bsodAllowed);
+        Engine engine = new Engine(new DesktopBridge(), params, ignored -> bsodPage);
+        engineRef[0] = engine;
+        CoreRenderer.engine = engine;
+        engine.startNewPage(currentPage);
+        observer.clear();
+        CoreRenderer renderer = new CoreRenderer(engine, ignored -> bsodPage);
+
+        if (bsodAllowed) {
+            renderer.draw();
+        } else {
+            assertSame(cause, assertThrows(IllegalStateException.class, renderer::draw));
+        }
+
+        assertAll(
+                () -> assertEquals(1, observer.failures.size()),
+                () -> assertFailure(
+                        observer.failures.get(0),
+                        RuntimeFailure.Stage.PAGE_TRANSITION,
+                        cause,
+                        null,
+                        targetPage
+                ),
+                () -> assertFalse(observer.failures.stream().anyMatch(
+                        failure -> failure.getStage() == RuntimeFailure.Stage.PAGE_DRAW
+                )),
+                () -> assertSame(bsodAllowed ? bsodPage : targetPage, engine.getGamePage()),
+                () -> assertEquals(bsodAllowed ? 1 : 0, observer.afterContexts.size())
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void inFramePageChangedFailurePropagatesWithoutFailureOrBsod(boolean bsodAllowed) {
+        List<String> events = new ArrayList<>();
+        IllegalStateException callbackFailure = new IllegalStateException("observer failed");
+        TestPage targetPage = new TestPage("target", events, null);
+        RecordingObserver observer = new RecordingObserver(events) {
+            @Override
+            public void onPageChanged(PageTransition transition) {
+                super.onPageChanged(transition);
+                if (transition.getNewPage() == targetPage) {
+                    throw callbackFailure;
+                }
+            }
+        };
+        TestPage bsodPage = new TestPage("bsod", events, null);
+        Engine[] engineRef = new Engine[1];
+        TestPage currentPage = new TestPage(
+                "current",
+                events,
+                null,
+                () -> engineRef[0].startNewPage(targetPage)
+        );
+        LauncherParams params = new LauncherParams()
+                .setRuntimeObserver(observer)
+                .setUseBSOD(bsodAllowed);
+        Engine engine = new Engine(new DesktopBridge(), params, ignored -> bsodPage);
+        engineRef[0] = engine;
+        CoreRenderer.engine = engine;
+        engine.startNewPage(currentPage);
+        observer.clear();
+        CoreRenderer renderer = new CoreRenderer(engine, ignored -> bsodPage);
+
+        IllegalStateException thrown = assertThrows(
+                IllegalStateException.class,
+                renderer::draw
+        );
+
+        assertAll(
+                () -> assertSame(callbackFailure, thrown),
+                () -> assertTrue(observer.failures.isEmpty()),
+                () -> assertSame(targetPage, engine.getGamePage()),
+                () -> assertTrue(observer.afterContexts.isEmpty())
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void transitionErrorIsReportedAndNeverConvertedToBsod(boolean bsodAllowed) {
+        List<String> events = new ArrayList<>();
+        RecordingObserver observer = new RecordingObserver(events);
+        AssertionError cause = new AssertionError("surface error");
+        TestPage targetPage = new TestPage("target", events, cause);
+        TestPage bsodPage = new TestPage("bsod", events, null);
+        LauncherParams params = new LauncherParams()
+                .setRuntimeObserver(observer)
+                .setUseBSOD(bsodAllowed);
+        Engine engine = new Engine(new DesktopBridge(), params, ignored -> bsodPage);
+        CoreRenderer.engine = engine;
+
+        AssertionError thrown = assertThrows(
+                AssertionError.class,
+                () -> engine.startNewPage(targetPage)
+        );
+
+        assertAll(
+                () -> assertSame(cause, thrown),
+                () -> assertEquals(1, observer.failures.size()),
+                () -> assertFailure(
+                        observer.failures.get(0),
+                        RuntimeFailure.Stage.PAGE_TRANSITION,
+                        cause,
+                        null,
+                        targetPage
+                ),
+                () -> assertSame(targetPage, engine.getGamePage())
+        );
+    }
+
     @Test
     void observedFramesHaveMonotonicIdsContextAndCallbackOrder() {
         List<String> events = new ArrayList<>();
@@ -294,6 +421,33 @@ class RuntimeObserverLifecycleTest {
         );
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void pageDrawErrorIsReportedAndNeverConvertedToBsod(boolean bsodAllowed) {
+        List<String> events = new ArrayList<>();
+        RecordingObserver observer = new RecordingObserver(events);
+        AssertionError cause = new AssertionError("page error");
+        TestPage page = new TestPage("page", events, cause);
+        LifecycleEngine engine = new LifecycleEngine(observer, bsodAllowed, page, events);
+        CoreRenderer renderer = renderer(engine);
+
+        AssertionError thrown = assertThrows(AssertionError.class, renderer::draw);
+
+        assertAll(
+                () -> assertSame(cause, thrown),
+                () -> assertEquals(1, observer.failures.size()),
+                () -> assertFailure(
+                        observer.failures.get(0),
+                        RuntimeFailure.Stage.PAGE_DRAW,
+                        cause,
+                        observer.beforeContexts.get(0),
+                        page
+                ),
+                () -> assertSame(page, engine.getGamePage()),
+                () -> assertTrue(observer.afterContexts.isEmpty())
+        );
+    }
+
     @Test
     void nonBsodPageFailureIsReportedAndOriginalCausePropagates() {
         List<String> events = new ArrayList<>();
@@ -356,6 +510,33 @@ class RuntimeObserverLifecycleTest {
     }
 
     @Test
+    void postPageErrorReportsExactStageAndPropagates() {
+        List<String> events = new ArrayList<>();
+        RecordingObserver observer = new RecordingObserver(events);
+        AssertionError cause = new AssertionError("keyboard error");
+        TestPage page = new TestPage("page", events, null);
+        LifecycleEngine engine = new LifecycleEngine(observer, false, page, events);
+        CoreRenderer renderer = renderer(engine);
+        registerInput(page, events, cause);
+        queueInput();
+
+        AssertionError thrown = assertThrows(AssertionError.class, renderer::draw);
+
+        assertAll(
+                () -> assertSame(cause, thrown),
+                () -> assertEquals(1, observer.failures.size()),
+                () -> assertFailure(
+                        observer.failures.get(0),
+                        RuntimeFailure.Stage.KEYBOARD_PROCESS,
+                        cause,
+                        observer.beforeContexts.get(0),
+                        page
+                ),
+                () -> assertTrue(observer.afterContexts.isEmpty())
+        );
+    }
+
+    @Test
     void observerFailureIsSuppressedOnOriginalFrameFailure() {
         List<String> events = new ArrayList<>();
         IllegalStateException observerFailure = new IllegalStateException("observer failed");
@@ -402,6 +583,32 @@ class RuntimeObserverLifecycleTest {
                         List.of("before:1", "fps", "failure:FRAME_SETUP"),
                         events
                 ),
+                () -> assertFailure(
+                        observer.failures.get(0),
+                        RuntimeFailure.Stage.FRAME_SETUP,
+                        cause,
+                        observer.beforeContexts.get(0),
+                        page
+                ),
+                () -> assertTrue(observer.afterContexts.isEmpty())
+        );
+    }
+
+    @Test
+    void frameSetupErrorReportsItsStageAndPropagates() {
+        List<String> events = new ArrayList<>();
+        RecordingObserver observer = new RecordingObserver(events);
+        AssertionError cause = new AssertionError("fps error");
+        TestPage page = new TestPage("page", events, null);
+        LifecycleEngine engine = new LifecycleEngine(observer, false, page, events);
+        engine.setupFailure = cause;
+        CoreRenderer renderer = renderer(engine);
+
+        AssertionError thrown = assertThrows(AssertionError.class, renderer::draw);
+
+        assertAll(
+                () -> assertSame(cause, thrown),
+                () -> assertEquals(1, observer.failures.size()),
                 () -> assertFailure(
                         observer.failures.get(0),
                         RuntimeFailure.Stage.FRAME_SETUP,
@@ -475,7 +682,7 @@ class RuntimeObserverLifecycleTest {
     private void registerInput(
             GamePageClass page,
             List<String> events,
-            RuntimeException keyboardFailure
+            Throwable keyboardFailure
     ) {
         TouchProcessor.processMotions();
         KeyboardProcessor.processKeys();
@@ -487,7 +694,7 @@ class RuntimeObserverLifecycleTest {
         KeyListener keyListener = new KeyListener(TEST_KEY, key -> {
             events.add("keyboard");
             if (keyboardFailure != null) {
-                throw keyboardFailure;
+                throwUnchecked(keyboardFailure);
             }
             return null;
         }, page);
@@ -569,13 +776,21 @@ class RuntimeObserverLifecycleTest {
             failures.add(failure);
             events.add("failure:" + failure.getStage());
         }
+
+        void clear() {
+            events.clear();
+            beforeContexts.clear();
+            afterContexts.clear();
+            transitions.clear();
+            failures.clear();
+        }
     }
 
     private static final class LifecycleEngine extends Engine {
         final List<String> events;
         private final boolean bsodAllowed;
         private GamePageClass currentPage;
-        private RuntimeException setupFailure;
+        private Throwable setupFailure;
         private GamePageClass bsodPage;
 
         LifecycleEngine(
@@ -599,7 +814,7 @@ class RuntimeObserverLifecycleTest {
         public void calculateFps() {
             events.add("fps");
             if (setupFailure != null) {
-                throw setupFailure;
+                throwUnchecked(setupFailure);
             }
         }
 
@@ -628,19 +843,30 @@ class RuntimeObserverLifecycleTest {
     private static final class TestPage extends GamePageClass {
         private final String name;
         private final List<String> events;
-        private final RuntimeException failure;
+        private final Throwable failure;
+        private final Runnable drawAction;
 
-        TestPage(String name, List<String> events, RuntimeException failure) {
+        TestPage(String name, List<String> events, Throwable failure) {
+            this(name, events, failure, null);
+        }
+
+        TestPage(
+                String name,
+                List<String> events,
+                Throwable failure,
+                Runnable drawAction
+        ) {
             this.name = name;
             this.events = events;
             this.failure = failure;
+            this.drawAction = drawAction;
         }
 
         @Override
         public void onSurfaceChanged(int x, int y) {
             events.add("surface:" + name);
             if (failure != null) {
-                throw failure;
+                throwUnchecked(failure);
             }
         }
 
@@ -648,7 +874,10 @@ class RuntimeObserverLifecycleTest {
         public void draw() {
             events.add("draw:" + name);
             if (failure != null) {
-                throw failure;
+                throwUnchecked(failure);
+            }
+            if (drawAction != null) {
+                drawAction.run();
             }
         }
 
@@ -663,5 +892,12 @@ class RuntimeObserverLifecycleTest {
 
     private static String pageName(GamePageClass page) {
         return page == null ? "null" : ((TestPage) page).name;
+    }
+
+    private static void throwUnchecked(Throwable failure) {
+        if (failure instanceof RuntimeException runtimeException) {
+            throw runtimeException;
+        }
+        throw (Error) failure;
     }
 }

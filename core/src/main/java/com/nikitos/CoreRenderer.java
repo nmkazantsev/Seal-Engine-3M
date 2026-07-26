@@ -115,6 +115,17 @@ public class CoreRenderer {
                 (int) Utils.getY(),
                 engine.getPlatform()
         );
+        engine.beginObservedFrame();
+        try {
+            drawObserved(frameContext);
+        } catch (Engine.ObservedLifecycleException lifecycleFailure) {
+            throw lifecycleFailure.propagate();
+        } finally {
+            engine.endObservedFrame();
+        }
+    }
+
+    private void drawObserved(FrameContext frameContext) {
         runtimeObserver.beforeFrame(frameContext);
 
         try {
@@ -124,54 +135,87 @@ public class CoreRenderer {
             }
             VerticesShapesManager.onFrameBegin();
         } catch (Engine.ObservedLifecycleException lifecycleFailure) {
-            throw lifecycleFailure.propagate();
+            throw lifecycleFailure;
         } catch (Exception ex) {
             notifyFailure(RuntimeFailure.Stage.FRAME_SETUP, ex, frameContext);
             throw ex;
+        } catch (Error error) {
+            notifyFailure(RuntimeFailure.Stage.FRAME_SETUP, error, frameContext);
+            throw error;
         }
 
         if (engine.getBsodAllowed()) {
             try {
                 engine.getGamePage().draw();
+            } catch (Engine.ObservedLifecycleException lifecycleFailure) {
+                throw lifecycleFailure;
             } catch (Exception ex) {
                 notifyFailure(RuntimeFailure.Stage.PAGE_DRAW, ex, frameContext);
                 engine.startNewPage(createBsodPage(ex));
+            } catch (Error error) {
+                notifyFailure(RuntimeFailure.Stage.PAGE_DRAW, error, frameContext);
+                throw error;
             }
         } else {
             try {
                 engine.getGamePage().draw();
+            } catch (Engine.ObservedLifecycleException lifecycleFailure) {
+                throw lifecycleFailure;
             } catch (Exception ex) {
                 notifyFailure(RuntimeFailure.Stage.PAGE_DRAW, ex, frameContext);
                 throw ex;
+            } catch (Error error) {
+                notifyFailure(RuntimeFailure.Stage.PAGE_DRAW, error, frameContext);
+                throw error;
             }
         }
 
         try {
             Debugger.draw();
+        } catch (Engine.ObservedLifecycleException lifecycleFailure) {
+            throw lifecycleFailure;
         } catch (Exception ex) {
             notifyFailure(RuntimeFailure.Stage.DEBUGGER_DRAW, ex, frameContext);
             throw ex;
+        } catch (Error error) {
+            notifyFailure(RuntimeFailure.Stage.DEBUGGER_DRAW, error, frameContext);
+            throw error;
         }
 
         try {
             VerticesShapesManager.redrawAll();
+        } catch (Engine.ObservedLifecycleException lifecycleFailure) {
+            throw lifecycleFailure;
         } catch (Exception ex) {
             notifyFailure(RuntimeFailure.Stage.VERTICES_REDRAW, ex, frameContext);
             throw ex;
+        } catch (Error error) {
+            notifyFailure(RuntimeFailure.Stage.VERTICES_REDRAW, error, frameContext);
+            throw error;
         }
 
         try {
             TouchProcessor.processMotions();
+        } catch (Engine.ObservedLifecycleException lifecycleFailure) {
+            throw lifecycleFailure;
         } catch (Exception ex) {
             notifyFailure(RuntimeFailure.Stage.TOUCH_PROCESS, ex, frameContext);
             throw ex;
+        } catch (Error error) {
+            notifyFailure(RuntimeFailure.Stage.TOUCH_PROCESS, error, frameContext);
+            throw error;
         }
 
         try {
             KeyboardProcessor.processKeys();
+        } catch (Engine.ObservedLifecycleException lifecycleFailure) {
+            throw lifecycleFailure;
         } catch (Exception ex) {
             notifyFailure(RuntimeFailure.Stage.KEYBOARD_PROCESS, ex, frameContext);
             throw ex;
+        } catch (Error error) {
+            notifyFailure(RuntimeFailure.Stage.KEYBOARD_PROCESS, error, frameContext);
+            throw error;
         }
 
         runtimeObserver.afterFrame(frameContext);
@@ -186,7 +230,7 @@ public class CoreRenderer {
 
     private void notifyFailure(
             RuntimeFailure.Stage stage,
-            Exception cause,
+            Throwable cause,
             FrameContext frameContext
     ) {
         try {

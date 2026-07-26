@@ -96,9 +96,10 @@ public class Engine {
     }
 
     private boolean switching = false;
+    private boolean observedFrameActive;
 
     public void startNewPage(GamePageClass newPage) {
-        startNewPage(newPage, false);
+        startNewPage(newPage, observedFrameActive);
     }
 
     private void startNewPage(GamePageClass newPage, boolean markObserverFailures) {
@@ -136,6 +137,20 @@ public class Engine {
                 }
                 throw e;
             }
+        } catch (Error error) {
+            if (runtimeObserver == null) {
+                throw error;
+            }
+            notifyObserver(markObserverFailures, () -> runtimeObserver.onFailure(new RuntimeFailure(
+                    RuntimeFailure.Stage.PAGE_TRANSITION,
+                    error,
+                    null,
+                    newPage
+            )));
+            if (markObserverFailures) {
+                throw new ObservedLifecycleException(error);
+            }
+            throw error;
         }
         if (runtimeObserver != null) {
             notifyObserver(
@@ -158,13 +173,13 @@ public class Engine {
             defaultPage = launcherParams.getStartPage().apply(null);
         } catch (Exception e) {
             if (launcherParams.getUseBSOD()) {
-                startNewPage(createBsodPage(e), true);
+                startNewPage(createBsodPage(e), observedFrameActive);
             } else {
                 throw e;
             }
             return;
         }
-        startNewPage(defaultPage, true);
+        startNewPage(defaultPage, observedFrameActive);
     }
 
     private GamePageClass createBsodPage(Exception cause) {
@@ -199,6 +214,14 @@ public class Engine {
             }
             throw (Error) originalFailure;
         }
+    }
+
+    void beginObservedFrame() {
+        observedFrameActive = true;
+    }
+
+    void endObservedFrame() {
+        observedFrameActive = false;
     }
 
     public boolean switchingNewGamePage(){
