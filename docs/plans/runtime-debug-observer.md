@@ -1,0 +1,69 @@
+# Seal Engine Runtime Debug Observer Implementation Plan
+
+## Global Constraints
+
+- Base all work on commit `00722de8a0d0a52d12fac114c44586c20480eceb`.
+- Preserve every existing public default and the production frame/page/input order.
+- With no observer and no capture request: no per-frame allocations, no framebuffer readback, no worker, and no diagnostics I/O.
+- Keep `core` platform-neutral and Android-compilable; desktop-specific OpenGL code stays in `desktop`.
+- Do not change `Engine.pageMillis()`, FPS calculation, or the engine time model.
+- Add behavior through tests first and record RED/GREEN evidence.
+- Update README contracts in the same commit as each public API change.
+
+## Task 1: Optional runtime observer contract
+
+Introduce a minimal core API for observing a frame without changing the legacy path.
+
+- Add immutable runtime DTOs for frame context, page transition, and runtime failure.
+- Add `RuntimeObserver` with default no-op methods: `beforeFrame`, `afterFrame`, `onPageChanged`, and `onFailure`.
+- Add an optional observer to `LauncherParams`; the default must be `null`.
+- Notify page transitions with old/new page instances without changing transition order.
+- Notify failures from page rendering and post-page frame stages, preserving existing BSOD/rethrow behavior.
+- Call `beforeFrame` immediately before the existing frame body and `afterFrame` after debugger, queued vertices, touch, and keyboard processing.
+- Only create frame DTOs and increment observer frame IDs when an observer is installed.
+- Characterization tests must prove the no-observer path retains existing ordering and the observer path reports exact ordering/failures.
+
+Verification:
+
+- `./gradlew :core:test :desktop:test --no-daemon`
+- `./gradlew :core:jar :desktop:jar --no-daemon`
+
+## Task 2: On-demand cross-platform frame capture and window settings
+
+Add capture and deterministic desktop-window capabilities behind platform-neutral contracts.
+
+- Add `FrameCaptureSource` and immutable `CapturedFrame` in `core`; RGBA byte order and top-left orientation are part of the contract.
+- Extend the platform bridge with capability reporting and on-demand RGBA readback.
+- Desktop readback uses the current default framebuffer after `CoreRenderer.draw()` and before swap. It must preserve prior GL pack state and restore it.
+- Android implementation may report capture unavailable in this version but must compile against the same contract.
+- Capture occurs only when observer code explicitly calls the source; never pre-capture each frame.
+- Add `LauncherParams` window width, height, maximized, and VSync settings.
+- Preserve legacy defaults exactly. Explicit settings must allow a non-maximized 1280x720 window with VSync disabled.
+- Add tests for defaults, validation, capability behavior, orientation conversion, and no-readback when capture is not requested.
+
+Verification:
+
+- `./gradlew :core:test :desktop:test --no-daemon`
+- `./gradlew :core:jar :desktop:jar --no-daemon`
+- `./gradlew :android:compileDebugJavaWithJavac --no-daemon`
+
+## Task 3: Instance-safe page resource ownership and diagnostics
+
+Correct same-class page cleanup without changing different-class or global ownership behavior.
+
+- Introduce an internal page generation/identity ownership token.
+- Migrate VRAM, Shader, TouchProcessor, and KeyboardProcessor cleanup to the token while retaining source-compatible constructors/APIs.
+- `creator == null` remains global and is not deleted by page transitions.
+- Resources created by the incoming page must not be deleted during transition cleanup.
+- Existing different-class transition cleanup remains equivalent.
+- Same-class transition deletes resources/processors owned by the outgoing instance.
+- Add observer-visible resource counters without work when no observer is installed.
+- Add characterization tests for null owner, different-class transition, same-class transition, context redraw, and incoming-resource preservation.
+- Document the corrected instance ownership lifecycle and compatibility boundary.
+
+Verification:
+
+- `./gradlew :core:test :desktop:test --no-daemon`
+- `./gradlew :core:jar :desktop:jar --no-daemon`
+- `./gradlew :android:compileDebugJavaWithJavac --no-daemon`
+- Compare no-observer allocation/frame benchmark to the `00722de8` baseline; any stable regression blocks completion.
