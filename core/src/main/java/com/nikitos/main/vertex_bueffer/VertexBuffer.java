@@ -82,7 +82,7 @@ public class VertexBuffer extends VRAMobject {
 
     @Override
     public void reload() {
-        // Legacy tracked vertex buffers are rebuilt by their owning shape.
+        allocate();
     }
 
 }

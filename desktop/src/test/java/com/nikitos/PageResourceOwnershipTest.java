@@ -162,6 +162,31 @@ class PageResourceOwnershipTest {
     }
 
     @Test
+    void contextRedrawReallocatesTrackedVertexBufferObjects() {
+        RecordingBridge bridge = new RecordingBridge();
+        Engine engine = new Engine(bridge, new LauncherParams());
+        CoreRenderer.engine = engine;
+        EmptyPage owner = new EmptyPage();
+        engine.startNewPage(owner);
+        new VertexBuffer(2, owner);
+        int bufferAllocations = bridge.vertexBridge().bufferAllocations;
+        int arrayAllocations = bridge.vertexBridge().arrayAllocations;
+
+        VRAMobject.onRedraw();
+
+        assertAll(
+                () -> assertEquals(
+                        bufferAllocations + 1,
+                        bridge.vertexBridge().bufferAllocations
+                ),
+                () -> assertEquals(
+                        arrayAllocations + 1,
+                        bridge.vertexBridge().arrayAllocations
+                )
+        );
+    }
+
+    @Test
     void framebufferResizeAfterDrawReusesItsTrackedVertexBufferAndDeletesItOnce() {
         RecordingBridge bridge = new RecordingBridge();
         Engine engine = new Engine(bridge, new LauncherParams());

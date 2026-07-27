@@ -204,7 +204,9 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   before that initialization return without clearing or drawing.
 - Default `GLSurfaceView` context-preservation behavior is unchanged. Surface
   recreation still creates a new local `CoreRenderer`, while frame IDs remain
-  owned locally by that renderer.
+  owned locally by that renderer. The existing `VRAMobject.onRedraw()` recovery
+  also reallocates tracked vertex-buffer VBO and VAO names, so no identifier
+  from the destroyed EGL context is rebound.
 
 ### 5.5 Keyboard input model
 
