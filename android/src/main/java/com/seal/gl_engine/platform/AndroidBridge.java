@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES30;
+import android.opengl.EGLExt;
 import android.opengl.GLSurfaceView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -240,28 +241,45 @@ public class AndroidBridge extends PlatformBridge {
 
         @Override
         public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
-            int[] attribs = {
+            EGLConfig config = chooseConfig(egl, display, attributes(antiAliasMode));
+            if (config == null && antiAliasMode > 1) {
+                config = chooseConfig(egl, display, attributes(0));
+            }
+            return config;
+        }
+
+        private static EGLConfig chooseConfig(
+                EGL10 egl,
+                EGLDisplay display,
+                int[] attributes
+        ) {
+            EGLConfig[] configs = new EGLConfig[1];
+            int[] configCounts = new int[1];
+            if (!egl.eglChooseConfig(
+                    display,
+                    attributes,
+                    configs,
+                    configs.length,
+                    configCounts
+            ) || configCounts[0] == 0) {
+                return null;
+            }
+            return configs[0];
+        }
+
+        static int[] attributes(int antiAliasMode) {
+            return new int[] {
                     EGL10.EGL_LEVEL, 0,
-                    EGL10.EGL_RENDERABLE_TYPE, 4,  // EGL_OPENGL_ES2_BIT
+                    EGL10.EGL_RENDERABLE_TYPE, EGLExt.EGL_OPENGL_ES3_BIT_KHR,
                     EGL10.EGL_COLOR_BUFFER_TYPE, EGL10.EGL_RGB_BUFFER,
                     EGL10.EGL_RED_SIZE, 8,
                     EGL10.EGL_GREEN_SIZE, 8,
                     EGL10.EGL_BLUE_SIZE, 8,
                     EGL10.EGL_DEPTH_SIZE, 16,
-                    EGL10.EGL_SAMPLE_BUFFERS, 1,
-                    EGL10.EGL_SAMPLES, antiAliasMode,  // This is for 4x MSAA.
+                    EGL10.EGL_SAMPLE_BUFFERS, antiAliasMode > 1 ? 1 : 0,
+                    EGL10.EGL_SAMPLES, Math.max(antiAliasMode, 0),
                     EGL10.EGL_NONE
             };
-            EGLConfig[] configs = new EGLConfig[1];
-            int[] configCounts = new int[1];
-            egl.eglChooseConfig(display, attribs, configs, 1, configCounts);
-
-            if (configCounts[0] == 0) {
-                // Failed! Error handling.
-                return null;
-            } else {
-                return configs[0];
-            }
         }
     }
 

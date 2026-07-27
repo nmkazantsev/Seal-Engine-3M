@@ -11,6 +11,11 @@ Desktop: https://github.com/nmkazantsev/Demo-launcher
 
 Android: https://github.com/nmkazantsev/Demo-app
 
+The Android launcher requests an OpenGL ES 3 context and selects an
+`EGL_OPENGL_ES3_BIT_KHR`-compatible config, including when the custom MSAA
+chooser is active. If the requested multisample config is unavailable, the
+chooser retries without MSAA while retaining the GLES 3 requirement.
+
 
 
 # Документация пользователя ядра Seal Engine 3-M
