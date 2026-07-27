@@ -163,6 +163,7 @@ public class TouchProcessor {
      */
     public void terminate() {
         //the same as usual terminate(event), but call callback ot once, because we are already in main thread and editing command queue will crash the app
+        cancelQueuedCommands(this);
         touchAlive = false;
         touchEndProcessed = true;
         activeProcessors.remove(touchId);
@@ -396,6 +397,17 @@ public class TouchProcessor {
         t.terminate(event);
     }
 
+    private static void cancelQueuedCommands(TouchProcessor parent) {
+        synchronized (commandQueue) {
+            for (BufferedCommand command : commandQueue) {
+                if (command instanceof TouchCommand touchCommand
+                        && touchCommand.parent == parent) {
+                    touchCommand.cancelled = true;
+                }
+            }
+        }
+    }
+
     public static void onPageChange() {
         //clearing only through iterator, else concurrent modification error
         synchronized (commandQueue) {
@@ -426,6 +438,7 @@ public class TouchProcessor {
         private final Function<TouchPoint, Void> function;
         private final TouchProcessor parent;
         private boolean isTouchEnded = false;
+        private boolean cancelled = false;
 
         private TouchCommand(TouchPoint t, Function<TouchPoint, Void> function, TouchProcessor parent) {
             this.touchPoint = t;
@@ -435,7 +448,7 @@ public class TouchProcessor {
 
         @Override
         public boolean shouldRun() {
-            return parent.touchAlive || (!parent.touchAlive && !parent.touchEndProcessed && isTouchEnded);
+            return !cancelled;
         }
 
         @Override
