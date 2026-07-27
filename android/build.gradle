@@ -42,3 +42,21 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+tasks.configureEach { task ->
+    if (task.name == 'processReleaseManifest') {
+        task.doLast {
+            task.outputs.files.asFileTree
+                    .matching { include '**/AndroidManifest.xml' }
+                    .files
+                    .each { manifest ->
+                        String content = manifest.getText('UTF-8')
+                        manifest.setText(
+                                content.replace('\r\n', '\n')
+                                        .replace('\r', '\n'),
+                                'UTF-8'
+                        )
+                    }
+        }
+    }
+}
