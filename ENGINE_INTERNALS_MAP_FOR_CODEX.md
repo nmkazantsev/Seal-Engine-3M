@@ -50,21 +50,11 @@ Key packages:
 
 - `CoreRenderer` is the platform-independent render-loop driver.
 - Changes here affect every platform and every frame.
-- `Engine.startNewPage(...)` makes the exact incoming instance current, invokes
-  its default-no-op `GamePageClass.onInstalled()`, then invokes its initial
-  `onSurfaceChanged(...)` before outgoing registries are cleaned.
-- Non-positive surface callbacks are transient lifecycle signals, not usable
-  render sizes. `Utils` retains the last positive viewport and `Engine` does
-  not forward the invalid callback to the current page.
 
 ### 3.4 GPU resource lifecycle (VRAM)
 
 - `VRAMobject` is the base for GPU-backed resources tracked globally.
 - The system supports deletion and reload (e.g., on page changes or GL context recreation).
-- `FrameBuffer.resize(...)` retains its dimension-independent child
-  `VertexBuffer` while reallocating only framebuffer attachments. Page deletion
-  deletes that child idempotently; context reload regenerates the existing
-  `VertexBuffer` wrapper instead of registering a replacement.
 
 This is a high-risk area: memory leaks, stale GL handles, and “works on desktop but not Android” bugs often originate here.
 
@@ -99,7 +89,6 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
 
 - Desktop:
   - `desktop/src/main/java/com/nikitos/platform/DesktopLauncher.java`
-  - `desktop/src/main/java/com/nikitos/platform/DesktopOpenGlContextHints.java`
   - `desktop/src/main/java/com/nikitos/platform/DesktopBridge.java`
   - `desktop/src/main/java/com/nikitos/platform/DesktopRuntimeFileBridge.java`
   - `desktop/src/main/java/com/nikitos/platform/DesktopMouseControlBridge.java`
@@ -111,7 +100,6 @@ This is a high-risk area: memory leaks, stale GL handles, and “works on deskto
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidBridge.java`
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidRuntimeFileBridge.java`
   - `android/src/main/java/com/seal/gl_engine/platform/AndroidMouseControlBridge.java`
-  - `android/src/main/java/com/seal/gl_engine/platform/AndroidFrameCaptureSource.java`
   - `android/src/main/java/com/seal/gl_engine/OpenGLRenderer.java` (GLSurfaceView renderer adapter)
   - `android/src/main/java/com/seal/gl_engine/touch/AndroidMotionEventAdapter.java`
   - audio implementation: `android/src/main/java/com/seal/gl_engine/mp3/AndroidAudioPLayer.java`
@@ -138,75 +126,10 @@ Implication: custom shader work usually requires a matching adaptor and careful 
 - Lighting/material classes (ambient/directional/point/source light, material, exposure) are primarily shader-uniform carriers.
 - They are typically page-scoped through the shader data forwarding mechanism.
 
-### 5.3.1 Desktop OpenGL context hints
-
-- `LauncherParams.setDesktopOpenGl33CoreContext(true)` is an explicit,
-  desktop-only request for OpenGL 3.3 core profile. Its default is `false`.
-- `DesktopOpenGlContextHints` owns the GLFW-specific mapping so `core` retains
-  no GLFW dependency.
-- `DesktopLauncher` applies the mapping after the existing
-  visibility/resizability/MSAA hints and before the macOS forward-compatible
-  hint and window creation. The default path emits no extra context hints.
-- This option does not alter `CoreRenderer`, timing, FPS, the frame loop, or
-  Android behavior.
-
 ### 5.4 Input/touch threading model
 
 - `TouchProcessor` buffers callbacks and processes them later (render-thread oriented).
 - This design avoids GL-thread/context issues but means “touch happens later” is normal.
-- `AndroidMotionEventAdapter` is a detached immutable snapshot of action metadata,
-  every pointer ID, and every pointer coordinate. Create it before
-  `GLSurfaceView.queueEvent(...)`; queued engine input never retains the live
-  recyclable `MotionEvent`.
-
-### 5.4.1 Android observer frame capture
-
-- `AndroidBridge` exposes one stable `AndroidFrameCaptureSource` when the engine
-  observer path requests it. The no-observer frame path still does not request a
-  source.
-- `OpenGLRenderer` only updates source lifecycle state from
-  `onSurfaceCreated(...)` and `onSurfaceChanged(...)`; it performs no per-frame
-  capture work.
-- An observer's explicit `capture()` call runs synchronously on the registered
-  `GLSurfaceView` GL thread after the existing frame body and before swap. It
-  validates the current EGL context and surface dimensions, reads the default
-  framebuffer from `GL_BACK` with a tightly packed client target. It temporarily
-  unbinds any pixel-pack buffer, clears row/skip pack parameters, and restores
-  read framebuffer/buffer plus every affected pack state with independent
-  best-effort operations. A read failure remains primary and restore failures
-  are suppressed. GLES bottom-left rows are then flipped into the core top-left
-  straight-alpha RGBA contract.
-
-### 5.4.2 Android process session and Activity lifecycle
-
-- A synchronized process-wide session owns one `Engine`, `AndroidBridge`, and
-  lazy `AndroidFrameCaptureSource`. Engine settings are copied into an
-  application-context snapshot; the session does not retain an Activity or the
-  caller's mutable `AndroidLauncherParams`.
-- Each Activity creates only its own `GLSurfaceView`. Replacement is a
-  synchronized transaction: the exact previous view is quiesced before
-  construction reaches `setRenderer(...)`, then the new view becomes current.
-  A null/failed construction restores the previous running state, while a
-  process-paused view remains paused. This prevents overlapping GL threads
-  from using the shared Engine/static VRAM state. A no-argument
-  `AndroidBridge` lazily binds the first view's application context, never its
-  Activity context. Its deprecated protected `startPage` field is retained for
-  source/binary compatibility and mirrors the process settings supplier.
-- `AndroidLauncher.onPause(view)`, `onResume(view)`, and `detach(view)` are
-  identity-aware and idempotent. Stale callbacks cannot operate on a newer
-  Activity's view, and duplicate callbacks do not invoke Engine lifecycle or
-  time accounting twice. The exact current view is quiesced before page/Utils
-  pause; the later bridge callback from `Engine.onPause()` is an idempotent
-  fallback. Direct Engine lifecycle calls remain compatible.
-- `OpenGLRenderer` construction performs no GL work and creates no
-  `CoreRenderer`. A positive `onSurfaceChanged(...)` callback creates or
-  replaces the local `CoreRenderer` on the current GL thread. Draw callbacks
-  before that initialization return without clearing or drawing.
-- Default `GLSurfaceView` context-preservation behavior is unchanged. Surface
-  recreation still creates a new local `CoreRenderer`, while frame IDs remain
-  owned locally by that renderer. The existing `VRAMobject.onRedraw()` recovery
-  also reallocates tracked vertex-buffer VBO and VAO names, so no identifier
-  from the destroyed EGL context is rebound.
 
 ### 5.5 Keyboard input model
 
@@ -232,14 +155,6 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   - Desktop: `System.getProperty("user.dir")`
   - Android: `Context.getFilesDir()` app-internal persistent files directory
 - Asset loading is still handled separately through `SealAssetManager`; runtime file APIs must not be used as a replacement for packaged resources.
-- Android asset lookup is application-`AssetManager` first. A classloader
-  fallback is attempted only after the packaged path reports
-  `FileNotFoundException`, preserving Engine/JAR resources without masking an
-  existing packaged asset's open/read failure. The Android manager retains no
-  `Context`; its stream source owns only the application package's
-  `AssetManager`. `load(...)` transfers stream ownership to its caller, while
-  `loadText(...)` and `loadBytes(...)` close streams and decode text as UTF-8
-  without API-level branching.
 - Mouse control is routed through `MouseControlBridge`:
   - Desktop implementation is bound to the actual GLFW window from `DesktopLauncher`
   - Android implementation is intentionally a safe no-op to keep the API surface stable without affecting touch/input behavior
@@ -267,6 +182,16 @@ Implication: custom shader work usually requires a matching adaptor and careful 
   - right button and wheel events only update the new mouse callback state path
 - Android does not forward any of these mouse callbacks at runtime.
 - Repo-level verification scene: `desktop/src/test/java/MouseCallbacksSmokeTestMain.java` starts a dedicated page with two visible polygons to validate latest-state mouse-move and once-per-frame wheel delivery without touching gameplay code.
+
+### 5.8 Application shutdown
+
+- Public entry point: `Engine.shutdown()`.
+- The call is terminal and idempotent; `Engine` uses an atomic flag so concurrent callers cannot close the host twice.
+- If the current page is `BSODScreen`, `Engine` prints its already prepared error text to `stderr` before requesting platform shutdown.
+- `PlatformBridge.shutdownApplication()` is the platform boundary:
+  - Desktop: `DesktopBridge` sets a volatile flag; `DesktopLauncher` observes it in its GLFW loop and performs GLFW cleanup on the launcher thread.
+  - Android: `AndroidBridge` requires the launch `Activity` context and calls `finishAndRemoveTask()` through `Activity.runOnUiThread(...)`.
+- Do not call platform window or Activity APIs directly from game code; use `Engine.shutdown()` so the thread handoff and BSOD logging remain consistent.
 
 ## 6. Dependency and Interaction Maps
 

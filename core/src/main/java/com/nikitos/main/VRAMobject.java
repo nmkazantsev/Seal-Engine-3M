@@ -3,7 +3,6 @@ package com.nikitos.main;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
-import com.nikitos.PageOwnership;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 
@@ -17,7 +16,7 @@ import java.util.List;
 public abstract class VRAMobject {
     protected final GeneralPlatformBridge gl;
     protected final GLConstBridge glc;
-    protected final Class<?> creator;
+    // Нужен дочерним ресурсам FrameBuffer при ленивом создании VBO.
     protected final GamePageClass gamePageClass;
     protected final Object ownershipToken;
     private static final List<VRAMobject> allObjects = new ArrayList<>();//links to all objects
@@ -27,19 +26,14 @@ public abstract class VRAMobject {
     }
 
     /**
-     * Creates a GPU resource whose lifecycle may be owned by another tracked
-     * resource.
+     * Создаёт GPU-ресурс без регистрации в общем списке, когда его жизненным циклом
+     * управляет родительский ресурс, например framebuffer.
      */
     protected VRAMobject(GamePageClass creator, boolean registerForLifecycle) {
         gl = CoreRenderer.engine.getPlatformBridge().getGeneralPlatformBridge();
         glc = CoreRenderer.engine.getPlatformBridge().getGLConstBridge();
         gamePageClass = creator;
-        ownershipToken = PageOwnership.tokenOf(creator);
-        if (creator != null) {
-            this.creator = creator.getClass();
-        } else {
-            this.creator = null;
-        }
+        ownershipToken = creator == null ? null : creator.getResourceOwnershipToken();
         if (registerForLifecycle) {
             allObjects.add(this);
         }
@@ -50,7 +44,8 @@ public abstract class VRAMobject {
     public abstract void reload();
 
     public static void onPageChange() {
-        Object currentOwnershipToken = PageOwnership.currentToken();
+        // Сравнение токенов удаляет ресурсы именно ушедшего экземпляра страницы.
+        Object currentOwnershipToken = CoreRenderer.engine.getCurrentPageOwnershipToken();
         Iterator<VRAMobject> iterator = allObjects.iterator();
         while (iterator.hasNext()) {
             VRAMobject obj = iterator.next();
@@ -67,7 +62,4 @@ public abstract class VRAMobject {
         }
     }
 
-    public static int getTrackedObjectCount() {
-        return allObjects.size();
-    }
 }

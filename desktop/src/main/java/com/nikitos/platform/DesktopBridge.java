@@ -15,6 +15,8 @@ public class DesktopBridge extends PlatformBridge {
     private final DesktopMouseControlBridge mouseControlBridge = new DesktopMouseControlBridge();
     private final DesktopFrameCaptureSource frameCaptureSource =
             new DesktopFrameCaptureSource();
+    // Может быть установлен из любого потока, а читается GLFW-loop в DesktopLauncher.
+    private volatile boolean shutdownRequested;
 
     @Override
     public void onPause() {
@@ -123,12 +125,24 @@ public class DesktopBridge extends PlatformBridge {
     }
 
     @Override
+    public void shutdownApplication() {
+        // GLFW остаётся в потоке launcher: другой поток только запрашивает выход из цикла.
+        shutdownRequested = true;
+    }
+
+    /** Возвращает запрос на выход; сам GLFW вызов остаётся в потоке launcher. */
+    public boolean isShutdownRequested() {
+        return shutdownRequested;
+    }
+
+    @Override
     public FrameCaptureSource getFrameCaptureSource() {
         return frameCaptureSource;
     }
 
     public void attachWindow(long window) {
         mouseControlBridge.attachWindow(window);
+        // Capture использует то же GLFW-окно и не создаёт вторую поверхность.
         frameCaptureSource.attachWindow(window);
     }
 }

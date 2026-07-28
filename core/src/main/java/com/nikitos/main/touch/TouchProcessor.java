@@ -3,7 +3,6 @@ package com.nikitos.main.touch;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
-import com.nikitos.PageOwnership;
 import com.nikitos.main.debugger.BSODScreen;
 import com.nikitos.main.debugger.Debugger;
 
@@ -35,7 +34,7 @@ public class TouchProcessor {
     private static float accumulatedWheelX = 0;
     private static float accumulatedWheelY = 0;
     private static boolean pageChanged = false;
-    private final Class<?> creatorClassName;
+    // Токен изолирует обработчики разных экземпляров одинаковой страницы.
     private final Object ownershipToken;
     private final Function<TouchPoint, Boolean> checkHitboxCallback;
     private final Function<TouchPoint, Void> touchStartedCallback;
@@ -65,12 +64,7 @@ public class TouchProcessor {
                           Function<TouchPoint, Void> touchMovedCallback,
 
                           Function<TouchPoint, Void> touchEndedCallback, GamePageClass creatorPage) {
-        if (creatorPage != null) {
-            this.creatorClassName = creatorPage.getClass();
-        } else {
-            this.creatorClassName = null;
-        }
-        ownershipToken = PageOwnership.tokenOf(creatorPage);
+        ownershipToken = creatorPage == null ? null : creatorPage.getResourceOwnershipToken();
         this.checkHitboxCallback = checkHitboxCallback;
         this.touchStartedCallback = touchStartedCallback;
         this.touchMovedCallback = touchMovedCallback;
@@ -163,7 +157,6 @@ public class TouchProcessor {
      */
     public void terminate() {
         //the same as usual terminate(event), but call callback ot once, because we are already in main thread and editing command queue will crash the app
-        cancelQueuedCommands(this);
         touchAlive = false;
         touchEndProcessed = true;
         activeProcessors.remove(touchId);
@@ -203,7 +196,7 @@ public class TouchProcessor {
         synchronized (commandQueue) {
             TouchProcessor t = activeProcessors.getOrDefault(event.getPointerId(event.getActionIndex()), null);
             if (t != null && !t.blocked && !CoreRenderer.engine.switchingNewGamePage()) {
-                if (t.ownershipToken == PageOwnership.currentToken() || t.ownershipToken == null) {
+                if (t.ownershipToken == currentOwnershipToken() || t.ownershipToken == null) {
                     if (event.getActionMasked() == MyMotionEvent.ACTION_MOVE) {
                         touchMoved(event);
                     }
@@ -340,7 +333,7 @@ public class TouchProcessor {
         if (Debugger.getPage() == 0) { //do not process touches when debugger available
             for (TouchProcessor t : allProcessors) {
                 if (!CoreRenderer.engine.switchingNewGamePage()) {
-                    if (t.checkHitbox(new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()))) && (t.ownershipToken == PageOwnership.currentToken() || t.ownershipToken == null) && !t.touchAlive && !t.blocked) { //not to start the same processor twice if 2 touches in 1 area
+                    if (t.checkHitbox(new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()))) && (t.ownershipToken == currentOwnershipToken() || t.ownershipToken == null) && !t.touchAlive && !t.blocked) { //not to start the same processor twice if 2 touches in 1 area
                         activeProcessors.put(event.getPointerId(event.getActionIndex()), t);
                         t.lastTouchPoint = new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
                         t.touchAlive = true;
@@ -359,7 +352,7 @@ public class TouchProcessor {
             //touch moves will not be processed if starts are not processed here (blocked by debugger)
             TouchProcessor t = Debugger.getMainPageTouchProcessor();
             if (!CoreRenderer.engine.switchingNewGamePage()) {
-                if (t.checkHitbox(new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()))) && (t.ownershipToken == PageOwnership.currentToken() || t.ownershipToken == null) && !t.touchAlive && !t.blocked) { //not to start the same processor twice if 2 touches in 1 area
+                if (t.checkHitbox(new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()))) && (t.ownershipToken == currentOwnershipToken() || t.ownershipToken == null) && !t.touchAlive && !t.blocked) { //not to start the same processor twice if 2 touches in 1 area
                     activeProcessors.put(event.getPointerId(event.getActionIndex()), t);
                     t.lastTouchPoint = new TouchPoint(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
                     t.touchAlive = true;
@@ -397,24 +390,14 @@ public class TouchProcessor {
         t.terminate(event);
     }
 
-    private static void cancelQueuedCommands(TouchProcessor parent) {
-        synchronized (commandQueue) {
-            for (BufferedCommand command : commandQueue) {
-                if (command instanceof TouchCommand touchCommand
-                        && touchCommand.parent == parent) {
-                    touchCommand.cancelled = true;
-                }
-            }
-        }
-    }
-
     public static void onPageChange() {
         //clearing only through iterator, else concurrent modification error
         synchronized (commandQueue) {
             activeProcessors.clear();
             pageChanged = true;
             //do not call terminate here not to call touch ended
-            Object currentOwnershipToken = PageOwnership.currentToken();
+            // Глобальные обработчики имеют null, остальные принадлежат текущему экземпляру страницы.
+            Object currentOwnershipToken = currentOwnershipToken();
             allProcessors.removeIf(e -> e.ownershipToken != null && e.ownershipToken != currentOwnershipToken);
             removeInactivePageProcessors(leftButtonProcessors);
             removeInactivePageProcessors(rightButtonProcessors);
@@ -438,7 +421,6 @@ public class TouchProcessor {
         private final Function<TouchPoint, Void> function;
         private final TouchProcessor parent;
         private boolean isTouchEnded = false;
-        private boolean cancelled = false;
 
         private TouchCommand(TouchPoint t, Function<TouchPoint, Void> function, TouchProcessor parent) {
             this.touchPoint = t;
@@ -448,7 +430,7 @@ public class TouchProcessor {
 
         @Override
         public boolean shouldRun() {
-            return !cancelled;
+            return parent.touchAlive || (!parent.touchAlive && !parent.touchEndProcessed && isTouchEnded);
         }
 
         @Override
@@ -468,7 +450,10 @@ public class TouchProcessor {
     private static <T> void setProcessor(HashMap<Object, Function<T, Void>> processors,
                                          Function<T, Void> processor,
                                          GamePageClass creatorPage) {
-        Object key = PageOwnership.tokenOf(creatorPage);
+        if (creatorPage == null) {
+            throw new IllegalArgumentException("creatorPage can not be null for mouse processors");
+        }
+        Object key = creatorPage.getResourceOwnershipToken();
         if (processor == null) {
             processors.remove(key);
         } else {
@@ -477,18 +462,11 @@ public class TouchProcessor {
     }
 
     private static <T> Function<T, Void> getProcessorForCurrentPage(HashMap<Object, Function<T, Void>> processors) {
-        Object currentPage = PageOwnership.currentToken();
-        if (currentPage != null) {
-            Function<T, Void> pageProcessor = processors.get(currentPage);
-            if (pageProcessor != null) {
-                return pageProcessor;
-            }
-        }
-        return processors.get(null);
+        return processors.get(currentOwnershipToken());
     }
 
     private static <T> void removeInactivePageProcessors(HashMap<Object, Function<T, Void>> processors) {
-        Object currentPage = PageOwnership.currentToken();
+        Object currentPage = currentOwnershipToken();
         processors.entrySet().removeIf(e -> e.getKey() != null && e.getKey() != currentPage);
     }
 
@@ -518,6 +496,10 @@ public class TouchProcessor {
         rightButtonPressedPending = false;
         accumulatedWheelX = 0;
         accumulatedWheelY = 0;
+    }
+
+    private static Object currentOwnershipToken() {
+        return CoreRenderer.engine.getCurrentPageOwnershipToken();
     }
 
     private static void dispatchMousePointProcessor(HashMap<Object, Function<MousePoint, Void>> processors, boolean shouldDispatch) {
@@ -554,18 +536,4 @@ public class TouchProcessor {
         }
     }
 
-    public static int getTrackedProcessorCount() {
-        synchronized (commandQueue) {
-            return allProcessors.size();
-        }
-    }
-
-    public static int getDesktopMouseCallbackRegistrationCount() {
-        synchronized (commandQueue) {
-            return leftButtonProcessors.size()
-                    + rightButtonProcessors.size()
-                    + mouseMovedProcessors.size()
-                    + mouseWheelProcessors.size();
-        }
-    }
 }

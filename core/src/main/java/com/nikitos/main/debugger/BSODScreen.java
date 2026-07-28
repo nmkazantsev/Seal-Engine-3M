@@ -64,6 +64,11 @@ public class BSODScreen extends GamePageClass {
         screenPolygon = new SimplePolygon(redrawScreen, false, 0, this);
     }
 
+    /** Возвращает исходный текст ошибки для журналирования при принудительном завершении. */
+    public String getErrorText() {
+        return errorText;
+    }
+
     @Override
     public void onSurfaceChanged(int x, int y) {
         screenWidth = x;

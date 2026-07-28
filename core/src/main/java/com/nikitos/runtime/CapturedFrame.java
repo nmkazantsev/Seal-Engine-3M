@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Immutable RGBA capture whose first row is the top row of the image.
+ * Неизменяемый снимок RGBA: первый ряд массива соответствует верхнему ряду изображения.
+ * Конструктор и геттер копируют байты, чтобы снимок не менялся из пользовательского кода.
  */
 public final class CapturedFrame {
     private final int width;

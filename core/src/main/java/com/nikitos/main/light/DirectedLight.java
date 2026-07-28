@@ -35,6 +35,7 @@ public class DirectedLight extends ShaderData {
     }
 
     private static void reindexLights() {
+        // Удаление элемента сдвигает индексы uniform-массива, поэтому пересчитываем хвост списка.
         for (int i = 0; i < directLights.size(); i++) {
             directLights.get(i).get().index = i; //locations will be updated when apply shader
         }

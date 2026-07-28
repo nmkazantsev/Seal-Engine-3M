@@ -2,7 +2,6 @@ package com.nikitos.platform;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.Engine;
-import com.nikitos.GamePageClass;
 import com.nikitos.main.debugger.Debugger;
 import com.nikitos.main.keyboard.KeyboardProcessor;
 import com.nikitos.main.touch.MyMotionEvent;
@@ -10,7 +9,6 @@ import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.utils.Utils;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -41,10 +39,6 @@ public class DesktopLauncher {
 
     private final DesktopBridge desktopBridge;
 
-    private final DesktopWindowControl windowControl;
-
-    private final DesktopPageControl pageControl;
-
     private GLFWVidMode vidmode;
 
     private boolean fullScreenOpened = false;
@@ -57,57 +51,10 @@ public class DesktopLauncher {
 
     public DesktopLauncher(LauncherParams launcherParams) {
         this.launcherParams = launcherParams;
-        windowControl = new DesktopWindowControl();
         desktopBridge = new DesktopBridge();
         engine = new Engine(desktopBridge, launcherParams);
-        pageControl = new DesktopPageControl(windowControl, engine);
         init();
-        int[] framebufferSize = getFramebufferSize(window);
-        coreRenderer = new CoreRenderer(
-                framebufferSize[0],
-                framebufferSize[1],
-                engine
-        );
-    }
-
-    /**
-     * Requests a clean exit from the desktop render loop.
-     *
-     * <p>This method must be called on the thread that constructed this
-     * launcher. The GLFW window must still be active; calls after
-     * {@link #run()} returns fail with {@link IllegalStateException}.</p>
-     */
-    public void requestStop() {
-        windowControl.requestStop();
-    }
-
-    /**
-     * Requests a new desktop window content size in screen coordinates.
-     *
-     * <p>This method must be called on the thread that constructed this
-     * launcher. The GLFW window must still be active; calls after
-     * {@link #run()} returns fail with {@link IllegalStateException}.</p>
-     *
-     * @param width positive window content width
-     * @param height positive window content height
-     * @throws IllegalArgumentException if either dimension is not positive
-     */
-    public void requestWindowSize(int width, int height) {
-        windowControl.requestWindowSize(width, height);
-    }
-
-    /**
-     * Performs an immediate engine page transition for desktop coordinators.
-     *
-     * <p>This method must be called on the thread that constructed this
-     * launcher while its GLFW window is active. It does not enqueue work;
-     * calls from another thread or after {@link #run()} returns fail with
-     * {@link IllegalStateException}.</p>
-     *
-     * @param page non-null page to install
-     */
-    public void requestPage(GamePageClass page) {
-        pageControl.requestPage(page);
+        coreRenderer = new CoreRenderer(vidmode.width(), vidmode.height(), engine);
     }
 
     private static String glfwKeyToName(int key, int scancode) {
@@ -154,7 +101,6 @@ public class DesktopLauncher {
     public void run() {
         System.out.println("version of LWJGL " + Version.getVersion() + "!");
         loop();
-        windowControl.detachWindow();
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -185,8 +131,9 @@ public class DesktopLauncher {
             glfwWindowHint(GLFW_SAMPLES, 4);
         }
 
-        DesktopOpenGlContextHints.apply(launcherParams, GLFW::glfwWindowHint);
-
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.contains("mac")) {
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
@@ -220,26 +167,17 @@ public class DesktopLauncher {
             }
 
         } else {
-            int windowWidth = launcherParams.hasWindowSize()
-                    ? launcherParams.getWindowWidth()
-                    : vidmode.width();
-            int windowHeight = launcherParams.hasWindowSize()
-                    ? launcherParams.getWindowHeight()
-                    : vidmode.height();
             window = glfwCreateWindow(
-                    windowWidth,
-                    windowHeight,
+                    vidmode.width(),
+                    vidmode.height(),
                     launcherParams.getWindowTitle(),
                     NULL,
                     NULL);
+            glfwMaximizeWindow(window);
         }
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
-        if (!launcherParams.getFullScreen() && launcherParams.getMaximized()) {
-            glfwMaximizeWindow(window);
-        }
-        windowControl.attachWindow(window);
         desktopBridge.attachWindow(window);
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -307,8 +245,8 @@ public class DesktopLauncher {
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
-        // Enable or disable v-sync for the current context.
-        glfwSwapInterval(launcherParams.getVSync() ? 1 : 0);
+        // Enable v-sync
+        glfwSwapInterval(1);
 
         // Make the window visible
         glfwShowWindow(window);
@@ -386,15 +324,6 @@ public class DesktopLauncher {
         } // the stack frame is popped automatically
     }
 
-    private static int[] getFramebufferSize(long window) {
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer width = stack.mallocInt(1);
-            IntBuffer height = stack.mallocInt(1);
-            glfwGetFramebufferSize(window, width, height);
-            return new int[]{width.get(0), height.get(0)};
-        }
-    }
-
     private void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -411,7 +340,8 @@ public class DesktopLauncher {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window)) {
+        // shutdown() из другого потока только ставит флаг; закрытие GLFW выполняется здесь.
+        while (!desktopBridge.isShutdownRequested() && !glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             coreRenderer.draw();
             // Poll for window events. The key callback above will only be

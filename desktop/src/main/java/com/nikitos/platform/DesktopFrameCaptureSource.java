@@ -24,10 +24,12 @@ import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/** Читает GLFW back buffer и переворачивает строки OpenGL в публичный порядок сверху вниз. */
 final class DesktopFrameCaptureSource implements FrameCaptureSource {
     private long window = NULL;
 
     void attachWindow(long window) {
+        // Окно передаёт launcher: источник не владеет его жизненным циклом.
         this.window = window;
     }
 
@@ -62,6 +64,7 @@ final class DesktopFrameCaptureSource implements FrameCaptureSource {
         int byteCount = checkedRgbaByteCount(width, height);
         ByteBuffer bottomLeftRgba = BufferUtils.createByteBuffer(byteCount);
 
+        // Чтение временно меняет GL-состояние, поэтому все изменённые значения возвращаются в finally.
         int previousReadFramebuffer = glGetInteger(GL_READ_FRAMEBUFFER_BINDING);
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         try {

@@ -49,6 +49,20 @@ public abstract class PlatformBridge {
 
     public abstract MouseControlBridge getMouseControlBridge();
 
+    /**
+     * Завершает host-приложение средствами платформы. Реализация обязана принимать
+     * вызов не из render-потока и при необходимости сама перейти в UI-поток.
+     */
+    public void shutdownApplication() {
+        throw new UnsupportedOperationException(
+                "Application shutdown is unavailable on this platform"
+        );
+    }
+
+    /**
+     * Платформа может предоставить источник снимков; значение по умолчанию безопасно
+     * сообщает об отсутствии функции, не расширяя все существующие bridge-классы.
+     */
     public FrameCaptureSource getFrameCaptureSource() {
         return FrameCaptureSource.unavailable();
     }

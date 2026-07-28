@@ -1,7 +1,6 @@
 package com.nikitos;
 
 import com.nikitos.main.VRAMobject;
-import com.nikitos.main.frameBuffers.FrameBuffer;
 import com.nikitos.main.keyboard.KeyComboListener;
 import com.nikitos.main.keyboard.KeyListener;
 import com.nikitos.main.keyboard.KeyReleasedListener;
@@ -28,9 +27,6 @@ import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.platformBridge.SealAssetManager;
 import com.nikitos.platformBridge.ShaderBridge;
 import com.nikitos.platformBridge.VertexBridge;
-import com.nikitos.runtime.FrameContext;
-import com.nikitos.runtime.RuntimeObserver;
-import com.nikitos.runtime.RuntimeResourceSnapshot;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,10 +41,6 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PageResourceOwnershipTest {
@@ -124,206 +116,6 @@ class PageResourceOwnershipTest {
     }
 
     @Test
-    void observedFrameExposesExactRegistryCounts() {
-        RecordingObserver observer = new RecordingObserver();
-        RecordingBridge bridge = new RecordingBridge();
-        Engine engine = new Engine(
-                bridge,
-                new LauncherParams().setRuntimeObserver(observer)
-        );
-        CoreRenderer.engine = engine;
-        RegistryPage page = new RegistryPage("observed");
-        engine.startNewPage(page);
-        clearPageChangeSignals();
-        int expectedVram = VRAMobject.getTrackedObjectCount();
-        int expectedShaders = Shader.getTrackedShaderCount();
-        int expectedTouch = TouchProcessor.getTrackedProcessorCount();
-        int expectedPress = KeyboardProcessor.getPressListenerCount();
-        int expectedRelease = KeyboardProcessor.getReleaseListenerCount();
-        int expectedCombo = KeyboardProcessor.getComboListenerCount();
-        int expectedMouse = TouchProcessor.getDesktopMouseCallbackRegistrationCount();
-        int expectedShaderData = Adaptor.getTrackedShaderDataCount();
-        CoreRenderer renderer = new CoreRenderer(engine, ignored -> new EmptyPage());
-
-        renderer.draw();
-
-        RuntimeResourceSnapshot snapshot = observer.frameContext.getResourceSnapshot();
-        assertNotNull(snapshot);
-        assertAll(
-                () -> assertEquals(expectedVram, snapshot.getTrackedVramObjects()),
-                () -> assertEquals(expectedShaders, snapshot.getShaders()),
-                () -> assertEquals(expectedTouch, snapshot.getTouchProcessors()),
-                () -> assertEquals(expectedPress, snapshot.getKeyboardPressListeners()),
-                () -> assertEquals(expectedRelease, snapshot.getKeyboardReleaseListeners()),
-                () -> assertEquals(expectedCombo, snapshot.getKeyboardComboListeners()),
-                () -> assertEquals(expectedMouse, snapshot.getDesktopMouseCallbackRegistrations()),
-                () -> assertEquals(expectedShaderData, snapshot.getShaderData())
-        );
-    }
-
-    @Test
-    void contextRedrawReallocatesTrackedVertexBufferObjects() {
-        RecordingBridge bridge = new RecordingBridge();
-        Engine engine = new Engine(bridge, new LauncherParams());
-        CoreRenderer.engine = engine;
-        EmptyPage owner = new EmptyPage();
-        engine.startNewPage(owner);
-        new VertexBuffer(2, owner);
-        int bufferAllocations = bridge.vertexBridge().bufferAllocations;
-        int arrayAllocations = bridge.vertexBridge().arrayAllocations;
-
-        VRAMobject.onRedraw();
-
-        assertAll(
-                () -> assertEquals(
-                        bufferAllocations + 1,
-                        bridge.vertexBridge().bufferAllocations
-                ),
-                () -> assertEquals(
-                        arrayAllocations + 1,
-                        bridge.vertexBridge().arrayAllocations
-                )
-        );
-    }
-
-    @Test
-    void framebufferResizeAfterDrawReusesItsTrackedVertexBufferAndDeletesItOnce() {
-        RecordingBridge bridge = new RecordingBridge();
-        Engine engine = new Engine(bridge, new LauncherParams());
-        CoreRenderer.engine = engine;
-        EmptyPage owner = new EmptyPage();
-        engine.startNewPage(owner);
-        Shader shader = new Shader("vertex", "fragment", owner, new NoOpAdaptor());
-        shader.apply();
-        FrameBuffer frameBuffer = new FrameBuffer(640, 360, owner);
-        int trackedBeforeFirstDraw = VRAMobject.getTrackedObjectCount();
-
-        frameBuffer.drawTexture(
-                new PVector(0, 0, 1),
-                new PVector(640, 0, 1),
-                new PVector(0, 360, 1)
-        );
-        int trackedAfterFirstDraw = VRAMobject.getTrackedObjectCount();
-        int bufferAllocationsAfterFirstDraw = bridge.vertexBridge().bufferAllocations;
-        int arrayAllocationsAfterFirstDraw = bridge.vertexBridge().arrayAllocations;
-        int framebufferBeforeInvalidResize = frameBuffer.getFrameBuffer();
-        assertEquals(trackedBeforeFirstDraw, trackedAfterFirstDraw);
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> frameBuffer.resize(0, 720)
-        );
-        assertAll(
-                () -> assertEquals(640, frameBuffer.getWidth()),
-                () -> assertEquals(360, frameBuffer.getHeight()),
-                () -> assertEquals(
-                        framebufferBeforeInvalidResize,
-                        frameBuffer.getFrameBuffer()
-                ),
-                () -> assertEquals(trackedAfterFirstDraw, VRAMobject.getTrackedObjectCount())
-        );
-
-        frameBuffer.resize(1280, 720);
-        frameBuffer.drawTexture(
-                new PVector(0, 0, 1),
-                new PVector(1280, 0, 1),
-                new PVector(0, 720, 1)
-        );
-
-        assertAll(
-                () -> assertEquals(1280, frameBuffer.getWidth()),
-                () -> assertEquals(720, frameBuffer.getHeight()),
-                () -> assertEquals(trackedAfterFirstDraw, VRAMobject.getTrackedObjectCount()),
-                () -> assertEquals(
-                        bufferAllocationsAfterFirstDraw,
-                        bridge.vertexBridge().bufferAllocations
-                ),
-                () -> assertEquals(
-                        arrayAllocationsAfterFirstDraw,
-                        bridge.vertexBridge().arrayAllocations
-                )
-        );
-
-        VRAMobject.onRedraw();
-        assertAll(
-                () -> assertEquals(trackedAfterFirstDraw, VRAMobject.getTrackedObjectCount()),
-                () -> assertEquals(
-                        bufferAllocationsAfterFirstDraw + 1,
-                        bridge.vertexBridge().bufferAllocations
-                ),
-                () -> assertEquals(
-                        arrayAllocationsAfterFirstDraw + 1,
-                        bridge.vertexBridge().arrayAllocations
-                )
-        );
-        frameBuffer.drawTexture(
-                new PVector(0, 0, 1),
-                new PVector(1280, 0, 1),
-                new PVector(0, 720, 1)
-        );
-        assertAll(
-                () -> assertEquals(
-                        bufferAllocationsAfterFirstDraw + 1,
-                        bridge.vertexBridge().bufferAllocations
-                ),
-                () -> assertEquals(
-                        arrayAllocationsAfterFirstDraw + 1,
-                        bridge.vertexBridge().arrayAllocations
-                )
-        );
-
-        frameBuffer.delete();
-        engine.startNewPage(new FirstEmptyPage());
-
-        assertAll(
-                () -> assertEquals(1, bridge.vertexBridge().bufferDeletions),
-                () -> assertEquals(1, bridge.vertexBridge().arrayDeletions)
-        );
-    }
-
-    @Test
-    void firstObservedFrameSamplesResourcesBeforeDefaultPageCreation() {
-        RecordingObserver observer = new RecordingObserver();
-        RecordingBridge bridge = new RecordingBridge();
-        RegistryPage[] createdPage = new RegistryPage[1];
-        Engine engine = new Engine(
-                bridge,
-                new LauncherParams()
-                        .setRuntimeObserver(observer)
-                        .setStartPage(ignored -> {
-                            createdPage[0] = new RegistryPage("default");
-                            return createdPage[0];
-                        })
-        );
-        CoreRenderer renderer = new CoreRenderer(engine, ignored -> new EmptyPage());
-        int expectedVram = VRAMobject.getTrackedObjectCount();
-        int expectedShaders = Shader.getTrackedShaderCount();
-        int expectedTouch = TouchProcessor.getTrackedProcessorCount();
-        int expectedPress = KeyboardProcessor.getPressListenerCount();
-        int expectedRelease = KeyboardProcessor.getReleaseListenerCount();
-        int expectedCombo = KeyboardProcessor.getComboListenerCount();
-        int expectedMouse = TouchProcessor.getDesktopMouseCallbackRegistrationCount();
-        int expectedShaderData = Adaptor.getTrackedShaderDataCount();
-
-        renderer.draw();
-
-        RuntimeResourceSnapshot snapshot = observer.frameContext.getResourceSnapshot();
-        assertAll(
-                () -> assertNull(observer.frameContext.getPage()),
-                () -> assertNotNull(createdPage[0]),
-                () -> assertSame(createdPage[0], engine.getGamePage()),
-                () -> assertEquals(expectedVram, snapshot.getTrackedVramObjects()),
-                () -> assertEquals(expectedShaders, snapshot.getShaders()),
-                () -> assertEquals(expectedTouch, snapshot.getTouchProcessors()),
-                () -> assertEquals(expectedPress, snapshot.getKeyboardPressListeners()),
-                () -> assertEquals(expectedRelease, snapshot.getKeyboardReleaseListeners()),
-                () -> assertEquals(expectedCombo, snapshot.getKeyboardComboListeners()),
-                () -> assertEquals(expectedMouse, snapshot.getDesktopMouseCallbackRegistrations()),
-                () -> assertEquals(expectedShaderData, snapshot.getShaderData())
-        );
-    }
-
-    @Test
     void globalOwnershipSurvivesPageTransitionsAndContextRedraw() {
         RecordingBridge bridge = new RecordingBridge();
         Engine engine = new Engine(bridge, new LauncherParams());
@@ -359,11 +151,6 @@ class PageResourceOwnershipTest {
                 },
                 null
         );
-        TouchProcessor.setMouseMovedProcessor(point -> {
-            callbacks[0]++;
-            return null;
-        }, null);
-
         engine.startNewPage(new FirstEmptyPage());
         engine.startNewPage(new SecondEmptyPage());
         clearPageChangeSignals();
@@ -376,7 +163,7 @@ class PageResourceOwnershipTest {
                 () -> assertFalse(globalVram.deleted),
                 () -> assertFalse(bridge.shaderBridge.wasDeleted(globalShaderProgram)),
                 () -> assertEquals(1, globalVram.reloads),
-                () -> assertEquals(2, callbacks[0]),
+                () -> assertEquals(1, callbacks[0]),
                 () -> assertEquals(1, callbacks[1]),
                 () -> assertEquals(1, callbacks[2]),
                 () -> assertEquals(1, callbacks[3])
@@ -386,7 +173,6 @@ class PageResourceOwnershipTest {
         globalPress.delete();
         globalRelease.delete();
         globalCombo.delete();
-        TouchProcessor.setMouseMovedProcessor(null, null);
     }
 
     @Test
@@ -818,15 +604,6 @@ class PageResourceOwnershipTest {
     }
 
     private static final class SecondOwnedPage extends BasicOwnedPage {
-    }
-
-    private static final class RecordingObserver implements RuntimeObserver {
-        private FrameContext frameContext;
-
-        @Override
-        public void beforeFrame(FrameContext frameContext) {
-            this.frameContext = frameContext;
-        }
     }
 
     private static final class TestVram extends VRAMobject {

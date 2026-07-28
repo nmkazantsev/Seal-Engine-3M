@@ -36,6 +36,7 @@ public class PointLight extends ShaderData {
     }
 
     private static void reindexLights() {
+        // Удаление элемента сдвигает индексы uniform-массива, поэтому пересчитываем хвост списка.
         for (int i = 0; i < pointLights.size(); i++) {
             pointLights.get(i).get().index = i; //locations will be updated when apply shader
         }
@@ -71,5 +72,4 @@ public class PointLight extends ShaderData {
         reindexLights();
     }
 }
-
 

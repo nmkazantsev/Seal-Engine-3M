@@ -19,14 +19,7 @@ public class LauncherParams {
     protected boolean fullScreen = true;
 
     protected String windowTitle = "Seal Engine 3-M";
-
     protected RuntimeObserver runtimeObserver = null;
-
-    protected Integer windowWidth = null;
-    protected Integer windowHeight = null;
-    protected boolean maximized = true;
-    protected boolean vSync = true;
-    private boolean desktopOpenGl33CoreContext = false;
 
     public LauncherParams setDebug(boolean debug) {
         this.debug = debug;
@@ -67,32 +60,12 @@ public class LauncherParams {
         return this;
     }
 
+    /**
+     * Подключает необязательного наблюдателя кадра. Сам снимок создаётся только,
+     * если наблюдатель вызовет capture() в render-потоке.
+     */
     public LauncherParams setRuntimeObserver(RuntimeObserver runtimeObserver) {
         this.runtimeObserver = runtimeObserver;
-        return this;
-    }
-
-    public LauncherParams setWindowSize(int width, int height) {
-        if (width <= 0 || height <= 0) {
-            throw new IllegalArgumentException("Window dimensions must be positive");
-        }
-        this.windowWidth = width;
-        this.windowHeight = height;
-        return this;
-    }
-
-    public LauncherParams setMaximized(boolean maximized) {
-        this.maximized = maximized;
-        return this;
-    }
-
-    public LauncherParams setVSync(boolean vSync) {
-        this.vSync = vSync;
-        return this;
-    }
-
-    public LauncherParams setDesktopOpenGl33CoreContext(boolean enabled) {
-        desktopOpenGl33CoreContext = enabled;
         return this;
     }
 
@@ -102,30 +75,6 @@ public class LauncherParams {
 
     public RuntimeObserver getRuntimeObserver() {
         return runtimeObserver;
-    }
-
-    public boolean hasWindowSize() {
-        return windowWidth != null;
-    }
-
-    public Integer getWindowWidth() {
-        return windowWidth;
-    }
-
-    public Integer getWindowHeight() {
-        return windowHeight;
-    }
-
-    public boolean getMaximized() {
-        return maximized;
-    }
-
-    public boolean getVSync() {
-        return vSync;
-    }
-
-    public boolean isDesktopOpenGl33CoreContext() {
-        return desktopOpenGl33CoreContext;
     }
 
     public boolean isDebug() {

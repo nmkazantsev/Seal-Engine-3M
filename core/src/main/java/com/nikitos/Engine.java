@@ -8,12 +8,10 @@ import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
 import com.nikitos.platformBridge.*;
-import com.nikitos.runtime.PageTransition;
-import com.nikitos.runtime.RuntimeFailure;
 import com.nikitos.runtime.RuntimeObserver;
 import com.nikitos.utils.Utils;
 
-import java.util.function.Function;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Engine {
     public static String getVersion() {
@@ -26,28 +24,18 @@ public class Engine {
 
     private final PlatformBridge platformBridge;
 
-    private GamePageClass gamePage;
+    private volatile GamePageClass gamePage;
     private static long prevPageChangeTime = 0;
     private final LauncherParams launcherParams;
-    private final RuntimeObserver runtimeObserver;
-    private final Function<Exception, GamePageClass> bsodPageFactory;
+    // Первый вызов shutdown() является терминальным: второй не должен повторно закрывать host.
+    private final AtomicBoolean shutdownRequested = new AtomicBoolean();
 
     private final GeneralPlatformBridge generalPlatformBridge;
     private final GLConstBridge glconstBridge;
 
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
-        this(platformBridge, launcherParams, null);
-    }
-
-    Engine(
-            PlatformBridge platformBridge,
-            LauncherParams launcherParams,
-            Function<Exception, GamePageClass> bsodPageFactory
-    ) {
         this.platformBridge = platformBridge;
         this.launcherParams = launcherParams;
-        this.runtimeObserver = launcherParams.getRuntimeObserver();
-        this.bsodPageFactory = bsodPageFactory;
         this.generalPlatformBridge = platformBridge.getGeneralPlatformBridge();
         this.glconstBridge = platformBridge.getGLConstBridge();
         Matrix.init(platformBridge);
@@ -57,13 +45,6 @@ public class Engine {
     }
 
     public void onSurfaceChanged(int x, int y) {
-        if (x <= 0 || y <= 0) {
-            platformBridge.log_i(
-                    "engine",
-                    "ignoring non-positive surface size " + x + "x" + y
-            );
-            return;
-        }
         if (gamePage == null) {
             platformBridge.log_e("engine", "on surface changed called, but game page is null");
             return;
@@ -103,14 +84,8 @@ public class Engine {
     }
 
     private boolean switching = false;
-    private boolean observedFrameActive;
 
     public void startNewPage(GamePageClass newPage) {
-        startNewPage(newPage, observedFrameActive);
-    }
-
-    private void startNewPage(GamePageClass newPage, boolean markObserverFailures) {
-        GamePageClass previousPage = gamePage;
         try {
             switching = true;
             platformBridge.log_i("engine", "start new page");
@@ -119,7 +94,6 @@ public class Engine {
             System.gc();
             gamePage = newPage;
             resetPageMillis();
-            newPage.onInstalled();
             newPage.onSurfaceChanged((int) Utils.getX(), (int) Utils.getY());
             Debugger.onResChange((int) Utils.getX(), (int) Utils.getY());
             VRAMobject.onPageChange();
@@ -128,43 +102,11 @@ public class Engine {
             KeyboardProcessor.onPageChange();
             switching = false;
         } catch (Exception e) {
-            if (runtimeObserver != null) {
-                notifyObserver(markObserverFailures, () -> runtimeObserver.onFailure(new RuntimeFailure(
-                        RuntimeFailure.Stage.PAGE_TRANSITION,
-                        e,
-                        null,
-                        newPage
-                )));
-            }
             if (launcherParams.getUseBSOD()) {
-                startNewPage(createBsodPage(e), markObserverFailures);
-                return;
+                startNewPage(new BSODScreen(e));
             } else {
-                if (markObserverFailures && runtimeObserver != null) {
-                    throw new ObservedLifecycleException(e);
-                }
                 throw e;
             }
-        } catch (Error error) {
-            if (runtimeObserver == null) {
-                throw error;
-            }
-            notifyObserver(markObserverFailures, () -> runtimeObserver.onFailure(new RuntimeFailure(
-                    RuntimeFailure.Stage.PAGE_TRANSITION,
-                    error,
-                    null,
-                    newPage
-            )));
-            if (markObserverFailures) {
-                throw new ObservedLifecycleException(error);
-            }
-            throw error;
-        }
-        if (runtimeObserver != null) {
-            notifyObserver(
-                    markObserverFailures,
-                    () -> runtimeObserver.onPageChanged(new PageTransition(previousPage, gamePage))
-            );
         }
     }
 
@@ -176,60 +118,15 @@ public class Engine {
             platformBridge.log_i("engine", "asked to start default page, but it exists");
             return;
         }
-        GamePageClass defaultPage;
         try {
-            defaultPage = launcherParams.getStartPage().apply(null);
+            startNewPage(launcherParams.getStartPage().apply(null));
         } catch (Exception e) {
             if (launcherParams.getUseBSOD()) {
-                startNewPage(createBsodPage(e), observedFrameActive);
+                startNewPage(new BSODScreen(e));
             } else {
                 throw e;
             }
-            return;
         }
-        startNewPage(defaultPage, observedFrameActive);
-    }
-
-    private GamePageClass createBsodPage(Exception cause) {
-        if (bsodPageFactory != null) {
-            return bsodPageFactory.apply(cause);
-        }
-        return new BSODScreen(cause);
-    }
-
-    private void notifyObserver(boolean markFailure, Runnable callback) {
-        try {
-            callback.run();
-        } catch (RuntimeException | Error observerFailure) {
-            if (markFailure) {
-                throw new ObservedLifecycleException(observerFailure);
-            }
-            throw observerFailure;
-        }
-    }
-
-    static final class ObservedLifecycleException extends RuntimeException {
-        private final Throwable originalFailure;
-
-        private ObservedLifecycleException(Throwable originalFailure) {
-            super(null, null, false, false);
-            this.originalFailure = originalFailure;
-        }
-
-        RuntimeException propagate() {
-            if (originalFailure instanceof RuntimeException runtimeException) {
-                return runtimeException;
-            }
-            throw (Error) originalFailure;
-        }
-    }
-
-    void beginObservedFrame() {
-        observedFrameActive = true;
-    }
-
-    void endObservedFrame() {
-        observedFrameActive = false;
     }
 
     public boolean switchingNewGamePage(){
@@ -252,12 +149,37 @@ public class Engine {
         return gamePage;
     }
 
-    public RuntimeObserver getRuntimeObserver() {
-        return runtimeObserver;
+    /**
+     * Внутренний ключ текущей страницы для реестров из других пакетов.
+     * Не раскрывает саму страницу и сохраняет границу её жизненного цикла.
+     */
+    public Object getCurrentPageOwnershipToken() {
+        return gamePage.getResourceOwnershipToken();
     }
 
     public PlatformBridge getPlatformBridge() {
         return platformBridge;
+    }
+
+    /** Возвращает наблюдателя кадра, заданного при запуске, без создания глобального состояния. */
+    public RuntimeObserver getRuntimeObserver() {
+        return launcherParams.getRuntimeObserver();
+    }
+
+    /**
+     * Завершает приложение через platform bridge; метод можно вызывать из любого потока.
+     * Если текущая страница — BSOD, её текст сначала печатается в stderr для внешнего лога.
+     */
+    public void shutdown() {
+        if (!shutdownRequested.compareAndSet(false, true)) {
+            return;
+        }
+        // Ссылка читается один раз: страница может смениться параллельно с запросом завершения.
+        GamePageClass currentPage = gamePage;
+        if (currentPage instanceof BSODScreen) {
+            System.err.println(((BSODScreen) currentPage).getErrorText());
+        }
+        platformBridge.shutdownApplication();
     }
 
     public void glClear() {

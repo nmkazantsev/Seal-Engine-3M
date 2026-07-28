@@ -1,7 +1,7 @@
 package com.seal.gl_engine.platform;
 
+import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES30;
@@ -31,68 +31,38 @@ import java.util.Locale;
 import java.util.function.Function;
 
 public class AndroidBridge extends PlatformBridge {
-    /**
-     * @deprecated Start-page ownership belongs to the process launch settings.
-     * Kept for source and binary compatibility with existing Android adapters.
-     */
-    @Deprecated
+    private Context context;
+    private GLSurfaceView glSurfaceView;
     protected Function<Void, GamePageClass> startPage;
-    private volatile Context context;
-    private final AndroidViewBinding<GLSurfaceView> views =
-            new AndroidViewBinding<>(
-                    new AndroidViewBinding.Operations<>() {
-                        @Override
-                        public void pause(GLSurfaceView view) {
-                            view.onPause();
-                        }
-
-                        @Override
-                        public void resume(GLSurfaceView view) {
-                            view.onResume();
-                        }
-                    }
-            );
     private SealAssetManager assetManager;
     private AudioPlayer audioPlayer;
     private RuntimeFileBridge runtimeFileBridge;
     private final MouseControlBridge mouseControlBridge = new AndroidMouseControlBridge();
-    private AndroidFrameCaptureSource frameCaptureSource;
+    private final AndroidFrameCaptureSource frameCaptureSource = new AndroidFrameCaptureSource();
 
-    public AndroidBridge() {
-        this(null);
-    }
-
-    AndroidBridge(Context context) {
-        this.context = context;
-    }
-
-    GLSurfaceView createView(
-            Context activityContext,
-            AndroidLaunchSettings settings,
-            Engine engine
-    ) {
-        bindApplicationContext(activityContext);
-        bindLaunchSettings(settings);
-        ActivityManager activityManager = (ActivityManager) activityContext
+    GLSurfaceView launch(AndroidLauncherParams androidLauncherParams, Engine engine) {
+        startPage = androidLauncherParams.getStartPage();
+        this.context = androidLauncherParams.getContext();
+        ActivityManager activityManager = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
         ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
         Log.i("engine version ", Engine.getVersion());
         Log.i("version", String.valueOf(Double.parseDouble(configurationInfo.getGlEsVersion())));
         Log.i("version", String.valueOf(configurationInfo.reqGlEsVersion >= 0x30000));
         Log.i("version", String.format("%X", configurationInfo.reqGlEsVersion));
-        if (!supportES2(activityContext)) {
-            Toast.makeText(activityContext, "OpenGL ES 2.0 is not supported", Toast.LENGTH_LONG).show();
+        if (!supportES2()) {
+            Toast.makeText(context, "OpenGL ES 2.0 is not supported", Toast.LENGTH_LONG).show();
             return null;
         }
-        GLSurfaceView view = new GLSurfaceView(activityContext);
-        view.setEGLContextClientVersion(3);
-        view.setEGLConfigChooser(new MyConfigChooser(settings.getMSAA() ? 4 : 1));
+        glSurfaceView = new GLSurfaceView(context);
+        glSurfaceView.setEGLContextClientVersion(3);
+        glSurfaceView.setEGLConfigChooser(new MyConfigChooser(androidLauncherParams.getMSAA() ? 4 : 1));
 
         // Keyboard forwarding (if the view has focus).
-        view.setFocusable(true);
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
+        glSurfaceView.setFocusable(true);
+        glSurfaceView.setFocusableInTouchMode(true);
+        glSurfaceView.requestFocus();
+        glSurfaceView.setOnKeyListener((v, keyCode, event) -> {
             String keyName;
             int unicode = event.getUnicodeChar();
             if (unicode != 0) {
@@ -112,88 +82,48 @@ public class AndroidBridge extends PlatformBridge {
             }
             return false;
         });
-        WindowManager wm = (WindowManager) activityContext.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         final DisplayMetrics displayMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(displayMetrics);
         float widthPixels = displayMetrics.widthPixels;
         float heightPixels = displayMetrics.heightPixels;
-        AndroidFrameCaptureSource captureSource =
-                engine.getRuntimeObserver() == null
-                        ? null
-                        : getAndroidFrameCaptureSource();
-        if (settings.isDebug()) {
-            Debugger.debuggerInit();
-        }
-        view.setRenderer(new OpenGLRenderer(
+        /*if (androidLauncherParams.isLandscape() && widthPixels < heightPixels) {
+            glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
+        } else if (!androidLauncherParams.isLandscape() && widthPixels > heightPixels) {
+            glSurfaceView.setRenderer(new OpenGLRenderer(heightPixels, widthPixels, engine));
+        } else {
+            glSurfaceView.setRenderer(new OpenGLRenderer(widthPixels, heightPixels, engine));
+        }*/
+
+        // Источник создаётся только для наблюдателя: без него обычный рендеринг не меняется.
+        glSurfaceView.setRenderer(new OpenGLRenderer(
                 widthPixels,
                 heightPixels,
                 engine,
-                captureSource
+                engine.getRuntimeObserver() == null ? null : frameCaptureSource
         ));
+        if (androidLauncherParams.isDebug()) {
+            Debugger.debuggerInit();
+        }
 
-        return view;
+        return glSurfaceView;
     }
 
-    private boolean supportES2(Context activityContext) {
+    private boolean supportES2() {
         ActivityManager activityManager =
-                (ActivityManager) activityContext.getSystemService(Context.ACTIVITY_SERVICE);
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
         return (configurationInfo.reqGlEsVersion >= 0x20000);
     }
 
     @Override
     public void onPause() {
-        views.pauseCurrent();
+        glSurfaceView.onPause();
     }
 
     @Override
     public void onResume() {
-        views.resumeCurrent();
-    }
-
-    void attachView(
-            GLSurfaceView view,
-            boolean attachPaused
-    ) {
-        views.attach(view, attachPaused);
-    }
-
-    void pauseView(GLSurfaceView expectedView) {
-        views.pause(expectedView);
-    }
-
-    void detachView(GLSurfaceView expectedView) {
-        views.detach(expectedView);
-    }
-
-    void restoreView(
-            GLSurfaceView view,
-            boolean paused
-    ) {
-        views.restore(view, paused);
-    }
-
-    void bindLaunchSettings(AndroidLaunchSettings settings) {
-        startPage = settings.getStartPage();
-    }
-
-    synchronized void bindApplicationContext(
-            Context activityContext
-    ) {
-        Context applicationContext =
-                activityContext.getApplicationContext();
-        if (applicationContext == null) {
-            if (activityContext instanceof Application) {
-                applicationContext = activityContext;
-            } else {
-                throw new IllegalArgumentException(
-                        "Android Activity must expose an application context"
-                );
-            }
-        }
-        if (context == null) {
-            context = applicationContext;
-        }
+        glSurfaceView.onResume();
     }
 
     @Override
@@ -241,34 +171,7 @@ public class AndroidBridge extends PlatformBridge {
 
         @Override
         public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
-            EGLConfig config = chooseConfig(egl, display, attributes(antiAliasMode));
-            if (config == null && antiAliasMode > 1) {
-                config = chooseConfig(egl, display, attributes(0));
-            }
-            return config;
-        }
-
-        private static EGLConfig chooseConfig(
-                EGL10 egl,
-                EGLDisplay display,
-                int[] attributes
-        ) {
-            EGLConfig[] configs = new EGLConfig[1];
-            int[] configCounts = new int[1];
-            if (!egl.eglChooseConfig(
-                    display,
-                    attributes,
-                    configs,
-                    configs.length,
-                    configCounts
-            ) || configCounts[0] == 0) {
-                return null;
-            }
-            return configs[0];
-        }
-
-        static int[] attributes(int antiAliasMode) {
-            return new int[] {
+            int[] attribs = {
                     EGL10.EGL_LEVEL, 0,
                     EGL10.EGL_RENDERABLE_TYPE, EGLExt.EGL_OPENGL_ES3_BIT_KHR,
                     EGL10.EGL_COLOR_BUFFER_TYPE, EGL10.EGL_RGB_BUFFER,
@@ -276,10 +179,20 @@ public class AndroidBridge extends PlatformBridge {
                     EGL10.EGL_GREEN_SIZE, 8,
                     EGL10.EGL_BLUE_SIZE, 8,
                     EGL10.EGL_DEPTH_SIZE, 16,
-                    EGL10.EGL_SAMPLE_BUFFERS, antiAliasMode > 1 ? 1 : 0,
-                    EGL10.EGL_SAMPLES, Math.max(antiAliasMode, 0),
+                    EGL10.EGL_SAMPLE_BUFFERS, 1,
+                    EGL10.EGL_SAMPLES, antiAliasMode,  // This is for 4x MSAA.
                     EGL10.EGL_NONE
             };
+            EGLConfig[] configs = new EGLConfig[1];
+            int[] configCounts = new int[1];
+            egl.eglChooseConfig(display, attribs, configs, 1, configCounts);
+
+            if (configCounts[0] == 0) {
+                // Failed! Error handling.
+                return null;
+            } else {
+                return configs[0];
+            }
         }
     }
 
@@ -357,14 +270,21 @@ public class AndroidBridge extends PlatformBridge {
     }
 
     @Override
-    public FrameCaptureSource getFrameCaptureSource() {
-        return getAndroidFrameCaptureSource();
+    public void shutdownApplication() {
+        // Только Activity владеет жизненным циклом Android-приложения и может его закрыть.
+        if (!(context instanceof Activity)) {
+            throw new IllegalStateException(
+                    "Android shutdown requires the Activity context used to launch the engine"
+            );
+        }
+        Activity activity = (Activity) context;
+        // runOnUiThread допускает вызов Engine.shutdown() не из GL-потока.
+        activity.runOnUiThread(activity::finishAndRemoveTask);
     }
 
-    private AndroidFrameCaptureSource getAndroidFrameCaptureSource() {
-        if (frameCaptureSource == null) {
-            frameCaptureSource = new AndroidFrameCaptureSource();
-        }
+    @Override
+    public FrameCaptureSource getFrameCaptureSource() {
+        // Один источник привязан к одной GLSurfaceView и переживает смену игровых страниц.
         return frameCaptureSource;
     }
 }

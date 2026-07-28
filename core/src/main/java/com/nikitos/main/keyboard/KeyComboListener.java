@@ -2,7 +2,6 @@ package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
-import com.nikitos.PageOwnership;
 
 import java.util.*;
 import java.util.function.Function;
@@ -14,7 +13,7 @@ import static com.nikitos.main.keyboard.KeyboardProcessor.normalizeKeyName;
  * The callback is called once per activation, until any key from the combo is released.
  */
 public class KeyComboListener {
-    private final Class<?> creatorClassName;
+    // Токен отличает экземпляры одной страницы и не даёт слушателю пережить переход.
     private final Object ownershipToken;
     private final ArrayList<String> keysSorted;
     private final HashSet<String> keysSet;
@@ -25,8 +24,7 @@ public class KeyComboListener {
     private boolean blocked = false;
 
     public KeyComboListener(String[] keys, Function<String, Void> comboPressedCallback, GamePageClass creatorPage) {
-        this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
-        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
+        this.ownershipToken = creatorPage == null ? null : creatorPage.getResourceOwnershipToken();
         this.comboPressedCallback = comboPressedCallback;
 
         ArrayList<String> normalized = new ArrayList<>();
@@ -73,12 +71,7 @@ public class KeyComboListener {
 
     boolean isActiveForCurrentPage() {
         if (ownershipToken == null) return true;
-        if (CoreRenderer.engine == null) return true;
-        try {
-            return ownershipToken == PageOwnership.currentToken();
-        } catch (Throwable ignored) {
-            return true;
-        }
+        return ownershipToken == CoreRenderer.engine.getCurrentPageOwnershipToken();
     }
 
     boolean isComboPressed(Set<String> pressedKeys) {
@@ -102,10 +95,6 @@ public class KeyComboListener {
 
     Function<String, Void> getComboPressedCallback() {
         return comboPressedCallback;
-    }
-
-    Class<?> getCreatorClassName() {
-        return creatorClassName;
     }
 
     Object getOwnershipToken() {

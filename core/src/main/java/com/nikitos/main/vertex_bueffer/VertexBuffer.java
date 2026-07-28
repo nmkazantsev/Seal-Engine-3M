@@ -8,38 +8,25 @@ import com.nikitos.platformBridge.VertexBridge;
 
 
 public class VertexBuffer extends VRAMobject {
-    private int vao;
+    private final int vao;
     private final int[] vbo;
 
     private final int vboNum;
     private final VertexBridge vertexBridge;
 
     private boolean dynamicDraw = false;
-    private boolean allocated;
 
     public VertexBuffer(int vboNum, GamePageClass creator) {
-        this(vboNum, creator, true);
-    }
-
-    protected VertexBuffer(
-            int vboNum,
-            GamePageClass creator,
-            boolean registerForLifecycle
-    ) {
-        super(creator, registerForLifecycle);
+        super(creator);
         this.vertexBridge = CoreRenderer.engine.getPlatformBridge().getVertexBridge();
         this.vboNum = vboNum;
         vbo = new int[vboNum];
-        allocate();
-    }
 
-    protected final void allocate() {
         vertexBridge.glGenBuffers(vboNum, vbo, 0);
 
         int[] x = new int[1];
         vertexBridge.glGenVertexArrays(1, x, 0);
         vao = x[0];
-        allocated = true;
     }
 
     public void setDynamicDraw(boolean dynamicDraw) {
@@ -71,18 +58,14 @@ public class VertexBuffer extends VRAMobject {
     }
 
     public void delete() {
-        if (!allocated) {
-            return;
-        }
         vertexBridge.glDeleteBuffers(vboNum, vbo, 0);
         int[] x = {vao};
         vertexBridge.glDeleteVertexArrays(1, x, 0);
-        allocated = false;
     }
 
     @Override
     public void reload() {
-        allocate();
+        // пустая реализация
     }
 
 }

@@ -11,8 +11,8 @@
           <set>
             <option value="$PROJECT_DIR$/../Demo" />
             <option value="$PROJECT_DIR$/../Demo/game" />
-            <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/desktop" />
+            <option value="$PROJECT_DIR$/../seal-runtime-worktree/core" />
+            <option value="$PROJECT_DIR$/../seal-runtime-worktree/desktop" />
           </set>
         </option>
       </GradleProjectSettings>

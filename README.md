@@ -2,19 +2,10 @@ The first cross-platform version of https://github.com/nmkazantsev/seal_engine.
 
 All features are suppoerted. Unified for all platforms (Android, Windows, Linux) api was not changed.
 
-GLSL resources are checked out with LF line endings on every platform so the
-reproducible Gradle JAR settings produce the same runtime artifacts on Linux,
-macOS, and Windows.
-
 See example apps:
 Desktop: https://github.com/nmkazantsev/Demo-launcher
 
 Android: https://github.com/nmkazantsev/Demo-app
-
-The Android launcher requests an OpenGL ES 3 context and selects an
-`EGL_OPENGL_ES3_BIT_KHR`-compatible config, including when the custom MSAA
-chooser is active. If the requested multisample config is unavailable, the
-chooser retries without MSAA while retaining the GLES 3 requirement.
 
 
 
@@ -87,6 +78,7 @@ chooser retries without MSAA while retaining the GLES 3 requirement.
 - Если BSOD support включён через `LauncherParams.setUseBSOD(true)` во время запуска, движок инициализирует automatic crash-screen handling при старте.
 - При исключении внутри пользовательского приложения движок автоматически показывает `BSODScreen`.
 - Экран отображает информацию об ошибке на экране и параллельно сохраняет её в текстовый файл.
+- При вызове `Engine.shutdown()` во время BSOD текст этой ошибки также печатается в `stderr` до завершения приложения.
 - Crash log locations:
   - Desktop: `crashes` folder inside the application folder
   - Android: `Android/data/<app>/files/crashes`
@@ -96,16 +88,10 @@ chooser retries without MSAA while retaining the GLES 3 requirement.
 Абстрактный класс, от которого должны наследоваться все игровые страницы.
 
 **Публичные методы:**
-- `void onInstalled()` – lifecycle hook, вызываемый `Engine.startNewPage(...)` после установки точного экземпляра страницы, до первого `onSurfaceChanged(...)` и до очистки реестров исходящей страницы. Реализация по умолчанию ничего не делает.
 - `abstract void onSurfaceChanged(int x, int y)` – вызывается при изменении размеров экрана.
 - `abstract void draw()` – основной метод отрисовки, вызывается каждый кадр.
 - `abstract void onResume()` – вызывается при возврате приложения на передний план.
 - `abstract void onPause()` – вызывается при уходе приложения в фон.
-
-Неположительный размер поверхности (например, промежуточный `0x0` при
-минимизации окна) не передаётся странице. Движок сохраняет последние
-положительные размеры и коэффициенты до следующего пригодного callback; поэтому
-переход страницы во время минимизации получает последний usable viewport.
 
 ### LauncherParams
 Класс для настройки параметров запуска движка. Используется при создании экземпляра `Engine`.
@@ -116,80 +102,34 @@ chooser retries without MSAA while retaining the GLES 3 requirement.
 - `LauncherParams setFullScreen(boolean fullScreen)` – включает/выключает полноэкранный режим.
 - `LauncherParams setMSAA(boolean MSAA)` – включает/выключает мультисэмплинг.
 - `LauncherParams setStartPage(Function<Void, GamePageClass> startPage)` – задаёт поставщик стартовой страницы.
-- `LauncherParams setRuntimeObserver(RuntimeObserver runtimeObserver)` – задаёт необязательный runtime observer. По умолчанию значение равно `null`.
-- `LauncherParams setWindowSize(int width, int height)` – задаёт положительные ширину и высоту desktop-окна как одну неделимую настройку.
-- `LauncherParams setMaximized(boolean maximized)` – управляет стартовой максимизацией оконного desktop-режима.
-- `LauncherParams setVSync(boolean vSync)` – задаёт desktop swap interval: `1` при `true` и `0` при `false`.
-- `LauncherParams setDesktopOpenGl33CoreContext(boolean enabled)` – явно запрашивает desktop-контекст OpenGL 3.3 core profile для диагностических инструментов, которым несовместим legacy-контекст.
-- `boolean hasWindowSize()`, `Integer getWindowWidth()`, `Integer getWindowHeight()`, `boolean getMaximized()`, `boolean getVSync()`, `boolean isDesktopOpenGl33CoreContext()` – геттеры desktop-настроек окна и контекста.
-- `boolean isDebug()`, `boolean getMSAA()`, `boolean isDesktop()`, `String getWindowTitle()`, `boolean getFullScreen()`, `RuntimeObserver getRuntimeObserver()` – остальные геттеры.
+- `LauncherParams setRuntimeObserver(RuntimeObserver observer)` – задаёт необязательного наблюдателя отрисованных кадров.
+- `void shutdown()` – завершает игру средствами текущей платформы; допустим вызов из любого потока.
+- `boolean isDebug()`, `boolean getMSAA()`, `boolean isDesktop()`, `String getWindowTitle()`, `boolean getFullScreen()` – геттеры.
 
-Legacy defaults desktop-окна и OpenGL-контекста сохранены: явный размер отсутствует, окно максимизируется, VSync включён, а запрос OpenGL 3.3 core profile выключен. При значении `false` новый параметр не добавляет GLFW hints и не меняет Android. Для воспроизводимого оконного запуска 1280×720 без VSync используйте:
+### Снимок кадра для отладки
+
+Для локальной отладки можно передать в `LauncherParams` реализацию `RuntimeObserver`:
 
 ```java
-new LauncherParams()
-        .setFullScreen(false)
-        .setWindowSize(1280, 720)
-        .setMaximized(false)
-        .setVSync(false);
+new LauncherParams().setRuntimeObserver(source -> {
+    if (source.isAvailable()) {
+        CapturedFrame frame = source.capture();
+        // frame.getRgba(): RGBA, строки от верхней к нижней.
+    }
+});
 ```
 
-Размер и максимизация применяются только к оконному desktop-режиму. `CoreRenderer` получает фактический размер framebuffer, который может отличаться от размера окна на HiDPI-системах.
+Метод вызывается в render-потоке после отрисовки кадра и до показа буфера. `capture()` делает синхронное чтение framebuffer, поэтому его следует вызывать только для действительно нужных кадров. Desktop и Android поддерживаются; на других bridge-реализациях источник явно сообщает, что захват недоступен. API не управляет игрой: пауза, пошаговое выполнение и внешние команды остаются отдельной будущей задачей.
 
-### DesktopLauncher window control
+### Завершение игры
 
-`DesktopLauncher` предоставляет узкий desktop-only API управления уже созданным GLFW-окном:
+`engine.shutdown()` завершает desktop-окно либо Android `Activity`; вызывать его из render-потока не требуется. Вызов терминальный и идемпотентный: повторные вызовы ничего не делают. Если текущая страница — `BSODScreen`, движок перед закрытием печатает её текст ошибки в `stderr`.
 
-- `void requestStop()` устанавливает close flag окна. Существующий render loop завершает текущую итерацию, выходит по своему штатному условию и выполняет обычное освобождение callbacks, окна, GLFW и audio; `System.exit` не используется.
-- `void requestWindowSize(int width, int height)` запрашивает положительный размер content area в screen coordinates. Это не размер framebuffer в pixels; фактический framebuffer и `onSurfaceChanged(...)` продолжают обновляться существующим GLFW callback.
-- `void requestPage(GamePageClass page)` синхронно делегирует точный экземпляр страницы в `Engine.startNewPage(...)`. Метод предназначен для render-thread coordinator: он не раскрывает `Engine`, не создаёт очередь и сохраняет обычный `PageTransition`, включая переходы между разными экземплярами одного класса.
-
-Все три метода должны вызываться из того же потока, который создал `DesktopLauncher` и выполняет его render loop. Окно активно после успешного завершения конструктора и до возврата `run()`. Вызов из другого потока или после teardown выбрасывает `IllegalStateException`; неположительный размер выбрасывает `IllegalArgumentException` без native-вызова. Для воспроизводимых resize-сценариев используйте оконный немаксимизированный режим: в full-screen GLFW трактует изменение размера как смену желаемого video mode.
-
-API не меняет launcher defaults, порядок кадра, FPS, `Engine.pageMillis()` или `Utils.millis()` и не добавляет работу в render loop, если методы не вызываются.
-
-### Runtime Observer API
-`RuntimeObserver` задаёт необязательный API наблюдения за runtime. Его default-методы не выполняют действий: `beforeFrame(FrameContext)`, `afterFrame(FrameContext)`, `afterFrame(FrameContext, FrameCaptureSource)`, `onPageChanged(PageTransition)` и `onFailure(RuntimeFailure)`.
-
-- `FrameContext` содержит идентификатор кадра, текущую `GamePageClass`, ширину, высоту, `Platform` и допускающий `null` `RuntimeResourceSnapshot`.
-- `RuntimeResourceSnapshot` неизменно хранит числа отслеживаемых VRAM-объектов, shader-программ, `ShaderData`, touch processors, keyboard press/release/combo listeners и desktop mouse callback registrations. Прежний семиаргументный конструктор сохранён; в созданном им snapshot счётчик `ShaderData` равен `0`.
-- Snapshot снимается только на observed-пути непосредственно перед `beforeFrame` и согласован с pre-frame значением `FrameContext.getPage()`. Поэтому на первом кадре до создания default page страница равна `null`, а counters описывают состояние до её конструктора.
-- `PageTransition` содержит предыдущую и новую `GamePageClass`.
-- `RuntimeFailure` содержит `Stage`, исходное `Throwable`, а также допускающие `null` `FrameContext` и `GamePageClass`. Возможные стадии: `FRAME_SETUP`, `PAGE_DRAW`, `DEBUGGER_DRAW`, `VERTICES_REDRAW`, `TOUCH_PROCESS`, `KEYBOARD_PROCESS`, `PAGE_TRANSITION`.
-- `Engine.getRuntimeObserver()` возвращает observer, зафиксированный при создании `Engine`; отдельного runtime setter нет.
-- При установленном observer идентификаторы кадров начинаются с `1`. Порядок вызовов: `beforeFrame` → расчёт FPS / стартовая страница / начало кадра → `GamePageClass.draw()` → `Debugger.draw()` → перерисовка вершин → touch → keyboard → `afterFrame`.
-- После успешного перехода страницы вызывается `onPageChanged`; первый переход передаётся как `null → startPage`. Ошибка перехода передаётся в `onFailure` со стадией `PAGE_TRANSITION`, без `FrameContext`.
-- Переход, вызванный приложением из `draw()` или другой стадии наблюдаемого кадра, сохраняет стадию `PAGE_TRANSITION`: его ошибка не отправляется повторно как ошибка окружающей стадии кадра.
-- Ошибка стадии кадра передаётся в `onFailure` с исходной причиной, контекстом кадра и страницей, активной в момент ошибки. Существующее BSOD-поведение ошибки страницы сохраняется, а ошибки после страницы продолжают распространяться вызывающему коду.
-- `Error` на наблюдаемом пути также передаётся с точной стадией и затем распространяется напрямую; BSOD создаётся только для прежних `Exception`-сбоев страницы/перехода.
-- Если `onFailure` кадра сам выбрасывает исключение, исходная ошибка остаётся основной, а ошибка observer добавляется как suppressed. Ошибки `beforeFrame`, `afterFrame` и `onPageChanged` распространяются напрямую и повторно через `onFailure` не отправляются.
-
-**On-demand frame capture**
-
-- Движок вызывает двухаргументный `afterFrame(FrameContext, FrameCaptureSource)` в прежней точке окончания кадра. Его default-реализация делегирует старому `afterFrame(FrameContext)`, поэтому существующие observer остаются source-compatible.
-- `FrameCaptureSource.isAvailable()` сообщает о доступности, а `capture()` синхронно захватывает текущий default framebuffer. Desktop-источник доступен после привязки GLFW-окна. Android-источник доступен только в callback потока `GLSurfaceView.Renderer`, когда EGL context current и поверхность имеет положительный размер.
-- Desktop-захват разрешён только синхронно из callback render-потока, после полной отрисовки кадра и до `glfwSwapBuffers`. Размер запрашивается через framebuffer pixels, а не через screen coordinates окна.
-- Android-захват выполняет `GLES30.glReadPixels(...)` в том же месте `afterFrame`, до возврата из `onDrawFrame(...)` и автоматического swap. Для плотного чтения из default framebuffer источник временно выбирает `GL_BACK`, отключает pixel-pack buffer и устанавливает `GL_PACK_ALIGNMENT = 1`, `GL_PACK_ROW_LENGTH = 0`, `GL_PACK_SKIP_ROWS = 0`, `GL_PACK_SKIP_PIXELS = 0`. Прежние read framebuffer/buffer и все перечисленные pack-состояния восстанавливаются отдельными best-effort операциями даже при ошибке; исходная ошибка чтения остаётся основной, а ошибки восстановления добавляются как suppressed.
-- После Android surface/context recreation источник остаётся тем же объектом, но временно недоступен до следующего положительного `onSurfaceChanged(...)`. `capture()` отклоняет вызов вне зарегистрированного GL thread, без current EGL context, с неположительными или переполняющими Java-массив размерами.
-- При context recreation отслеживаемые `VertexBuffer` заново выделяют VBO и VAO через существующий `VRAMobject.onRedraw()`; имена объектов из уничтоженного EGL context не переиспользуются.
-- `CapturedFrame` хранит положительные `width`/`height` и ровно `width * height * 4` байта в порядке R, G, B, A. Нулевая строка — верхняя; входной массив и результат `getRgba()` копируются.
-- Источник передаётся observer, но не выполняет readback сам. Буферы, массивы и `glReadPixels` появляются только при явном вызове `capture()`. Без observer нулевой путь кадра не запрашивает даже `FrameCaptureSource`.
-- При `null` observer выполняется прежний lifecycle без чтения resource counters, создания runtime DTO, счётчика наблюдаемых кадров и observer callbacks.
-
-**Android Activity recreation**
-
-- Все `AndroidLauncher` внутри одного процесса используют один и тот же `Engine`, `AndroidBridge` и источник кадров. При замене Activity предыдущий view синхронно останавливается до создания и активации renderer нового `GLSurfaceView`, поэтому два GL-потока не используют общий Engine одновременно. Если создание или конфигурация нового view завершается ошибкой, прежний running view восстанавливается; в paused-состоянии он остаётся остановленным. Настройки Engine и bridge хранят только application context и не удерживают первую Activity. Публичный `AndroidBridge()` сохраняет совместимость: application context привязывается при первом создании view, а deprecated protected `startPage` продолжает отражать supplier process settings.
-- Передавайте точный view, возвращённый `launch()`, в `AndroidLauncher.onPause(view)`, `onResume(view)` и `detach(view)`. Текущий `GLSurfaceView` останавливается до `GamePageClass.onPause()` и `Utils.onPause()`, а повторный вызов bridge из `Engine.onPause()` безопасно игнорируется. Поздний callback старой Activity и повторный callback не меняют lifecycle страницы или учёт игрового времени.
-- `OpenGLRenderer` не создаёт `CoreRenderer` в конструкторе на UI thread. Локальный renderer создаётся или заменяется только в положительном `onSurfaceChanged(...)` на GL thread; `onDrawFrame(...)` до этого безопасно ничего не делает.
-- Существующие `launch()`, `getEngine()` и прямые `Engine.onPause()` / `Engine.onResume()` остаются доступными. Identity-aware методы launcher следует использовать для Activity lifecycle:
+На Android launcher должен быть создан с `Activity` context, как в обычном `Activity.onCreate(...)`; именно эта Activity закрывается через UI-поток. На desktop другой поток лишь ставит флаг, а GLFW освобождается в основном цикле launcher.
 
 ```java
-GLSurfaceView gameView = launcher.launch();
-
-// Activity callbacks:
-launcher.onPause(gameView);
-launcher.onResume(gameView);
-launcher.detach(gameView);
+// Допустимо вызывать из callback, worker thread или страницы игры.
+engine.shutdown();
 ```
 
 ---
@@ -511,13 +451,6 @@ img.text("Hello, World!", 100, 100);
 - `abstract void delete()`
 - `abstract void reload()`
 
-**Владение ресурсами страницы:**
-
-- Каждый экземпляр `GamePageClass` получает отдельный стабильный internal ownership token. Ресурсы, `ShaderData` и input listeners привязаны к экземпляру страницы, а не к её Java-классу.
-- При `Engine.startNewPage(...)` точный входящий экземпляр сначала становится текущей страницей, затем получает `onInstalled()` и первый `onSurfaceChanged(...)`, после чего переходные registry удаляют объекты исходящего экземпляра, включая переход между двумя экземплярами одного класса. Устаревшие `ShaderData` удаляются до обновления locations и передачи данных при следующем `Shader.apply()`. Объекты входящей страницы, созданные в её конструкторе, `onInstalled()` и `onSurfaceChanged(...)`, сохраняются; индексы оставшихся directed/point/source lights пересчитываются.
-- `creator == null` остаётся global ownership: такие VRAM-объекты, shaders, `ShaderData`, touch processors, keyboard listeners и desktop mouse callbacks переживают переходы страниц.
-- Публичные конструкторы и прежние class-name поля/getters сохранены для source compatibility. Порядок перехода, context redraw и reload retained-объектов не изменён.
-
 ### VerticesShapesManager
 Статический менеджер, управляющий перерисовкой всех `VerticesSet`. Вызывается движком автоматически, но может быть полезен при ручной форсированной перерисовке.
 
@@ -562,8 +495,6 @@ img.text("Hello, World!", 100, 100);
 
 ### ShaderData
 Базовый класс для данных, передаваемых в шейдер (например, источники света, материал). Позволяет автоматически обновлять uniform-переменные при смене страницы.
-
-Экземпляры с ненулевой страницей принадлежат конкретному экземпляру `GamePageClass`; данные прежней страницы не передаются даже при переходе между двумя объектами одного Java-класса. `null` задаёт global ownership. Прежний protected-метод `getCreatorClass()` сохранён для source compatibility.
 
 **Методы (реализуются в наследниках):**
 - `protected abstract void getLocations(int programId)`
@@ -779,7 +710,7 @@ img.text("Hello, World!", 100, 100);
 **Семантика mouse callbacks:**
 - Для каждого типа обработчика хранится ровно один callback на страницу.
 - Повторный вызов того же setter для той же страницы перезаписывает предыдущий callback.
-- `creatorPage == null` регистрирует global handler, который переживает переходы и используется, если для текущей страницы нет собственного callback.
+- `creatorPage` должен быть задан явно; mouse processors не регистрируются как global handlers.
 - Хранилище разделено по типам:
   - page -> left button processor
   - page -> right button processor
@@ -819,15 +750,6 @@ img.text("Hello, World!", 100, 100);
 
 ### MyMotionEvent
 Интерфейс, абстрагирующий платформенное событие касания. Константы `ACTION_DOWN`, `ACTION_UP`, `ACTION_MOVE`, `ACTION_POINTER_DOWN`, `ACTION_POINTER_UP`. Пользователь не реализует напрямую.
-
-`AndroidMotionEventAdapter` при создании копирует action, action index, IDs и
-координаты всех pointers. Он не хранит исходный recyclable `MotionEvent`,
-поэтому snapshot можно безопасно передать из UI thread в render thread:
-
-```java
-AndroidMotionEventAdapter snapshot = new AndroidMotionEventAdapter(event);
-glSurfaceView.queueEvent(() -> TouchProcessor.onTouch(snapshot));
-```
 
 ---
 
@@ -958,14 +880,6 @@ Mouse control exposed through `Engine` and implemented only on desktop.
 ### SealAssetManager
 Интерфейс для загрузки ресурсов из assets. Реализуется платформой.
 
-На Android поиск сначала выполняется в `AssetManager` приложения. Только если
-упакованный asset отсутствует, используется classpath fallback для ресурсов
-движка из JAR. Ошибка открытия или чтения существующего упакованного asset не
-маскируется fallback-ресурсом. `loadText(...)` декодирует UTF-8 на всех
-поддерживаемых Android API (minSdk 24). Поток, возвращённый `load(...)`, остаётся
-открытым и принадлежит вызывающему коду; `loadText(...)` и `loadBytes(...)`
-закрывают открытый ими поток.
-
 **Методы:**
 - `InputStream load(String path)`
 - `String loadText(String path)`
@@ -984,10 +898,9 @@ Mouse control exposed through `Engine` and implemented only on desktop.
 **Публичные методы:**
 - `void drawTexture(PVector a, PVector b, PVector d)` – отрисовывает содержимое буфера как текстуру на прямоугольник.
 - `int getFrameBuffer()`, `int getDepth()`, `int getTexture()`, `int getWidth()`, `int getHeight()`
-- `void resize(int width, int height)` – переаллоцирует только зависящие от размера framebuffer/texture/depth attachments и сохраняет уже созданный fullscreen-quad VBO.
 - `void apply()` – активирует этот буфер для рендеринга.
 - `void connectDefaultFrameBuffer()` – переключает обратно на экранный буфер.
-- `void delete()` – идемпотентно удаляет attachments и принадлежащий framebuffer fullscreen-quad VBO.
+- `void delete()`
 
 ### SectionPolygon
 Утилитный класс для отрисовки отрезков (линий) через шейдер.
