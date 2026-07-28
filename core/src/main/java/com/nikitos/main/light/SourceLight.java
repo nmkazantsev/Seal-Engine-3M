@@ -37,6 +37,7 @@ public class SourceLight extends ShaderData {
     }
 
     private static void reindexLights() {
+        // Удаление элемента сдвигает индексы uniform-массива, поэтому пересчитываем хвост списка.
         for (int i = 0; i < sourceLights.size(); i++) {
             sourceLights.get(i).get().index = i; //locations will be updated when apply shader
         }

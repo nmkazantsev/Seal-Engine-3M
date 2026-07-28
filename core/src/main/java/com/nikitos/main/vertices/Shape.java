@@ -1,8 +1,6 @@
 package com.nikitos.main.vertices;
 
 
-import static com.nikitos.utils.FileUtils.loadImage;
-
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
@@ -15,15 +13,16 @@ import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.function.Function;
 
-import de.javagl.obj.Obj;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
+import static com.nikitos.utils.FileUtils.loadImage;
 
 
 public class Shape implements VerticesSet {
@@ -301,7 +300,9 @@ public class Shape implements VerticesSet {
     @Override
     public void delete() {
         image.delete();
-        normalImage.delete();
+        if (normalImage != null) {
+            normalImage.delete();
+        }
         vertexBuffer.delete();
     }
 

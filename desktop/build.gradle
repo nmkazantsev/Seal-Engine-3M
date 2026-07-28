@@ -91,9 +91,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-tasks.register('noObserverAllocationBenchmark', JavaExec) {
-    dependsOn testClasses
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'com.nikitos.NoObserverAllocationBenchmark'
-}

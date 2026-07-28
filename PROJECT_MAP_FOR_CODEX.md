@@ -57,6 +57,7 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo/src/main/java/com/nikitos/Main.
 - Keyboard events are captured by the engine’s desktop launcher and routed into the engine keyboard system automatically (no app-side wiring required).
 - Runtime files: relative paths passed to `Engine.loadTextFile(...)`, `saveTextFile(...)`, `fileExists(...)`, `folderExists(...)`, `createFolder(...)` resolve from the current working directory.
 - Mouse control: desktop supports `Engine.disableMouseCursor()`, `enableMouseCursor()`, and `setMousePosition(...)` against the GLFW window.
+- `engine.shutdown()` may be called from any thread. It asks the desktop launcher loop to exit; GLFW cleanup remains on that loop's thread.
 
 ### 4.2 Android bootstrap (observed)
 
@@ -70,26 +71,13 @@ Observed in `~/IdeaProjects/Seal_Engine_3-M/Demo-app/app/src/main/java/com/examp
   - create `AndroidLauncher(androidLauncherParams)`
   - keep the `Engine`: `engine = androidLauncher.getEngine()`
   - set content view to the returned `GLSurfaceView`: `setContentView(androidLauncher.launch())`
-- Snapshot touch events on the UI thread, then forward the detached data through
-  the `GLSurfaceView` queue:
-  ```java
-  AndroidMotionEventAdapter snapshot = new AndroidMotionEventAdapter(event);
-  glSurfaceView.queueEvent(() -> TouchProcessor.onTouch(snapshot));
-  ```
-  The adapter copies every pointer ID and coordinate and never retains the
-  recyclable Android `MotionEvent`.
-- Keep the exact `GLSurfaceView` returned by `launch()`. In
-  `Activity.onPause()` / `Activity.onResume()` call
-  `androidLauncher.onPause(glSurfaceView)` /
-  `androidLauncher.onResume(glSurfaceView)`, and call
-  `androidLauncher.detach(glSurfaceView)` when that Activity releases the
-  view. These identity-aware callbacks ignore late events from an old Activity
-  after recreation and avoid applying page/time lifecycle twice. Direct
-  `engine.onPause()` / `engine.onResume()` remain compatible for legacy apps,
-  but cannot reject stale Activity callbacks.
+- forward touch events into the engine input system:
+    - `TouchProcessor.onTouch(new AndroidMotionEventAdapter(event))`
+- In `Activity.onPause()` / `Activity.onResume()` call `engine.onPause()` / `engine.onResume()`.
 - Keyboard: if a hardware keyboard is present, the engine’s returned `GLSurfaceView` is focusable and forwards key events into the engine keyboard system. Ensure the view has focus if your Activity contains other focusable views.
 - Runtime files: relative paths passed to the same `Engine` file API resolve under `Context.getFilesDir()` (typically `/data/user/0/<package>/files`).
 - Mouse control methods are exposed on `Engine` for API consistency, but are safe no-ops on Android.
+- `engine.shutdown()` finishes the Activity used as `AndroidLauncherParams` context. It may be called from any thread; the bridge forwards it to Android's UI thread.
 
 ### 4.3 Runtime files vs packaged assets
 
@@ -147,9 +135,6 @@ When asked to modify an application built on Seal Engine, start in this order:
 - Implement a new `GamePageClass`.
 - Switch to it via `engine.startNewPage(new YourPage())`.
 - Ensure the new page creates heavy assets once (constructor) and recreates size-dependent resources in `onSurfaceChanged(...)`.
-- Resize an existing `FrameBuffer` with `FrameBuffer.resize(...)`; do not
-  replace its tracked wrapper or its dimension-independent fullscreen-quad VBO
-  on every surface callback.
 
 ### 7.2 Touch issues
 

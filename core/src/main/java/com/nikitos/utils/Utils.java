@@ -31,9 +31,6 @@ public class Utils {
     }
 
     public static void setDim(float x, float y, float kx, float ky) {
-        if (x <= 0 || y <= 0) {
-            return;
-        }
         Utils.x = x;
         Utils.y = y;
         Utils.kx = kx;

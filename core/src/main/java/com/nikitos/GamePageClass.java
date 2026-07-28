@@ -3,18 +3,12 @@ package com.nikitos;
 public abstract class GamePageClass {
     private final Object resourceOwnershipToken = new Object();
 
-    final Object getResourceOwnershipToken() {
-        return resourceOwnershipToken;
-    }
-
     /**
-     * Called whenever this exact page instance is installed by
-     * {@link Engine#startNewPage(GamePageClass)}, before its initial surface
-     * callback and before outgoing page registries are cleaned.
-     *
-     * <p>The default implementation preserves existing page behavior.</p>
+     * Уникальный ключ экземпляра страницы для реестров ресурсов.
+     * Он не зависит от класса страницы, поэтому переход на новый экземпляр того же класса очищает старые ресурсы.
      */
-    public void onInstalled() {
+    public final Object getResourceOwnershipToken() {
+        return resourceOwnershipToken;
     }
 
     public abstract void onSurfaceChanged(int x, int y);

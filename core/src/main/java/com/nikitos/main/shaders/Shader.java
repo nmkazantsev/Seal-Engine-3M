@@ -3,7 +3,6 @@ package com.nikitos.main.shaders;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
-import com.nikitos.PageOwnership;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.platformBridge.SealAssetManager;
 import com.nikitos.platformBridge.ShaderBridge;
@@ -18,7 +17,7 @@ public class Shader { //means shader program
     private final String vertex;
     private final String fragment;
     private String geom = null;
-    private Class<?> page;
+    // Токен сохраняет привязку шейдера к экземпляру страницы, а не к её классу.
     private final Object ownershipToken;
     private boolean reloadNeeded = false;
     private final Adaptor adaptor;
@@ -34,10 +33,7 @@ public class Shader { //means shader program
         this.vertex = assetManager.loadText(vertex);
         this.fragment = assetManager.loadText(fragment);
         link = shaderUtils.createShaderProgram(this.vertex, this.fragment);
-        if (page != null) {
-            this.page = page.getClass();
-        }
-        ownershipToken = PageOwnership.tokenOf(page);
+        ownershipToken = page == null ? null : page.getResourceOwnershipToken();
         allShaders.add(this);
         this.adaptor = adaptor;
         adaptor.setProgramId(link);
@@ -52,10 +48,7 @@ public class Shader { //means shader program
         this.fragment = assetManager.loadText(fragment);
         this.geom = assetManager.loadText(geom);
         link = shaderUtils.createShaderProgram(this.vertex, this.fragment, this.geom);
-        if (page != null) {
-            this.page = page.getClass();
-        }
-        ownershipToken = PageOwnership.tokenOf(page);
+        ownershipToken = page == null ? null : page.getResourceOwnershipToken();
         allShaders.add(this);
         this.adaptor = adaptor;
         adaptor.setProgramId(link);
@@ -84,7 +77,7 @@ public class Shader { //means shader program
         if (ownershipToken == null) {
             return false;
         }
-        if (ownershipToken != PageOwnership.currentToken()) {
+        if (ownershipToken != CoreRenderer.engine.getCurrentPageOwnershipToken()) {
             return true;
         }
         return false;
@@ -135,7 +128,4 @@ public class Shader { //means shader program
         return activeShader;
     }
 
-    public static int getTrackedShaderCount() {
-        return allShaders.size();
-    }
 }

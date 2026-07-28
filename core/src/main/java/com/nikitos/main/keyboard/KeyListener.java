@@ -2,7 +2,6 @@ package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
-import com.nikitos.PageOwnership;
 
 import java.util.*;
 import java.util.function.Function;
@@ -22,7 +21,7 @@ import static com.nikitos.main.keyboard.KeyboardProcessor.normalizeKeyName;
  * <p>Any-key option: {@link #anyKey(Function, GamePageClass)}</p>
  */
 public class KeyListener {
-    private final Class<?> creatorClassName;
+    // Токен отличает экземпляры одной страницы и не даёт слушателю пережить переход.
     private final Object ownershipToken;
     private final HashSet<String> keys = new HashSet<>();
     private boolean anyKey = false;
@@ -36,8 +35,7 @@ public class KeyListener {
     private boolean blocked = false;
 
     public KeyListener(String key, Function<String, Void> keyPressedCallback, GamePageClass creatorPage) {
-        this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
-        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
+        this.ownershipToken = creatorPage == null ? null : creatorPage.getResourceOwnershipToken();
         this.keyPressedCallback = keyPressedCallback;
         String n = normalizeKeyName(key);
         if (n != null) {
@@ -47,8 +45,7 @@ public class KeyListener {
     }
 
     public KeyListener(String[] keys, Function<String, Void> keyPressedCallback, GamePageClass creatorPage) {
-        this.creatorClassName = creatorPage == null ? null : creatorPage.getClass();
-        this.ownershipToken = PageOwnership.tokenOf(creatorPage);
+        this.ownershipToken = creatorPage == null ? null : creatorPage.getResourceOwnershipToken();
         this.keyPressedCallback = keyPressedCallback;
         if (keys != null) {
             for (String k : keys) {
@@ -127,20 +124,11 @@ public class KeyListener {
 
     boolean isActiveForCurrentPage() {
         if (ownershipToken == null) return true;
-        if (CoreRenderer.engine == null) return true;
-        try {
-            return ownershipToken == PageOwnership.currentToken();
-        } catch (Throwable ignored) {
-            return true;
-        }
+        return ownershipToken == CoreRenderer.engine.getCurrentPageOwnershipToken();
     }
 
     Function<String, Void> getKeyPressedCallback() {
         return keyPressedCallback;
-    }
-
-    Class<?> getCreatorClassName() {
-        return creatorClassName;
     }
 
     Object getOwnershipToken() {

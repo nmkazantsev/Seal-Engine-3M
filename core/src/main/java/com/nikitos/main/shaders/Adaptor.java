@@ -2,7 +2,6 @@ package com.nikitos.main.shaders;
 
 
 import com.nikitos.CoreRenderer;
-import com.nikitos.PageOwnership;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.main.vertices.Face;
 import com.nikitos.maths.PVector;
@@ -34,7 +33,8 @@ public abstract class Adaptor {
 
     public static void updateShaderDataLocations() {
         Iterator<ShaderData> iterator = shaderData.iterator();
-        Object currentOwnershipToken = PageOwnership.currentToken();
+        // При смене страницы оставляем только её данные и глобальные данные без владельца.
+        Object currentOwnershipToken = CoreRenderer.engine.getCurrentPageOwnershipToken();
         while (iterator.hasNext()) {
             ShaderData e = iterator.next();
             if (e == null) {

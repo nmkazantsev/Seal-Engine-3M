@@ -1,22 +1,10 @@
 package com.nikitos.runtime;
 
 public interface RuntimeObserver {
-    default void beforeFrame(FrameContext frameContext) {
-    }
-
-    default void afterFrame(FrameContext frameContext) {
-    }
-
-    default void afterFrame(
-            FrameContext frameContext,
-            FrameCaptureSource frameCaptureSource
-    ) {
-        afterFrame(frameContext);
-    }
-
-    default void onPageChanged(PageTransition pageTransition) {
-    }
-
-    default void onFailure(RuntimeFailure runtimeFailure) {
+    /**
+     * Вызывается в render-потоке после полной отрисовки и до обмена буферов.
+     * Вызов {@link FrameCaptureSource#capture()} создаёт снимок только по необходимости.
+     */
+    default void afterFrame(FrameCaptureSource frameCaptureSource) {
     }
 }

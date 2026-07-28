@@ -1,7 +1,6 @@
 package com.nikitos.main.keyboard;
 
 import com.nikitos.CoreRenderer;
-import com.nikitos.PageOwnership;
 import com.nikitos.main.debugger.BSODScreen;
 
 import java.util.*;
@@ -202,28 +201,11 @@ public class KeyboardProcessor {
             if (CoreRenderer.engine == null) {
                 return;
             }
-            Object currentPage = PageOwnership.currentToken();
+            // Удаляем слушатели ушедшего экземпляра, даже если класс страницы не изменился.
+            Object currentPage = CoreRenderer.engine.getCurrentPageOwnershipToken();
             allKeyListeners.removeIf(e -> e.getOwnershipToken() != null && e.getOwnershipToken() != currentPage);
             allKeyReleasedListeners.removeIf(e -> e.getOwnershipToken() != null && e.getOwnershipToken() != currentPage);
             allKeyComboListeners.removeIf(e -> e.getOwnershipToken() != null && e.getOwnershipToken() != currentPage);
-        }
-    }
-
-    public static int getPressListenerCount() {
-        synchronized (commandQueue) {
-            return allKeyListeners.size();
-        }
-    }
-
-    public static int getReleaseListenerCount() {
-        synchronized (commandQueue) {
-            return allKeyReleasedListeners.size();
-        }
-    }
-
-    public static int getComboListenerCount() {
-        synchronized (commandQueue) {
-            return allKeyComboListeners.size();
         }
     }
 

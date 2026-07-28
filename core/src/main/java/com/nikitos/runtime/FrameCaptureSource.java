@@ -1,7 +1,8 @@
 package com.nikitos.runtime;
 
 /**
- * On-demand access to the current platform framebuffer.
+ * Доступ к текущему framebuffer по требованию. Реализация платформы читает его только
+ * из render-потока, поэтому обычный кадр не получает лишнего чтения памяти.
  */
 public interface FrameCaptureSource {
     boolean isAvailable();
