@@ -29,6 +29,8 @@ public class Engine {
     private final GLConstBridge glconstBridge;
     private boolean simulationPaused;
     private boolean renderingSuspended;
+    private boolean shutdownRequested;
+    private boolean closed;
 
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
         this.platformBridge = platformBridge;
@@ -84,9 +86,17 @@ public class Engine {
     public void suspendRendering() { renderingSuspended = true; }
     public void resumeRendering() { renderingSuspended = false; }
     public EngineRunState getRunState() {
+        if (closed) return EngineRunState.CLOSED;
         if (renderingSuspended) return EngineRunState.RENDERING_SUSPENDED;
         if (simulationPaused) return EngineRunState.SIMULATION_PAUSED;
         return EngineRunState.RUNNING;
+    }
+
+    public void requestShutdown() { shutdownRequested = true; }
+    public boolean isShutdownRequested() { return shutdownRequested; }
+    public void close() {
+        if (closed) return;
+        closed = true;
     }
 
     private boolean switching = false;

@@ -69,7 +69,7 @@ public class CoreRenderer {
     }
 
     public void draw() {
-        if (engine.getRunState() == EngineRunState.RENDERING_SUSPENDED) {
+        if (engine.getRunState() == EngineRunState.RENDERING_SUSPENDED || engine.getRunState() == EngineRunState.CLOSED) {
             return;
         }
         //calculate fps:
