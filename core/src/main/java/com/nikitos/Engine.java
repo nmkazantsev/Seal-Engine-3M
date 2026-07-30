@@ -27,6 +27,8 @@ public class Engine {
 
     private final GeneralPlatformBridge generalPlatformBridge;
     private final GLConstBridge glconstBridge;
+    private boolean simulationPaused;
+    private boolean renderingSuspended;
 
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
         this.platformBridge = platformBridge;
@@ -75,6 +77,16 @@ public class Engine {
         }
         Utils.onResume();
         platformBridge.onResume();
+    }
+
+    public void pauseSimulation() { simulationPaused = true; }
+    public void resumeSimulation() { simulationPaused = false; }
+    public void suspendRendering() { renderingSuspended = true; }
+    public void resumeRendering() { renderingSuspended = false; }
+    public EngineRunState getRunState() {
+        if (renderingSuspended) return EngineRunState.RENDERING_SUSPENDED;
+        if (simulationPaused) return EngineRunState.SIMULATION_PAUSED;
+        return EngineRunState.RUNNING;
     }
 
     private boolean switching = false;

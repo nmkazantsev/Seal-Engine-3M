@@ -69,6 +69,9 @@ public class CoreRenderer {
     }
 
     public void draw() {
+        if (engine.getRunState() == EngineRunState.RENDERING_SUSPENDED) {
+            return;
+        }
         //calculate fps:
         engine.calculateFps();
 
@@ -80,7 +83,7 @@ public class CoreRenderer {
         if (engine.getBsodAllowed()) {
             try {
                 GamePageClass framePage = engine.getGamePage();
-                framePage.update(frameDtMillis);
+                if (engine.getRunState() == EngineRunState.RUNNING) framePage.update(frameDtMillis);
                 if (engine.getGamePage() == framePage) {
                     framePage.render();
                 }
@@ -89,7 +92,7 @@ public class CoreRenderer {
             }
         } else {
             GamePageClass framePage = engine.getGamePage();
-            framePage.update(frameDtMillis);
+            if (engine.getRunState() == EngineRunState.RUNNING) framePage.update(frameDtMillis);
             if (engine.getGamePage() == framePage) {
                 framePage.render();
             }
