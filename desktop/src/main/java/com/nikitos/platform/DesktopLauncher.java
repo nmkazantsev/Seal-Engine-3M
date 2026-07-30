@@ -340,7 +340,7 @@ public class DesktopLauncher {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window)) {
+        while (!glfwWindowShouldClose(window) && !engine.isShutdownRequested()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             coreRenderer.draw();
             // Poll for window events. The key callback above will only be
@@ -353,5 +353,6 @@ public class DesktopLauncher {
             com.nikitos.CoreRenderer.engine.getPlatformBridge().getAudioPlayer().stopMusic();
         } catch (Exception ignored) {
         }
+        engine.close();
     }
 }
