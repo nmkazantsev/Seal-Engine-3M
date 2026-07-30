@@ -7,8 +7,18 @@ import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 
 import java.nio.FloatBuffer;
+import java.nio.ByteBuffer;
 
 public class GeneralBridgeAndroid extends GeneralPlatformBridge {
+    @Override
+    public byte[] readPixelsRgba(int width, int height) {
+        ByteBuffer pixels = ByteBuffer.allocateDirect(width * height * 4);
+        GLES30.glReadPixels(0, 0, width, height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, pixels);
+        byte[] result = new byte[pixels.capacity()];
+        pixels.rewind();
+        pixels.get(result);
+        return result;
+    }
     @Override
     public void glDrawArrays(int type, int offest, int count) {
         GLES30.glDrawArrays(type, offest, count);

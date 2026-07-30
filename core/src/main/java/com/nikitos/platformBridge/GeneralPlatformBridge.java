@@ -5,6 +5,7 @@ import com.nikitos.main.images.PImage;
 import java.nio.FloatBuffer;
 
 public abstract class GeneralPlatformBridge {
+    public abstract byte[] readPixelsRgba(int width, int height);
     public abstract void glDrawArrays(int type, int offest, int count);
 
     public abstract int glGetUniformLocation(int program, String name);

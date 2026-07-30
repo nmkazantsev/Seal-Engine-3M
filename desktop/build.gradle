@@ -91,3 +91,8 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+tasks.register('frameCaptureSmoke', JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'FrameCaptureSmokeTestMain'
+}

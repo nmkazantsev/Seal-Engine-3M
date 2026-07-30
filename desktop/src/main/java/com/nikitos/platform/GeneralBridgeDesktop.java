@@ -13,6 +13,15 @@ import java.nio.FloatBuffer;
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
     @Override
+    public byte[] readPixelsRgba(int width, int height) {
+        ByteBuffer pixels = ByteBuffer.allocateDirect(width * height * 4);
+        GL33.glReadPixels(0, 0, width, height, GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, pixels);
+        byte[] result = new byte[pixels.capacity()];
+        pixels.rewind();
+        pixels.get(result);
+        return result;
+    }
+    @Override
     public void glDrawArrays(int type, int offest, int count) {
         GL30.glDrawArrays(type, offest, count);
     }

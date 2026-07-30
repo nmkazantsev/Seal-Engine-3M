@@ -9,6 +9,8 @@ import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
 import com.nikitos.platformBridge.*;
 import com.nikitos.utils.Utils;
+import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Engine {
     public static String getVersion() {
@@ -31,6 +33,8 @@ public class Engine {
     private boolean renderingSuspended;
     private boolean shutdownRequested;
     private boolean closed;
+    private final AtomicReference<FrameCaptureRequest> frameCaptureRequest = new AtomicReference<>();
+    private volatile FrameCaptureDataProvider frameCaptureDataProvider;
 
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
         this.platformBridge = platformBridge;
@@ -97,6 +101,23 @@ public class Engine {
     public void close() {
         if (closed) return;
         closed = true;
+    }
+
+    public void requestFrameCapture() { requestFrameCapture(null); }
+    public void requestFrameCapture(Path outputDirectory) {
+        frameCaptureRequest.set(new FrameCaptureRequest(outputDirectory));
+    }
+    public void setFrameCaptureDataProvider(FrameCaptureDataProvider provider) { frameCaptureDataProvider = provider; }
+    FrameCaptureRequest consumeFrameCaptureRequest() { return frameCaptureRequest.getAndSet(null); }
+    public FrameCaptureDataProvider getFrameCaptureDataProvider() { return frameCaptureDataProvider; }
+    public boolean getFullScreen() { return launcherParams.getFullScreen(); }
+
+    static final class FrameCaptureRequest {
+        final Path outputDirectory;
+
+        FrameCaptureRequest(Path outputDirectory) {
+            this.outputDirectory = outputDirectory;
+        }
     }
 
     private boolean switching = false;
