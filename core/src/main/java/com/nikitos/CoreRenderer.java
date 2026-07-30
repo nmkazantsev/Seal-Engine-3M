@@ -73,12 +73,20 @@ public class CoreRenderer {
         VerticesShapesManager.onFrameBegin();
         if (engine.getBsodAllowed()) {
             try {
-                engine.getGamePage().draw();
+                GamePageClass framePage = engine.getGamePage();
+                framePage.update(0.0f);
+                if (engine.getGamePage() == framePage) {
+                    framePage.render();
+                }
             } catch (Exception ex) {
                 engine.startNewPage(new BSODScreen(ex));
             }
         } else {
-            engine.getGamePage().draw();
+            GamePageClass framePage = engine.getGamePage();
+            framePage.update(0.0f);
+            if (engine.getGamePage() == framePage) {
+                framePage.render();
+            }
         }
         Debugger.draw();
 

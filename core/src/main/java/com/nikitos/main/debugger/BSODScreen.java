@@ -77,7 +77,11 @@ public class BSODScreen extends GamePageClass {
     }
 
     @Override
-    public void draw() {
+    public void update(float dtMillis) {
+    }
+
+    @Override
+    public void render() {
         Utils.background(0, 45, 135);
         CoreRenderer.engine.glClear();
         shader.apply();

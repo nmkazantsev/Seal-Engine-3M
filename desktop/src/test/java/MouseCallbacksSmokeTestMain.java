@@ -105,7 +105,11 @@ public final class MouseCallbacksSmokeTestMain {
         }
 
         @Override
-        public void draw() {
+        public void update(float dtMillis) {
+        }
+
+        @Override
+        public void render() {
             Utils.background(18, 24, 28);
             CoreRenderer.engine.glClear();
 
