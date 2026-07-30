@@ -17,11 +17,16 @@ import com.nikitos.utils.Utils;
  * the heart of the engine
  */
 public class CoreRenderer {
+    public static final float MIN_SIMULATION_FPS = 30.0f;
+    public static final float MAX_DT_MILLIS = 1000.0f / MIN_SIMULATION_FPS;
+
     private boolean firstStart = true;
     public static Engine engine;
     private final PlatformBridge pf;
     private final GeneralPlatformBridge gl;
     private final GLConstBridge glc;
+    private long previousFrameNanos;
+    private float dtMillis;
 
     public CoreRenderer(float width, float height, Engine engine) {
         CoreRenderer.engine = engine;
@@ -71,10 +76,11 @@ public class CoreRenderer {
             engine.startDefaultPage();
         }
         VerticesShapesManager.onFrameBegin();
+        float frameDtMillis = updateDt();
         if (engine.getBsodAllowed()) {
             try {
                 GamePageClass framePage = engine.getGamePage();
-                framePage.update(0.0f);
+                framePage.update(frameDtMillis);
                 if (engine.getGamePage() == framePage) {
                     framePage.render();
                 }
@@ -83,7 +89,7 @@ public class CoreRenderer {
             }
         } else {
             GamePageClass framePage = engine.getGamePage();
-            framePage.update(0.0f);
+            framePage.update(frameDtMillis);
             if (engine.getGamePage() == framePage) {
                 framePage.render();
             }
@@ -93,5 +99,23 @@ public class CoreRenderer {
         VerticesShapesManager.redrawAll();
         TouchProcessor.processMotions();
         KeyboardProcessor.processKeys();
+    }
+
+    public float dt() {
+        return dtMillis;
+    }
+
+    private float updateDt() {
+        long now = System.nanoTime();
+        float calculatedDtMillis;
+        if (previousFrameNanos == 0L) {
+            calculatedDtMillis = 1000.0f / Math.max(engine.fps, MIN_SIMULATION_FPS);
+        } else {
+            float rawDtMillis = (now - previousFrameNanos) / 1_000_000.0f;
+            calculatedDtMillis = Math.min(Math.max(rawDtMillis, 0.0f), MAX_DT_MILLIS);
+        }
+        previousFrameNanos = now;
+        dtMillis = calculatedDtMillis;
+        return dtMillis;
     }
 }

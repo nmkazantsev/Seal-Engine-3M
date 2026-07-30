@@ -331,28 +331,6 @@ public class Utils {
         return out;
     }
 
-    private static float timeK;
-
-    /**
-     * Get timing coefficient for physics
-     *
-     * @return 120/current fps
-     */
-    public static float getTimeK() {
-        if (millisFrozen) {
-            return 0;
-        }
-        return timeK;
-    }
-
-    public static void findTimeK() {
-        if (CoreRenderer.engine.fps == 0) {
-            timeK = 1;
-            return;
-        }
-        timeK = 120.0f / CoreRenderer.engine.fps;
-    }
-
     public static Animator.Animation[] contactArray(Animator.Animation[] a, Animator.Animation[] b) {
         if (a == null)
             return b;

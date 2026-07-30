@@ -58,7 +58,6 @@ public class Engine {
             prevFps = Utils.millis();
             cadrs = 0;
         }
-        Utils.findTimeK();
         cadrs++;
     }
 
