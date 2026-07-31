@@ -3,9 +3,12 @@ package com.nikitos.platformBridge;
 import com.nikitos.main.images.PImage;
 
 import java.nio.FloatBuffer;
+import java.nio.file.Path;
+import java.util.Map;
 
 public abstract class GeneralPlatformBridge {
     public abstract byte[] readPixelsRgba(int width, int height);
+    public abstract void writePng(Path outputFile, int width, int height, byte[] rgbaBottomFirst) throws java.io.IOException;
     public abstract void glDrawArrays(int type, int offest, int count);
 
     public abstract int glGetUniformLocation(int program, String name);

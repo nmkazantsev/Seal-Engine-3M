@@ -15,10 +15,8 @@ import com.nikitos.utils.Utils;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,8 +26,6 @@ import java.util.Map;
 public class CoreRenderer {
     public static final float MIN_SIMULATION_FPS = 30.0f;
     public static final float MAX_DT_MILLIS = 1000.0f / MIN_SIMULATION_FPS;
-    private static final DateTimeFormatter CAPTURE_TIME = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS")
-            .withZone(ZoneId.systemDefault());
 
     private boolean firstStart = true;
     public static Engine engine;
@@ -142,11 +138,23 @@ public class CoreRenderer {
         int width = (int) Utils.getX();
         int height = (int) Utils.getY();
         if (width <= 0 || height <= 0) return;
-        String basename = "capture-" + CAPTURE_TIME.format(Instant.now()) + "-frame-" + frameNumber;
+        String basename = "capture-" + frameNumber;
+        String metadata = captureMetadata(basename, width, height);
+        try {
+            Path outputDirectory = request.outputDirectory == null ? Paths.get("captures") : request.outputDirectory;
+            Path pngFile = outputDirectory.resolve(basename + ".png");
+            engine.getPlatformBridge().getGeneralPlatformBridge().writePng(pngFile, width, height, gl.readPixelsRgba(width, height));
+            engine.saveTextFile(outputDirectory.resolve(basename + ".json").toString(), metadata);
+        } catch (IOException | RuntimeException exception) {
+            pf.log_e("engine", "frame capture failed: " + exception.getMessage());
+        }
+    }
+
+    private String captureMetadata(String captureId, int width, int height) {
         Map<String, Object> metadata = new LinkedHashMap<>();
-        metadata.put("captureId", basename);
-        metadata.put("timestamp", Instant.now().toString());
+        metadata.put("captureId", captureId);
         metadata.put("frameNumber", frameNumber);
+        metadata.put("timestamp", System.currentTimeMillis());
         metadata.put("dtMillis", dtMillis);
         metadata.put("fps", engine.fps);
         metadata.put("runState", engine.getRunState().name());
@@ -154,17 +162,46 @@ public class CoreRenderer {
         GamePageClass page = engine.getGamePage();
         metadata.put("pageClassName", page == null ? null : page.getClass().getName());
         metadata.put("fullscreen", engine.getFullScreen());
-        metadata.put("mouse", Map.of("x", TouchProcessor.getMouseX(), "y", TouchProcessor.getMouseY(),
-                "leftButtonDown", TouchProcessor.getLeftButtonDown(), "rightButtonDown", TouchProcessor.getRightButtonDown()));
-        metadata.put("lastGlError", null);
+        metadata.put("mouse", Map.of(
+                "x", TouchProcessor.getMouseX(),
+                "y", TouchProcessor.getMouseY(),
+                "leftButtonDown", TouchProcessor.getLeftButtonDown(),
+                "rightButtonDown", TouchProcessor.getRightButtonDown()
+        ));
         metadata.put("platform", engine.getPlatform().name().toLowerCase());
         FrameCaptureDataProvider provider = engine.getFrameCaptureDataProvider();
         metadata.put("game", provider == null ? null : provider.getFrameCaptureData());
-        try {
-            Path outputDirectory = request.outputDirectory == null ? Paths.get("captures") : request.outputDirectory;
-            FrameCaptureWriter.write(outputDirectory, basename, width, height, gl.readPixelsRgba(width, height), metadata);
-        } catch (IOException | RuntimeException exception) {
-            pf.log_e("engine", "frame capture failed: " + exception.getMessage());
+        return toJson(metadata);
+    }
+
+    private static String toJson(Object value) {
+        if (value == null) {
+            return "null";
         }
+        if (value instanceof String) {
+            return '"' + ((String) value).replace("\\", "\\\\").replace("\"", "\\\"") + '"';
+        }
+        if (value instanceof Boolean || value instanceof Number) {
+            return value.toString();
+        }
+        if (value instanceof Map) {
+            StringBuilder json = new StringBuilder("{");
+            boolean first = true;
+            for (Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
+                if (!first) json.append(',');
+                json.append(toJson(entry.getKey().toString())).append(':').append(toJson(entry.getValue()));
+                first = false;
+            }
+            return json.append('}').toString();
+        }
+        if (value instanceof List) {
+            StringBuilder json = new StringBuilder("[");
+            for (int index = 0; index < ((List<?>) value).size(); index++) {
+                if (index > 0) json.append(',');
+                json.append(toJson(((List<?>) value).get(index)));
+            }
+            return json.append(']').toString();
+        }
+        return toJson(value.toString());
     }
 }

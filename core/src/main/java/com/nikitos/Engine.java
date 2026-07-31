@@ -11,6 +11,7 @@ import com.nikitos.platformBridge.*;
 import com.nikitos.utils.Utils;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.EnumSet;
 
 public class Engine {
     public static String getVersion() {
@@ -29,8 +30,7 @@ public class Engine {
 
     private final GeneralPlatformBridge generalPlatformBridge;
     private final GLConstBridge glconstBridge;
-    private boolean simulationPaused;
-    private boolean renderingSuspended;
+    private final EnumSet<EngineRunState> activeRunStates = EnumSet.noneOf(EngineRunState.class);
     private boolean shutdownRequested;
     private boolean closed;
     private final AtomicReference<FrameCaptureRequest> frameCaptureRequest = new AtomicReference<>();
@@ -85,22 +85,25 @@ public class Engine {
         platformBridge.onResume();
     }
 
-    public void pauseSimulation() { simulationPaused = true; }
-    public void resumeSimulation() { simulationPaused = false; }
-    public void suspendRendering() { renderingSuspended = true; }
-    public void resumeRendering() { renderingSuspended = false; }
     public EngineRunState getRunState() {
-        if (closed) return EngineRunState.CLOSED;
-        if (renderingSuspended) return EngineRunState.RENDERING_SUSPENDED;
-        if (simulationPaused) return EngineRunState.SIMULATION_PAUSED;
+        if (closed || activeRunStates.contains(EngineRunState.CLOSED)) return EngineRunState.CLOSED;
+        if (activeRunStates.contains(EngineRunState.RENDERING_SUSPENDED)) return EngineRunState.RENDERING_SUSPENDED;
+        if (activeRunStates.contains(EngineRunState.SIMULATION_PAUSED)) return EngineRunState.SIMULATION_PAUSED;
         return EngineRunState.RUNNING;
     }
+
+    public void pauseSimulation() { activeRunStates.add(EngineRunState.SIMULATION_PAUSED); }
+    public void resumeSimulation() { activeRunStates.remove(EngineRunState.SIMULATION_PAUSED); }
+    public void suspendRendering() { activeRunStates.add(EngineRunState.RENDERING_SUSPENDED); }
+    public void resumeRendering() { activeRunStates.remove(EngineRunState.RENDERING_SUSPENDED); }
 
     public void requestShutdown() { shutdownRequested = true; }
     public boolean isShutdownRequested() { return shutdownRequested; }
     public void close() {
         if (closed) return;
         closed = true;
+        activeRunStates.clear();
+        activeRunStates.add(EngineRunState.CLOSED);
     }
 
     public void requestFrameCapture() { requestFrameCapture(null); }

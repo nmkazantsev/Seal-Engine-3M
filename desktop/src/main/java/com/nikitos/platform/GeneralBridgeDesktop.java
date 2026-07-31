@@ -7,8 +7,12 @@ import io.github.humbleui.skija.Surface;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.file.Path;
 
 
 public class GeneralBridgeDesktop extends GeneralPlatformBridge {
@@ -20,6 +24,23 @@ public class GeneralBridgeDesktop extends GeneralPlatformBridge {
         pixels.rewind();
         pixels.get(result);
         return result;
+    }
+
+    @Override
+    public void writePng(Path outputFile, int width, int height, byte[] rgbaBottomFirst) throws IOException {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < height; y++) {
+            int sourceRow = (height - 1 - y) * width * 4;
+            for (int x = 0; x < width; x++) {
+                int pixel = sourceRow + x * 4;
+                int r = rgbaBottomFirst[pixel] & 0xFF;
+                int g = rgbaBottomFirst[pixel + 1] & 0xFF;
+                int b = rgbaBottomFirst[pixel + 2] & 0xFF;
+                int a = rgbaBottomFirst[pixel + 3] & 0xFF;
+                image.setRGB(x, y, (a << 24) | (r << 16) | (g << 8) | b);
+            }
+        }
+        ImageIO.write(image, "png", outputFile.toFile());
     }
     @Override
     public void glDrawArrays(int type, int offest, int count) {
