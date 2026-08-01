@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Engine {
     public static String getVersion() {
-        return "v3.2.6";
+        return "v3.2.7";
     }
 
     public float fps;
