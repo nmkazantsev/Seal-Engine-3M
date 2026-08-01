@@ -46,17 +46,76 @@ class CoreRendererCaptureTest {
     }
 
     @Test
-    void runStateUsesEnumStateMachine() {
+    void drawCreatesMissingNestedCaptureDirectory() {
+        Path outputDirectory = tempDir.resolve("missing/nested/captures");
+        TestPlatformBridge platformBridge = new TestPlatformBridge(tempDir);
+        Engine engine = new Engine(platformBridge, new LauncherParams().setStartPage(ignored -> new TestPage()));
+        CoreRenderer renderer = new CoreRenderer(2, 2, engine);
+        engine.requestFrameCapture(outputDirectory);
+
+        renderer.draw();
+
+        assertTrue(Files.isRegularFile(outputDirectory.resolve("capture-1.png")));
+        assertTrue(Files.isRegularFile(outputDirectory.resolve("capture-1.json")));
+    }
+
+    @Test
+    void runStateAllowsExplicitSimulationTransitions() {
         TestPlatformBridge platformBridge = new TestPlatformBridge(tempDir);
         Engine engine = new Engine(platformBridge, new LauncherParams().setStartPage(ignored -> new TestPage()));
 
         assertEquals(EngineRunState.RUNNING, engine.getRunState());
         engine.pauseSimulation();
         assertEquals(EngineRunState.SIMULATION_PAUSED, engine.getRunState());
+        engine.resumeSimulation();
+        assertEquals(EngineRunState.RUNNING, engine.getRunState());
+    }
+
+    @Test
+    void resumeRenderingRestoresPausedSimulation() {
+        Engine engine = new Engine(new TestPlatformBridge(tempDir),
+                new LauncherParams().setStartPage(ignored -> new TestPage()));
+
+        engine.pauseSimulation();
         engine.suspendRendering();
         assertEquals(EngineRunState.RENDERING_SUSPENDED, engine.getRunState());
+        engine.pauseSimulation();
+        engine.resumeSimulation();
+        assertEquals(EngineRunState.RENDERING_SUSPENDED, engine.getRunState());
+        engine.resumeRendering();
+        assertEquals(EngineRunState.SIMULATION_PAUSED, engine.getRunState());
+    }
+
+    @Test
+    void resumeRenderingRestoresRunningSimulation() {
+        Engine engine = new Engine(new TestPlatformBridge(tempDir),
+                new LauncherParams().setStartPage(ignored -> new TestPage()));
+
+        engine.suspendRendering();
+        engine.resumeRendering();
+
+        assertEquals(EngineRunState.RUNNING, engine.getRunState());
+    }
+
+    @Test
+    void closedStateCannotTransitionBack() {
+        Engine engine = new Engine(new TestPlatformBridge(tempDir),
+                new LauncherParams().setStartPage(ignored -> new TestPage()));
+
         engine.close();
+        engine.pauseSimulation();
+        engine.resumeSimulation();
+        engine.suspendRendering();
+        engine.resumeRendering();
         assertEquals(EngineRunState.CLOSED, engine.getRunState());
+    }
+
+    @Test
+    void jsonStringsEscapeQuotesSlashesAndControlCharacters() {
+        String value = "line1\nline2\t\"quoted\"\\path";
+
+        assertEquals("\"line1\\nline2\\t\\\"quoted\\\"\\\\path\"", CoreRenderer.toJson(value));
+        assertEquals("\\b\\f\\n\\r\\t\\u0000\\u001F", CoreRenderer.escapeJsonString("\b\f\n\r\t\u0000\u001F"));
     }
 
     private static final class TestPage extends GamePageClass {

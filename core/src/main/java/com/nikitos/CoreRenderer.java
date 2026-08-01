@@ -13,6 +13,7 @@ import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.utils.Utils;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
@@ -142,6 +143,7 @@ public class CoreRenderer {
         String metadata = captureMetadata(basename, width, height);
         try {
             Path outputDirectory = request.outputDirectory == null ? Paths.get("captures") : request.outputDirectory;
+            Files.createDirectories(outputDirectory);
             Path pngFile = outputDirectory.resolve(basename + ".png");
             engine.getPlatformBridge().getGeneralPlatformBridge().writePng(pngFile, width, height, gl.readPixelsRgba(width, height));
             engine.saveTextFile(outputDirectory.resolve(basename + ".json").toString(), metadata);
@@ -174,12 +176,12 @@ public class CoreRenderer {
         return toJson(metadata);
     }
 
-    private static String toJson(Object value) {
+    static String toJson(Object value) {
         if (value == null) {
             return "null";
         }
         if (value instanceof String) {
-            return '"' + ((String) value).replace("\\", "\\\\").replace("\"", "\\\"") + '"';
+            return '"' + escapeJsonString((String) value) + '"';
         }
         if (value instanceof Boolean || value instanceof Number) {
             return value.toString();
@@ -203,5 +205,28 @@ public class CoreRenderer {
             return json.append(']').toString();
         }
         return toJson(value.toString());
+    }
+
+    static String escapeJsonString(String value) {
+        StringBuilder escaped = new StringBuilder(value.length());
+        for (int index = 0; index < value.length(); index++) {
+            char character = value.charAt(index);
+            switch (character) {
+                case '\\': escaped.append("\\\\"); break;
+                case '"': escaped.append("\\\""); break;
+                case '\n': escaped.append("\\n"); break;
+                case '\r': escaped.append("\\r"); break;
+                case '\t': escaped.append("\\t"); break;
+                case '\b': escaped.append("\\b"); break;
+                case '\f': escaped.append("\\f"); break;
+                default:
+                    if (character <= 0x1F) {
+                        escaped.append(String.format("\\u%04X", (int) character));
+                    } else {
+                        escaped.append(character);
+                    }
+            }
+        }
+        return escaped.toString();
     }
 }

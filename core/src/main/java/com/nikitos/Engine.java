@@ -11,7 +11,6 @@ import com.nikitos.platformBridge.*;
 import com.nikitos.utils.Utils;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.EnumSet;
 
 public class Engine {
     public static String getVersion() {
@@ -30,9 +29,9 @@ public class Engine {
 
     private final GeneralPlatformBridge generalPlatformBridge;
     private final GLConstBridge glconstBridge;
-    private final EnumSet<EngineRunState> activeRunStates = EnumSet.noneOf(EngineRunState.class);
+    private EngineRunState runState = EngineRunState.RUNNING;
+    private EngineRunState runStateBeforeRenderingSuspended = EngineRunState.RUNNING;
     private boolean shutdownRequested;
-    private boolean closed;
     private final AtomicReference<FrameCaptureRequest> frameCaptureRequest = new AtomicReference<>();
     private volatile FrameCaptureDataProvider frameCaptureDataProvider;
 
@@ -85,25 +84,40 @@ public class Engine {
         platformBridge.onResume();
     }
 
-    public EngineRunState getRunState() {
-        if (closed || activeRunStates.contains(EngineRunState.CLOSED)) return EngineRunState.CLOSED;
-        if (activeRunStates.contains(EngineRunState.RENDERING_SUSPENDED)) return EngineRunState.RENDERING_SUSPENDED;
-        if (activeRunStates.contains(EngineRunState.SIMULATION_PAUSED)) return EngineRunState.SIMULATION_PAUSED;
-        return EngineRunState.RUNNING;
+    public synchronized EngineRunState getRunState() {
+        return runState;
     }
 
-    public void pauseSimulation() { activeRunStates.add(EngineRunState.SIMULATION_PAUSED); }
-    public void resumeSimulation() { activeRunStates.remove(EngineRunState.SIMULATION_PAUSED); }
-    public void suspendRendering() { activeRunStates.add(EngineRunState.RENDERING_SUSPENDED); }
-    public void resumeRendering() { activeRunStates.remove(EngineRunState.RENDERING_SUSPENDED); }
+    public synchronized void pauseSimulation() {
+        if (runState == EngineRunState.RUNNING) {
+            runState = EngineRunState.SIMULATION_PAUSED;
+        }
+    }
+
+    public synchronized void resumeSimulation() {
+        if (runState == EngineRunState.SIMULATION_PAUSED) {
+            runState = EngineRunState.RUNNING;
+        }
+    }
+
+    public synchronized void suspendRendering() {
+        if (runState == EngineRunState.RUNNING || runState == EngineRunState.SIMULATION_PAUSED) {
+            runStateBeforeRenderingSuspended = runState;
+            runState = EngineRunState.RENDERING_SUSPENDED;
+        }
+    }
+
+    public synchronized void resumeRendering() {
+        if (runState == EngineRunState.RENDERING_SUSPENDED) {
+            runState = runStateBeforeRenderingSuspended;
+        }
+    }
 
     public void requestShutdown() { shutdownRequested = true; }
     public boolean isShutdownRequested() { return shutdownRequested; }
-    public void close() {
-        if (closed) return;
-        closed = true;
-        activeRunStates.clear();
-        activeRunStates.add(EngineRunState.CLOSED);
+    public synchronized void close() {
+        if (runState == EngineRunState.CLOSED) return;
+        runState = EngineRunState.CLOSED;
     }
 
     public void requestFrameCapture() { requestFrameCapture(null); }
