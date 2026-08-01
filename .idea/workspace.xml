@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="fix race when touch is held and page changed">
-      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/FrameCaptureTestRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/FrameCaptureTestRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="5b39c446-7fac-4701-bb47-acb0ce30e1a7" name="Changes" comment="update gitignore">
+      <change beforePath="$PROJECT_DIR$/../Demo/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/FrameCaptureTestMain.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/GameResultRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/GameResultRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Demo/game/src/main/java/com/nikitos/MainRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release_notes.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +55,7 @@
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../Demo" />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="ProjectColorInfo">{
@@ -65,36 +67,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build Demo.executor": "Run",
-    "Gradle.Build sealEngine_3M.executor": "Run",
-    "Gradle.Demo [:com.nikitos.FrameCaptureTestMain.main()].executor": "Run",
-    "Gradle.Demo [:com.nikitos.Main.main()].executor": "Run",
-    "Gradle.Demo [:desktop:MouseCallbacksSmokeTestMain.main()].executor": "Run",
-    "Gradle.DesktopFrameCaptureSourceTest.executor": "Run",
-    "Gradle.EngineShutdownTest.executor": "Run",
-    "Gradle.sealEngine_3M [android:bundleReleaseAar].executor": "Run",
-    "Gradle.sealEngine_3M [android:release].executor": "Run",
-    "Gradle.sealEngine_3M [core:assemble].executor": "Run",
-    "Gradle.sealEngine_3M [desktop:assemble].executor": "Run",
-    "Gradle.sealEngine_3M [mobile:assemble].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "external.system.has.shared.sources": "true",
-    "git-widget-placeholder": "codex/android-frame-capture-review",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build Demo.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build sealEngine_3M.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:com.nikitos.FrameCaptureTestMain.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:com.nikitos.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Demo [:desktop:MouseCallbacksSmokeTestMain.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.DesktopFrameCaptureSourceTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.EngineShutdownTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [android:bundleReleaseAar].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [android:release].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [core:assemble].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [desktop:assemble].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.sealEngine_3M [mobile:assemble].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nikita/IdeaProjects/Seal_Engine_3-M/sealEngine_3M/core/src/main/resources&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/core/src/main/resources" />
@@ -109,7 +110,7 @@
       <command value="gradle core:assemble" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.FrameCaptureTestMain">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="FrameCaptureTestMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nikitos.FrameCaptureTestMain" />
       <module name="Demo.frameCapture" />
@@ -262,6 +263,8 @@
       <workItem from="1785049580887" duration="7658000" />
       <workItem from="1785403987093" duration="63000" />
       <workItem from="1785437531147" duration="1000000" />
+      <workItem from="1785595860103" duration="493000" />
+      <workItem from="1785596474917" duration="43000" />
     </task>
     <task id="LOCAL-00002" summary="codex adds mouse and files&#10;seems ok">
       <option name="closed" value="true" />
@@ -351,7 +354,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785050925422</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="update gitignore">
+      <option name="closed" value="true" />
+      <created>1785594555851</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1785594555851</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -380,6 +391,13 @@
             <State>
               <option name="FILTERS">
                 <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/codex/fix-engine-runtime" />
+                      </list>
+                    </value>
+                  </entry>
                   <entry key="roots">
                     <value>
                       <list>
@@ -406,7 +424,8 @@
     <MESSAGE value="update version" />
     <MESSAGE value="migrate frame buffer to default 32bit depth" />
     <MESSAGE value="fix race when touch is held and page changed" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix race when touch is held and page changed" />
+    <MESSAGE value="update gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="update gitignore" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -483,6 +502,12 @@
           <option name="totalLines" value="88375" />
           <option name="info" value="fix race when touch is held and page changed" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1785594556094" />
+          <option name="linesCode" value="46890" />
+          <option name="totalLines" value="82934" />
+          <option name="info" value="update gitignore" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -522,6 +547,12 @@
           <option name="linesCode" value="53825" />
           <option name="totalLines" value="88375" />
           <option name="info" value="Jul 26, 2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1785594556094" />
+          <option name="linesCode" value="46890" />
+          <option name="totalLines" value="82934" />
+          <option name="info" value="Aug 1, 2026" />
         </TimePoint>
       </list>
     </option>

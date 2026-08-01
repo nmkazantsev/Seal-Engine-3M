@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Demo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../seal-runtime-worktree" vcs="Git" />
   </component>
 </project>
