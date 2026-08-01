@@ -6,9 +6,42 @@ import android.opengl.GLUtils;
 import com.nikitos.main.images.PImage;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.nio.ByteBuffer;
+import java.nio.file.Path;
 
 public class GeneralBridgeAndroid extends GeneralPlatformBridge {
+    @Override
+    public byte[] readPixelsRgba(int width, int height) {
+        ByteBuffer pixels = ByteBuffer.allocateDirect(width * height * 4);
+        GLES30.glReadPixels(0, 0, width, height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, pixels);
+        byte[] result = new byte[pixels.capacity()];
+        pixels.rewind();
+        pixels.get(result);
+        return result;
+    }
+
+    @Override
+    public void writePng(Path outputFile, int width, int height, byte[] rgbaBottomFirst) throws IOException {
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        for (int y = 0; y < height; y++) {
+            int sourceRow = (height - 1 - y) * width * 4;
+            for (int x = 0; x < width; x++) {
+                int pixel = sourceRow + x * 4;
+                int r = rgbaBottomFirst[pixel] & 0xFF;
+                int g = rgbaBottomFirst[pixel + 1] & 0xFF;
+                int b = rgbaBottomFirst[pixel + 2] & 0xFF;
+                int a = rgbaBottomFirst[pixel + 3] & 0xFF;
+                bitmap.setPixel(x, y, android.graphics.Color.argb(a, r, g, b));
+            }
+        }
+        try (FileOutputStream output = new FileOutputStream(outputFile.toFile())) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+        }
+        bitmap.recycle();
+    }
     @Override
     public void glDrawArrays(int type, int offest, int count) {
         GLES30.glDrawArrays(type, offest, count);

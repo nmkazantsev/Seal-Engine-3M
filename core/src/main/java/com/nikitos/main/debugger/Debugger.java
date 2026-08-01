@@ -30,6 +30,7 @@ import java.util.function.Function;
 
 public class Debugger {
     private static boolean enabled = false;
+    private static boolean fpsVisible = true;
     private static Camera debuggerCamera;
     private static SimplePolygon debuggerPage, fpsPolygon;
     private static Shader shader;
@@ -41,6 +42,7 @@ public class Debugger {
     private static final HashMap<String, DebugValueFloat> debugValues = new HashMap<>();//later will be replaced with abstract debug value
     private static final List<DebugValueFloat> debugList = new ArrayList<>();
     private static TouchProcessor mainTP;
+    private static TouchProcessor openMenuTP;
     //menu rendering
     private final static float shift = 300 * Utils.getKx();
     private final static float enter = 75 * Utils.getKx();
@@ -57,7 +59,7 @@ public class Debugger {
         inited = true;
         //open menu button
         //no need in blocking openMenu. because it will not be processed (all touches will be blocked by debugger)
-        TouchProcessor openMenu = new TouchProcessor(
+        openMenuTP = new TouchProcessor(
                 TouchPoint -> (TouchPoint.touchX < fps_x && TouchPoint.touchY < fps_y),
                 TouchPoint -> {
                     page = 1;
@@ -131,6 +133,9 @@ public class Debugger {
                 }, null, null
         );
         mainTP.block();
+        if (!fpsVisible) {
+            openMenuTP.block();
+        }
         enabled = true;
         debuggerPage = new SimplePolygon(drawMianPage, true, 0, null);
         FileUtils fileUtils = new FileUtils();
@@ -190,9 +195,11 @@ public class Debugger {
             debuggerCamera.apply();
             Matrix.applyMatrix(matrix);
             if (page == 0) {
-                fpsPolygon.setRedrawNeeded(true);
-                fpsPolygon.redrawNow();
-                fpsPolygon.prepareAndDraw(new PVector(0 * kx, 0, 10), new PVector(fps_x, 0, 10), new PVector(0 * kx, fps_y, 10));
+                if (fpsVisible) {
+                    fpsPolygon.setRedrawNeeded(true);
+                    fpsPolygon.redrawNow();
+                    fpsPolygon.prepareAndDraw(new PVector(0 * kx, 0, 10), new PVector(fps_x, 0, 10), new PVector(0 * kx, fps_y, 10));
+                }
             } else {
                 gl.glBlendFunc(glc.GL_SRC_ALPHA(), glc.GL_ONE_MINUS_SRC_ALPHA());
                 gl.glEnable(glc.GL_BLEND());
@@ -218,6 +225,26 @@ public class Debugger {
 
     public static void setEnabled(boolean debuggerEnabled) {
         enabled = debuggerEnabled;
+        if (openMenuTP != null) {
+            if (enabled && fpsVisible) openMenuTP.unblock();
+            else openMenuTP.block();
+        }
+        if (mainTP != null) {
+            if (enabled && page != 0) mainTP.unblock();
+            else mainTP.block();
+        }
+    }
+
+    public static void setFpsVisible(boolean visible) {
+        fpsVisible = visible;
+        if (openMenuTP != null) {
+            if (enabled && fpsVisible) openMenuTP.unblock();
+            else openMenuTP.block();
+        }
+    }
+
+    public static boolean isFpsVisible() {
+        return fpsVisible;
     }
 
     private static final Function<List<Object>, PImage> drawMianPage = objects -> {

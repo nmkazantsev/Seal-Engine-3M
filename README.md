@@ -1,6 +1,9 @@
-The first cross-platform version of https://github.com/nmkazantsev/seal_engine.
+The cross-platform Seal Engine 3-M runtime for Android, Windows and Linux.
 
-All features are suppoerted. Unified for all platforms (Android, Windows, Linux) api was not changed.
+The current runtime uses a deliberately separated simulation and rendering loop:
+gameplay advances in `GamePageClass.update(float dtMillis)`, while OpenGL work is
+performed in `GamePageClass.render()`. The public API is intentionally breaking
+relative to the old `draw()`-only page contract.
 
 See example apps:
 Desktop: https://github.com/nmkazantsev/Demo-launcher
@@ -13,7 +16,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 
 ## Введение
 
-Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.2.4). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и системы анимации.
+Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.2.6). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и разделённого цикла `update/render`.
 
 Документ сгруппирован по функциональным разделам. Для каждого класса приведено краткое описание и список публичных методов, которые могут быть полезны разработчику.
 
@@ -29,7 +32,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 1. создать имплементацию ``GamePageClass``.
 2. В конструкторе (или заранее) загружать тяжелые объекты, такие, как меши и картинки, а также шейдеры и шрифты.
 3. в onSurfaceChanged пересоздавать камеру, frame buffers и другие объекты, которые прямо или косвенно зависят от разрешения экрана. 
-4. при отрисовке каждый кадр нужно: подключить шейдер, подключить матрицу проекции и камеру. Отрисовать сцену.
+4. в `update(float dtMillis)` изменять игровое состояние, таймеры и ввод; в `render()` подключать шейдер, матрицу проекции и камеру и отрисовывать сцену.
 5. в целях адаптации, обработчик касаний не должен ни где кешировать границы, они должны вычисляться динамически, чтобы изменение размеров экрана не повлияло на его работу.
 6. рекомендуется разделять контекст на страницы и избегать использования статических объектов, так как неаккуратное обращение с ними спровоцирует утечку видеопамяти. Для их удаления не забывать запускать метод очисти видеопамяти.
 
@@ -42,6 +45,13 @@ Android: https://github.com/nmkazantsev/Demo-app
 - `static String getVersion()` – возвращает версию движка (например, "v3.2.0").
 - `void startNewPage(GamePageClass newPage)` – переключает текущую игровую страницу. Старая страница удаляется сборщиком мусора.
 - `long pageMillis()` – возвращает время в миллисекундах с момента загрузки текущей страницы.
+- `EngineRunState getRunState()` – возвращает `RUNNING`, `SIMULATION_PAUSED`, `RENDERING_SUSPENDED` или `CLOSED`.
+- `void pauseSimulation()` / `void resumeSimulation()` – останавливают или возобновляют `update`, продолжая отрисовку на паузе.
+- `void suspendRendering()` / `void resumeRendering()` – приостанавливают или возобновляют и `update`, и `render` (например, при сворачивании окна).
+- `void requestShutdown()` / `boolean isShutdownRequested()` – передают host-циклу запрос на штатное завершение.
+- `void close()` – идемпотентно освобождает ресурсы движка; не вызывает `System.exit()`.
+- `void requestFrameCapture()` / `void requestFrameCapture(Path outputDirectory)` – запрашивают одну пару PNG/JSON после текущего отрисованного кадра.
+- `void setFrameCaptureDataProvider(FrameCaptureDataProvider provider)` – добавляет optional map `game` в JSON capture.
 - `void glClear()` – очищает буфер цвета и глубины.
 - `void disableBlend()` – отключает смешивание цветов.
 - `void enableBlend()` – включает смешивание цветов.
@@ -88,9 +98,77 @@ Android: https://github.com/nmkazantsev/Demo-app
 
 **Публичные методы:**
 - `abstract void onSurfaceChanged(int x, int y)` – вызывается при изменении размеров экрана.
-- `abstract void draw()` – основной метод отрисовки, вызывается каждый кадр.
+- `abstract void update(float dtMillis)` – изменяет игровое состояние один раз за разрешённый кадр; `dtMillis` – effective monotonic delta в миллисекундах, ограниченный сверху 1000/30.
+- `abstract void render()` – отрисовывает текущий кадр; не должен изменять игровое состояние.
 - `abstract void onResume()` – вызывается при возврате приложения на передний план.
 - `abstract void onPause()` – вызывается при уходе приложения в фон.
+
+`CoreRenderer.dt()` возвращает последний effective `dtMillis`. Не используйте FPS
+как время симуляции и не вызывайте `update()` или `render()` вручную из страницы.
+Если `update()` переключает страницу, движок не рендерит старую страницу в том же кадре.
+
+### Frame capture
+
+Capture выполняется только по запросу и создаёт файлы с одинаковым basename:
+
+```text
+capture-N.png
+capture-N.json
+```
+
+JSON содержит frame number, timestamp, `dtMillis`, measured FPS, `EngineRunState`,
+viewport, имя страницы, fullscreen, mouse state, platform и `game` data provider.
+Запрос во время `RENDERING_SUSPENDED` сохраняется до возобновления рендера.
+
+Пример запроса capture из страницы или host-кода:
+
+```java
+engine.setFrameCaptureDataProvider(() -> Map.of(
+        "level", level.getName(),
+        "score", score
+));
+engine.requestFrameCapture(Paths.get("captures"));
+```
+
+После следующего доступного кадра появятся, например, `captures/capture-100.png`
+и `captures/capture-100.json`:
+
+```json
+{
+  "captureId": "capture-100",
+  "frameNumber": 100,
+  "timestamp": 1785610893462,
+  "dtMillis": 18.381796,
+  "fps": 43.47826,
+  "runState": "RUNNING",
+  "viewport": {"width": 3296, "height": 1920},
+  "pageClassName": "com.nikitos.FrameCaptureTestRenderer",
+  "fullscreen": false,
+  "mouse": {"leftButtonDown": false, "rightButtonDown": false, "y": 1635.0, "x": 1158.0},
+  "platform": "desktop",
+  "game": {"level": "demo", "score": 42}
+}
+```
+
+### Pause and shutdown
+
+Пауза симуляции и приостановка рендера — разные режимы:
+
+```java
+engine.pauseSimulation();   // update остановлен, render продолжается
+engine.resumeSimulation();
+
+engine.suspendRendering();  // остановлены update и render, например при iconify
+engine.resumeRendering();
+
+engine.requestShutdown();   // только ставит запрос для host-цикла
+// host-цикл выходит и вызывает:
+engine.close();              // освобождение ресурсов, повторный вызов безопасен
+```
+
+`getRunState()` возвращает `SIMULATION_PAUSED` для пользовательской паузы и
+`RENDERING_SUSPENDED` для временной остановки графического цикла. `close()` не
+вызывает `System.exit()` и не требует отдельного `onShutdown()` у страницы.
 
 ### LauncherParams
 Класс для настройки параметров запуска движка. Используется при создании экземпляра `Engine`.

@@ -9,6 +9,8 @@ import com.nikitos.main.touch.TouchProcessor;
 import com.nikitos.maths.Matrix;
 import com.nikitos.platformBridge.*;
 import com.nikitos.utils.Utils;
+import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Engine {
     public static String getVersion() {
@@ -27,6 +29,11 @@ public class Engine {
 
     private final GeneralPlatformBridge generalPlatformBridge;
     private final GLConstBridge glconstBridge;
+    private EngineRunState runState = EngineRunState.RUNNING;
+    private EngineRunState runStateBeforeRenderingSuspended = EngineRunState.RUNNING;
+    private boolean shutdownRequested;
+    private final AtomicReference<FrameCaptureRequest> frameCaptureRequest = new AtomicReference<>();
+    private volatile FrameCaptureDataProvider frameCaptureDataProvider;
 
     public Engine(PlatformBridge platformBridge, LauncherParams launcherParams) {
         this.platformBridge = platformBridge;
@@ -58,7 +65,6 @@ public class Engine {
             prevFps = Utils.millis();
             cadrs = 0;
         }
-        Utils.findTimeK();
         cadrs++;
     }
 
@@ -76,6 +82,59 @@ public class Engine {
         }
         Utils.onResume();
         platformBridge.onResume();
+    }
+
+    public synchronized EngineRunState getRunState() {
+        return runState;
+    }
+
+    public synchronized void pauseSimulation() {
+        if (runState == EngineRunState.RUNNING) {
+            runState = EngineRunState.SIMULATION_PAUSED;
+        }
+    }
+
+    public synchronized void resumeSimulation() {
+        if (runState == EngineRunState.SIMULATION_PAUSED) {
+            runState = EngineRunState.RUNNING;
+        }
+    }
+
+    public synchronized void suspendRendering() {
+        if (runState == EngineRunState.RUNNING || runState == EngineRunState.SIMULATION_PAUSED) {
+            runStateBeforeRenderingSuspended = runState;
+            runState = EngineRunState.RENDERING_SUSPENDED;
+        }
+    }
+
+    public synchronized void resumeRendering() {
+        if (runState == EngineRunState.RENDERING_SUSPENDED) {
+            runState = runStateBeforeRenderingSuspended;
+        }
+    }
+
+    public void requestShutdown() { shutdownRequested = true; }
+    public boolean isShutdownRequested() { return shutdownRequested; }
+    public synchronized void close() {
+        if (runState == EngineRunState.CLOSED) return;
+        runState = EngineRunState.CLOSED;
+    }
+
+    public void requestFrameCapture() { requestFrameCapture(null); }
+    public void requestFrameCapture(Path outputDirectory) {
+        frameCaptureRequest.set(new FrameCaptureRequest(outputDirectory));
+    }
+    public void setFrameCaptureDataProvider(FrameCaptureDataProvider provider) { frameCaptureDataProvider = provider; }
+    FrameCaptureRequest consumeFrameCaptureRequest() { return frameCaptureRequest.getAndSet(null); }
+    public FrameCaptureDataProvider getFrameCaptureDataProvider() { return frameCaptureDataProvider; }
+    public boolean getFullScreen() { return launcherParams.getFullScreen(); }
+
+    static final class FrameCaptureRequest {
+        final Path outputDirectory;
+
+        FrameCaptureRequest(Path outputDirectory) {
+            this.outputDirectory = outputDirectory;
+        }
     }
 
     private boolean switching = false;
