@@ -131,13 +131,13 @@ public class DesktopLauncher {
             glfwWindowHint(GLFW_SAMPLES, 4);
         }
 
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("mac")) {
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        }
+       // if (osName.contains("mac")) {
+            //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+       // }
 
         // Get the resolution of the primary monitor
         vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());

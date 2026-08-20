@@ -2,92 +2,198 @@ plugins {
     id 'java'
 }
 
-
 group = 'com.nikitos'
 version = '1.0-SNAPSHOT'
 
-ext.lwjglVersion = "3.3.3"
+
+// ============================================================
+// Versions
+// ============================================================
 
 ext {
-    switch (org.gradle.internal.os.OperatingSystem.current()) {
-        case org.gradle.internal.os.OperatingSystem.WINDOWS:
-            lwjglNatives = "natives-windows"
-            break
-        case org.gradle.internal.os.OperatingSystem.LINUX:
-            lwjglNatives = "natives-linux"
-            break
-        case org.gradle.internal.os.OperatingSystem.MAC_OS:
-            lwjglNatives = "natives-macos"
-            break
-    }
+    lwjglVersion = "3.3.3"
+    skijaVersion = "0.143.10"
 }
+
+
+// ============================================================
+// Platform / architecture detection
+// ============================================================
+
+def os = org.gradle.internal.os.OperatingSystem.current()
+def arch = System.getProperty("os.arch").toLowerCase()
+
+def lwjglNatives
+def skijaPlatform
+
+
+if (os.isWindows()) {
+
+    if (arch == "aarch64" || arch == "arm64") {
+        throw new GradleException(
+                "Windows ARM64 is currently not configured for Skija"
+        )
+    }
+
+    lwjglNatives = "natives-windows"
+    skijaPlatform = "windows-x64"
+
+} else if (os.isLinux()) {
+
+    if (arch == "aarch64" || arch == "arm64") {
+        lwjglNatives = "natives-linux-arm64"
+        skijaPlatform = "linux-arm64"
+    } else {
+        lwjglNatives = "natives-linux"
+        skijaPlatform = "linux-x64"
+    }
+
+} else if (os.isMacOsX()) {
+
+    if (arch == "aarch64" || arch == "arm64") {
+
+        // Apple Silicon:
+        // M1 / M2 / M3 / M4 / M5
+        lwjglNatives = "natives-macos-arm64"
+        skijaPlatform = "macos-arm64"
+
+    } else {
+
+        // Intel Mac
+        lwjglNatives = "natives-macos"
+        skijaPlatform = "macos-x64"
+    }
+
+} else {
+
+    throw new GradleException(
+            "Unsupported platform: ${os} / ${arch}"
+    )
+}
+
+
+println "Detected OS: ${os}"
+println "Detected architecture: ${arch}"
+println "LWJGL natives: ${lwjglNatives}"
+println "Skija platform: ${skijaPlatform}"
+
+
+
+// ============================================================
+// Java
+// ============================================================
 
 java {
     withSourcesJar()
     withJavadocJar()
 }
 
+
+
+// ============================================================
+// Dependencies
+// ============================================================
+
 dependencies {
+
+    // --------------------------------------------------------
+    // Project dependencies
+    // --------------------------------------------------------
+
+    implementation project(":core")
+
+
+    // --------------------------------------------------------
+    // Logging
+    // --------------------------------------------------------
+
     implementation 'org.slf4j:slf4j-nop:2.0.17'
-    // BasicPlayer — основная библиотека
+
+
+    // --------------------------------------------------------
+    // Audio
+    // --------------------------------------------------------
+
+    // BasicPlayer
     implementation 'com.googlecode.soundlibs:basicplayer:3.0.0.0'
 
-    // JLayer для декодирования MP3
+    // JLayer MP3 decoder
     implementation 'com.googlecode.soundlibs:jlayer:1.0.1.4'
 
-    // MP3SPI для JavaSound поддержки (необязательно, но помогает)
+    // JavaSound MP3 support
     implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.3'
 
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation(project(":core"))
+
+    // --------------------------------------------------------
+    // Math
+    // --------------------------------------------------------
+
     implementation 'org.joml:joml:1.10.8'
-    // Базовый модуль LWJGL
-    implementation "org.lwjgl:lwjgl:${lwjglVersion}"
 
 
-    def skijaVersion = "0.143.10"
+    // ========================================================
+    // LWJGL
+    // ========================================================
 
-    implementation "io.github.humbleui:skija-shared:$skijaVersion"
+    // BOM задаёт одну версию для всех LWJGL-модулей
+    implementation platform(
+            "org.lwjgl:lwjgl-bom:${lwjglVersion}"
+    )
 
-    implementation "io.github.humbleui:skija-windows-x64:$skijaVersion"
-    implementation "io.github.humbleui:skija-linux-x64:$skijaVersion"
-    implementation "io.github.humbleui:skija-linux-arm64:$skijaVersion"
-    implementation "io.github.humbleui:skija-macos-arm64:$skijaVersion"
-    implementation "io.github.humbleui:skija-macos-x64:$skijaVersion"
 
-    implementation "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
-    implementation "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
-    implementation "org.lwjgl:lwjgl-opengles:${lwjglVersion}"
-
-    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
-
+    // Java bindings
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-opengles"
     implementation "org.lwjgl:lwjgl-stb"
 
 
+    // Native libraries ONLY for current platform
 
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-opengles::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-stb::${lwjglNatives}"
 
-    // Нативные библиотеки для разных платформ
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows-x86"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux-arm64"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux-arm32"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos-arm64"
 
-    // Для модулей тоже нужны natives (пример для opengl и glfw)
-    runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-macos"
-    runtimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-macos"
+    // ========================================================
+    // Skija
+    // ========================================================
+
+    implementation "io.github.humbleui:skija-shared:${skijaVersion}"
+
+    // Автоматически:
+    //
+    // Mac M1-M5  -> skija-macos-arm64
+    // Intel Mac  -> skija-macos-x64
+    // Linux ARM  -> skija-linux-arm64
+    // Linux x64  -> skija-linux-x64
+    // Windows    -> skija-windows-x64
+
+    implementation "io.github.humbleui:skija-${skijaPlatform}:${skijaVersion}"
+
+
+    // ========================================================
+    // Tests
+    // ========================================================
+
+    testImplementation platform(
+            'org.junit:junit-bom:5.10.0'
+    )
+
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+
+
+// ============================================================
+// Tests
+// ============================================================
+
 test {
     useJUnitPlatform()
 }
