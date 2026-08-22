@@ -1,3 +1,28 @@
+# Seal Engine 3-M Release v3.4.0 Notes
+
+## Platform-specific shaders
+
+- Shader callers keep using logical paths such as `vertex_shader.glsl` or `scene/fragment.glsl`.
+- `Shader` selects `shaders/android/<logicalPath>` or `shaders/desktop/<logicalPath>` at runtime through `PlatformBridge.getPlatform()`.
+- Android and desktop shader trees must contain the same relative paths; nested scene/subsystem folders are supported.
+- Built-in Android sources retain their working OpenGL ES 3 dialect, while desktop sources use GLSL `330 core`.
+- Invalid absolute, traversal, platform-prefixed and ambiguous logical paths now fail before asset loading.
+- Android text assets are decoded as UTF-8 on every supported API level (minSdk 24), not only API 33+.
+
+## Portable desktop dependencies
+
+- The desktop runtime classpath no longer depends on the build host OS or architecture.
+- One build resolves LWJGL and Skija runtime artifacts for Windows x64, Linux x64, Linux ARM64, macOS x64 and macOS ARM64.
+- Windows ARM64 remains unsupported because Skija 0.143.10 does not provide the required platform artifact.
+
+## Release artifacts
+
+- Engine and Gradle metadata now report `v3.4.0` / `3.4.0` consistently.
+- `./gradlew clean releaseJars` builds `core-3.4.0.jar`, `android-3.4.0.jar` and `desktop-3.4.0.jar`.
+- The Android task extracts the real compiled release `classes.jar`; it does not rename an AAR to `.jar`.
+
+---
+
 # Seal Engine 3-M Release v3.2.3 Notes
 
 ## Overview

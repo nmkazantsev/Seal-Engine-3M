@@ -42,3 +42,29 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+tasks.register('androidReleaseJar') {
+    group = 'build'
+    description = 'Extracts the compiled release classes JAR and keeps a versioned AAR.'
+    dependsOn 'bundleReleaseAar'
+
+    def aarFile = layout.buildDirectory.file('outputs/aar/android-release.aar')
+    def jarFile = layout.buildDirectory.file("libs/android-${project.version}.jar")
+    def versionedAarFile = layout.buildDirectory.file("libs/android-${project.version}.aar")
+    inputs.file(aarFile)
+    outputs.files(jarFile, versionedAarFile)
+
+    doLast {
+        def classesJar = zipTree(aarFile.get().asFile).matching { include 'classes.jar' }.singleFile
+        copy {
+            from classesJar
+            into jarFile.get().asFile.parentFile
+            rename { jarFile.get().asFile.name }
+        }
+        copy {
+            from aarFile
+            into versionedAarFile.get().asFile.parentFile
+            rename { versionedAarFile.get().asFile.name }
+        }
+    }
+}
