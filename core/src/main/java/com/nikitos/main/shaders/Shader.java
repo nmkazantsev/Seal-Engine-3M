@@ -3,6 +3,7 @@ package com.nikitos.main.shaders;
 
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
+import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
 import com.nikitos.platformBridge.SealAssetManager;
 import com.nikitos.platformBridge.ShaderBridge;
@@ -29,8 +30,9 @@ public class Shader { //means shader program
         shaderUtils = new ShaderUtils();
         PlatformBridge platformBridge = CoreRenderer.engine.getPlatformBridge();
         SealAssetManager assetManager = platformBridge.getAssetManager();
-        this.vertex = assetManager.loadText(vertex);
-        this.fragment = assetManager.loadText(fragment);
+        Platform platform = platformBridge.getPlatform();
+        this.vertex = assetManager.loadText(resolveAssetPath(vertex, platform));
+        this.fragment = assetManager.loadText(resolveAssetPath(fragment, platform));
         link = shaderUtils.createShaderProgram(this.vertex, this.fragment);
         if (page != null) {
             this.page = page.getClass();
@@ -45,9 +47,10 @@ public class Shader { //means shader program
         shaderUtils = new ShaderUtils();
         PlatformBridge platformBridge = CoreRenderer.engine.getPlatformBridge();
         SealAssetManager assetManager = platformBridge.getAssetManager();
-        this.vertex = assetManager.loadText(vertex);
-        this.fragment = assetManager.loadText(fragment);
-        this.geom = assetManager.loadText(geom);
+        Platform platform = platformBridge.getPlatform();
+        this.vertex = assetManager.loadText(resolveAssetPath(vertex, platform));
+        this.fragment = assetManager.loadText(resolveAssetPath(fragment, platform));
+        this.geom = assetManager.loadText(resolveAssetPath(geom, platform));
         link = shaderUtils.createShaderProgram(this.vertex, this.fragment, this.geom);
         if (page != null) {
             this.page = page.getClass();
@@ -56,6 +59,25 @@ public class Shader { //means shader program
         this.adaptor = adaptor;
         adaptor.setProgramId(link);
         shaderBridge = CoreRenderer.engine.getPlatformBridge().getShaderBridge();
+    }
+
+    static String resolveAssetPath(String logicalPath, Platform platform) {
+        if (logicalPath == null || platform == null || logicalPath.isBlank()
+                || !logicalPath.equals(logicalPath.trim())
+                || logicalPath.startsWith("/") || logicalPath.indexOf('\\') >= 0
+                || logicalPath.indexOf(':') >= 0) {
+            throw new IllegalArgumentException("Invalid logical shader path: " + logicalPath);
+        }
+        String[] segments = logicalPath.split("/", -1);
+        for (String segment : segments) {
+            if (segment.isEmpty() || segment.equals(".") || segment.equals("..")) {
+                throw new IllegalArgumentException("Invalid logical shader path: " + logicalPath);
+            }
+        }
+        if (segments[0].equals("shaders") || segments[0].equals("android") || segments[0].equals("desktop")) {
+            throw new IllegalArgumentException("Shader path must not contain a platform prefix: " + logicalPath);
+        }
+        return "shaders/" + (platform == Platform.DESKTOP ? "desktop/" : "android/") + logicalPath;
     }
 
     private void reload() {
