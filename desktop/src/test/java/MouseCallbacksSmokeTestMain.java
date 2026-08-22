@@ -4,6 +4,7 @@ import com.nikitos.main.camera.Camera;
 import com.nikitos.main.images.PImage;
 import com.nikitos.main.shaders.Shader;
 import com.nikitos.main.shaders.default_adaptors.MainShaderAdaptor;
+import com.nikitos.main.shaders.default_adaptors.SectionShaderAdaptor;
 import com.nikitos.main.touch.MousePoint;
 import com.nikitos.main.touch.MouseWheelData;
 import com.nikitos.main.touch.TouchProcessor;
@@ -13,6 +14,7 @@ import com.nikitos.platform.DesktopLauncher;
 import com.nikitos.platformBridge.LauncherParams;
 import com.nikitos.utils.Utils;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 
@@ -27,7 +29,14 @@ import java.util.function.Function;
  * - follows mouse position using TouchProcessor mouse-move callbacks
  */
 public final class MouseCallbacksSmokeTestMain {
+    private static Path captureDirectory;
+
     public static void main(String[] args) {
+        if (args.length == 2 && args[0].equals("--capture")) {
+            captureDirectory = Path.of(args[1]);
+        } else if (args.length != 0) {
+            throw new IllegalArgumentException("Usage: MouseCallbacksSmokeTestMain [--capture <directory>]");
+        }
         LauncherParams params = new LauncherParams()
                 .setWindowTitle("Seal Engine Mouse Callback Smoke Test")
                 .setFullScreen(false)
@@ -61,6 +70,12 @@ public final class MouseCallbacksSmokeTestMain {
                     "fragment_shader_engine.glsl",
                     this,
                     new MainShaderAdaptor()
+            );
+            new Shader(
+                    "line_vertex_engine.glsl",
+                    "line_fragment_engine.glsl",
+                    this,
+                    new SectionShaderAdaptor()
             );
             wheelPolygon = new SimplePolygon(drawWheelPolygon, false, 0, this);
             mousePolygon = new SimplePolygon(drawMousePolygon, false, 0, this);
@@ -126,6 +141,11 @@ public final class MouseCallbacksSmokeTestMain {
                     mousePolygonSize,
                     0.1f
             );
+            if (captureDirectory != null) {
+                CoreRenderer.engine.requestFrameCapture(captureDirectory);
+                captureDirectory = null;
+                CoreRenderer.engine.requestShutdown();
+            }
         }
 
         @Override

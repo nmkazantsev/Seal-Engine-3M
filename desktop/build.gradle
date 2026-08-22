@@ -2,10 +2,6 @@ plugins {
     id 'java'
 }
 
-group = 'com.nikitos'
-version = '1.0-SNAPSHOT'
-
-
 // ============================================================
 // Versions
 // ============================================================
@@ -17,67 +13,23 @@ ext {
 
 
 // ============================================================
-// Platform / architecture detection
+// Portable desktop runtime matrix
 // ============================================================
 
-def os = org.gradle.internal.os.OperatingSystem.current()
-def arch = System.getProperty("os.arch").toLowerCase()
-
-def lwjglNatives
-def skijaPlatform
-
-
-if (os.isWindows()) {
-
-    if (arch == "aarch64" || arch == "arm64") {
-        throw new GradleException(
-                "Windows ARM64 is currently not configured for Skija"
-        )
-    }
-
-    lwjglNatives = "natives-windows"
-    skijaPlatform = "windows-x64"
-
-} else if (os.isLinux()) {
-
-    if (arch == "aarch64" || arch == "arm64") {
-        lwjglNatives = "natives-linux-arm64"
-        skijaPlatform = "linux-arm64"
-    } else {
-        lwjglNatives = "natives-linux"
-        skijaPlatform = "linux-x64"
-    }
-
-} else if (os.isMacOsX()) {
-
-    if (arch == "aarch64" || arch == "arm64") {
-
-        // Apple Silicon:
-        // M1 / M2 / M3 / M4 / M5
-        lwjglNatives = "natives-macos-arm64"
-        skijaPlatform = "macos-arm64"
-
-    } else {
-
-        // Intel Mac
-        lwjglNatives = "natives-macos"
-        skijaPlatform = "macos-x64"
-    }
-
-} else {
-
-    throw new GradleException(
-            "Unsupported platform: ${os} / ${arch}"
-    )
-}
-
-
-println "Detected OS: ${os}"
-println "Detected architecture: ${arch}"
-println "LWJGL natives: ${lwjglNatives}"
-println "Skija platform: ${skijaPlatform}"
-
-
+def lwjglNativeClassifiers = [
+        'natives-windows',
+        'natives-linux',
+        'natives-linux-arm64',
+        'natives-macos',
+        'natives-macos-arm64'
+]
+def skijaPlatforms = [
+        'windows-x64',
+        'linux-x64',
+        'linux-arm64',
+        'macos-x64',
+        'macos-arm64'
+]
 
 // ============================================================
 // Java
@@ -145,17 +97,12 @@ dependencies {
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-glfw"
     implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-opengles"
-    implementation "org.lwjgl:lwjgl-stb"
 
-
-    // Native libraries ONLY for current platform
-
-    runtimeOnly "org.lwjgl:lwjgl::${lwjglNatives}"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::${lwjglNatives}"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::${lwjglNatives}"
-    runtimeOnly "org.lwjgl:lwjgl-opengles::${lwjglNatives}"
-    runtimeOnly "org.lwjgl:lwjgl-stb::${lwjglNatives}"
+    lwjglNativeClassifiers.each { classifier ->
+        runtimeOnly "org.lwjgl:lwjgl::${classifier}"
+        runtimeOnly "org.lwjgl:lwjgl-glfw::${classifier}"
+        runtimeOnly "org.lwjgl:lwjgl-opengl::${classifier}"
+    }
 
 
     // ========================================================
@@ -164,15 +111,9 @@ dependencies {
 
     implementation "io.github.humbleui:skija-shared:${skijaVersion}"
 
-    // Автоматически:
-    //
-    // Mac M1-M5  -> skija-macos-arm64
-    // Intel Mac  -> skija-macos-x64
-    // Linux ARM  -> skija-linux-arm64
-    // Linux x64  -> skija-linux-x64
-    // Windows    -> skija-windows-x64
-
-    implementation "io.github.humbleui:skija-${skijaPlatform}:${skijaVersion}"
+    skijaPlatforms.each { platformName ->
+        implementation "io.github.humbleui:skija-${platformName}:${skijaVersion}"
+    }
 
 
     // ========================================================
@@ -196,4 +137,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.register('mouseCallbacksSmoke', JavaExec) {
+    group = 'verification'
+    description = 'Runs the real OpenGL smoke scene; use -PcaptureDir=<directory> for one capture and exit.'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'MouseCallbacksSmokeTestMain'
+    if (providers.gradleProperty('captureDir').isPresent()) {
+        args '--capture', providers.gradleProperty('captureDir').get()
+    }
 }
