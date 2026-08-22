@@ -2,7 +2,6 @@ package com.seal.gl_engine.platform;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Build;
 
 import com.nikitos.platformBridge.SealAssetManager;
 
@@ -35,23 +34,21 @@ public class AndroidSealAssetManager implements SealAssetManager {
 
     @Override
     public String loadText(String path) {
-        try (InputStream is = load(path);
-             ByteArrayOutputStream result = new ByteArrayOutputStream()) {
-
-            byte[] buffer = new byte[4096];
-            int length;
-
-            while ((length = is.read(buffer)) != -1) {
-                result.write(buffer, 0, length);
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                return result.toString(StandardCharsets.UTF_8);
-            }
+        try (InputStream is = load(path)) {
+            return readUtf8(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return null;
+    }
+
+    static String readUtf8(InputStream input) throws IOException {
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int length;
+        while ((length = input.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+        return new String(result.toByteArray(), StandardCharsets.UTF_8);
     }
 
     @Override
