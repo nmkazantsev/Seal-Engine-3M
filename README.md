@@ -1,4 +1,4 @@
-The cross-platform Seal Engine 3-M runtime for Android, Windows and Linux.
+The cross-platform Seal Engine 3-M runtime for Android, Windows, Linux and macOS.
 
 The current runtime uses a deliberately separated simulation and rendering loop:
 gameplay advances in `GamePageClass.update(float dtMillis)`, while OpenGL work is
@@ -16,7 +16,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 
 ## Введение
 
-Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.3.0). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и разделённого цикла `update/render`.
+Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.4.0). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и разделённого цикла `update/render`.
 
 Документ сгруппирован по функциональным разделам. Для каждого класса приведено краткое описание и список публичных методов, которые могут быть полезны разработчику.
 
@@ -25,6 +25,44 @@ Android: https://github.com/nmkazantsev/Demo-app
 ## создание приложений
 
 для создания нового приложения используйте генератор, скачайте последнюю версию с gitHub https://github.com/nmkazantsev/seal-app-generator .
+
+## Платформенные шейдеры
+
+Начиная с Seal Engine v3.4.0 каждый shader asset имеет Android- и desktop-вариант с одинаковым логическим путём:
+
+```text
+src/main/resources/shaders/
+├── android/
+│   ├── vertex.glsl
+│   └── scene/fragment.glsl
+└── desktop/
+    ├── vertex.glsl
+    └── scene/fragment.glsl
+```
+
+Относительные деревья файлов внутри `android/` и `desktop/` должны полностью совпадать. Вложенные папки разрешены и рекомендуются для разделения сцен и подсистем.
+
+В конструктор `Shader` передаются только логические пути относительно platform-папки, без `shaders/`, `android/` или `desktop/`:
+
+```java
+new Shader("scene/vertex.glsl", "scene/fragment.glsl", page, adaptor);
+```
+
+Во время выполнения движок вызывает `PlatformBridge.getPlatform()` и загрузит `shaders/android/scene/vertex.glsl` на `Platform.MOBILE` либо `shaders/desktop/scene/vertex.glsl` на `Platform.DESKTOP`. Gradle и ОС машины сборки в выборе shader source не участвуют. То же правило действует для vertex, fragment и optional geometry shader.
+
+Android-варианты должны соответствовать используемому движком OpenGL ES 3 (встроенные shaders используют `#version 300 es`), desktop-варианты — OpenGL 3.3 core (`#version 330 core`). Uniforms, attributes и shader stage у пар с одинаковым логическим именем должны совпадать.
+
+Миграция со старого layout: переместите каждый одиночный `.glsl` из корня ресурсов в обе папки, сохраните одно и то же относительное имя, затем адаптируйте только GLSL dialect/version под платформу. Java call sites оставьте с прежними логическими именами.
+
+## Сборка release JAR
+
+Одна команда собирает три runtime JAR версии 3.4.0:
+
+```bash
+./gradlew clean releaseJars
+```
+
+Результаты: `core/build/libs/core-3.4.0.jar`, `android/build/libs/android-3.4.0.jar` и `desktop/build/libs/desktop-3.4.0.jar`. Android build также сохраняет versioned AAR `android/build/libs/android-3.4.0.aar` как дополнительный artifact.
 
 ---
 
@@ -42,7 +80,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 Главный класс движка. Управляет жизненным циклом, переключением страниц, FPS.
 
 **Публичные методы:**
-- `static String getVersion()` – возвращает версию движка (например, "v3.2.0").
+- `static String getVersion()` – возвращает версию движка (для этого release — "v3.4.0").
 - `void startNewPage(GamePageClass newPage)` – переключает текущую игровую страницу. Старая страница удаляется сборщиком мусора.
 - `long pageMillis()` – возвращает время в миллисекундах с момента загрузки текущей страницы.
 - `EngineRunState getRunState()` – возвращает `RUNNING`, `SIMULATION_PAUSED`, `RENDERING_SUSPENDED` или `CLOSED`.
