@@ -28,331 +28,1053 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class DesktopLauncher {
 
-    // The window handle
+    /*
+     * GLFW window handle.
+     */
     private long window;
 
     private final CoreRenderer coreRenderer;
-
     private final LauncherParams launcherParams;
-
     private final Engine engine;
-
     private final DesktopBridge desktopBridge;
 
     private GLFWVidMode vidmode;
 
     private boolean fullScreenOpened = false;
 
-    //приколхохим сюда обработку мыши
+    /*
+     * ---------------------------------------------------------------------
+     * Window coordinates
+     * ---------------------------------------------------------------------
+     *
+     * These are GLFW logical/screen coordinates.
+     *
+     * Mouse cursor coordinates use this coordinate system.
+     */
+    private int windowWidth;
+    private int windowHeight;
+
+
+    /*
+     * ---------------------------------------------------------------------
+     * OpenGL framebuffer coordinates
+     * ---------------------------------------------------------------------
+     *
+     * These are the actual pixel dimensions used by OpenGL.
+     *
+     * On HiDPI displays these may be larger than windowWidth/windowHeight.
+     *
+     * Example:
+     *
+     *     window:      1512 x 982
+     *     framebuffer: 3024 x 1964
+     */
+    private int framebufferWidth;
+    private int framebufferHeight;
+
+
+    /*
+     * Mouse coordinates are stored in GLFW window coordinates.
+     */
     private boolean mousePressed = false;
     private double mouseX = 0;
     private double mouseY = 0;
-    private final DesktopMotionEventAdapter mouseTouchEvent = new DesktopMotionEventAdapter(MyMotionEvent.ACTION_MOVE, 0, 0);
+
+    private final DesktopMotionEventAdapter mouseTouchEvent =
+            new DesktopMotionEventAdapter(
+                    MyMotionEvent.ACTION_MOVE,
+                    0,
+                    0
+            );
+
 
     public DesktopLauncher(LauncherParams launcherParams) {
+
         this.launcherParams = launcherParams;
+
         desktopBridge = new DesktopBridge();
-        engine = new Engine(desktopBridge, launcherParams);
+
+        engine = new Engine(
+                desktopBridge,
+                launcherParams
+        );
+
         init();
-        coreRenderer = new CoreRenderer(vidmode.width(), vidmode.height(), engine);
+
+        /*
+         * CoreRenderer should receive the actual framebuffer size,
+         * not GLFWVidMode.
+         *
+         * At this point the framebuffer callback has normally already
+         * initialized these values.
+         */
+        coreRenderer = new CoreRenderer(
+                framebufferWidth,
+                framebufferHeight,
+                engine
+        );
     }
 
-    private static String glfwKeyToName(int key, int scancode) {
-        String name = glfwGetKeyName(key, scancode);
+
+    private static String glfwKeyToName(
+            int key,
+            int scancode
+    ) {
+
+        String name = glfwGetKeyName(
+                key,
+                scancode
+        );
+
         if (name != null && !name.isEmpty()) {
             return name.toUpperCase(Locale.ROOT);
         }
+
         switch (key) {
+
             case GLFW_KEY_SPACE:
                 return "SPACE";
+
             case GLFW_KEY_ENTER:
                 return "ENTER";
+
             case GLFW_KEY_TAB:
                 return "TAB";
+
             case GLFW_KEY_BACKSPACE:
                 return "BACKSPACE";
+
             case GLFW_KEY_ESCAPE:
                 return "ESCAPE";
+
             case GLFW_KEY_LEFT:
                 return "LEFT";
+
             case GLFW_KEY_RIGHT:
                 return "RIGHT";
+
             case GLFW_KEY_UP:
                 return "UP";
+
             case GLFW_KEY_DOWN:
                 return "DOWN";
+
             case GLFW_KEY_LEFT_SHIFT:
                 return "LSHIFT";
+
             case GLFW_KEY_RIGHT_SHIFT:
                 return "RSHIFT";
+
             case GLFW_KEY_LEFT_CONTROL:
                 return "LCTRL";
+
             case GLFW_KEY_RIGHT_CONTROL:
                 return "RCTRL";
+
             case GLFW_KEY_LEFT_ALT:
                 return "LALT";
+
             case GLFW_KEY_RIGHT_ALT:
                 return "RALT";
+
             default:
                 return "KEY_" + key;
         }
     }
 
+
     public void run() {
-        System.out.println("version of LWJGL " + Version.getVersion() + "!");
+
+        System.out.println(
+                "version of LWJGL " + Version.getVersion() + "!"
+        );
+
         loop();
-        // Free the window callbacks and destroy the window
+
         glfwFreeCallbacks(window);
+
         glfwDestroyWindow(window);
 
-        // Terminate GLFW and free the error callback
         glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+
+        Objects.requireNonNull(
+                glfwSetErrorCallback(null)
+        ).free();
     }
 
+
     private void init() {
-        // Setup an error callback. The default implementation
-        // will print the error message in System.err.
-        GLFWErrorCallback.createPrint(System.err).set();
 
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
+        GLFWErrorCallback.createPrint(
+                System.err
+        ).set();
 
-        glfwSetErrorCallback((error, description) -> {
-            System.err.println("GLFW error " + error + ": " + GLFWErrorCallback.getDescription(description));
-        });
 
-        // Configure GLFW
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        if (launcherParams.getMSAA()) {
-            glfwWindowHint(GLFW_SAMPLES, 4);
+        if (!glfwInit()) {
+            throw new IllegalStateException(
+                    "Unable to initialize GLFW"
+            );
         }
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        String osName = System.getProperty("os.name").toLowerCase();
-       // if (osName.contains("mac")) {
-            //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-       // }
 
-        // Get the resolution of the primary monitor
-        vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        // Create the window
-        assert vidmode != null;
+        glfwSetErrorCallback(
+                (error, description) ->
+                        System.err.println(
+                                "GLFW error "
+                                        + error
+                                        + ": "
+                                        + GLFWErrorCallback.getDescription(
+                                        description
+                                )
+                        )
+        );
+
+
+        /*
+         * -----------------------------------------------------------------
+         * GLFW configuration
+         * -----------------------------------------------------------------
+         */
+
+        glfwDefaultWindowHints();
+
+        glfwWindowHint(
+                GLFW_VISIBLE,
+                GLFW_FALSE
+        );
+
+        glfwWindowHint(
+                GLFW_RESIZABLE,
+                GLFW_TRUE
+        );
+
+
+        if (launcherParams.getMSAA()) {
+
+            glfwWindowHint(
+                    GLFW_SAMPLES,
+                    4
+            );
+        }
+
+
+        glfwWindowHint(
+                GLFW_CONTEXT_VERSION_MAJOR,
+                3
+        );
+
+        glfwWindowHint(
+                GLFW_CONTEXT_VERSION_MINOR,
+                3
+        );
+
+        glfwWindowHint(
+                GLFW_OPENGL_PROFILE,
+                GLFW_OPENGL_CORE_PROFILE
+        );
+
+
+        String osName =
+                System.getProperty(
+                        "os.name"
+                ).toLowerCase(Locale.ROOT);
+
+
+        /*
+         * macOS requires the forward-compatible flag for a core
+         * OpenGL context.
+         */
+        if (osName.contains("mac")) {
+
+            glfwWindowHint(
+                    GLFW_OPENGL_FORWARD_COMPAT,
+                    GLFW_TRUE
+            );
+        }
+
+
+        /*
+         * Primary monitor.
+         */
+        long monitor =
+                glfwGetPrimaryMonitor();
+
+        if (monitor == NULL) {
+
+            throw new RuntimeException(
+                    "Failed to find primary monitor"
+            );
+        }
+
+
+        vidmode =
+                glfwGetVideoMode(
+                        monitor
+                );
+
+        if (vidmode == null) {
+
+            throw new RuntimeException(
+                    "Failed to get primary monitor video mode"
+            );
+        }
+
+
+        /*
+         * -----------------------------------------------------------------
+         * Window creation
+         * -----------------------------------------------------------------
+         */
+
 
         if (launcherParams.getFullScreen()) {
+
             fullScreenOpened = true;
+
+
             if (osName.contains("mac")) {
-                System.out.println("engine: This is a Mac operating system. Using custom full screen. Press ESC to exit.");
-                glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-                glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-                window = glfwCreateWindow(
-                        vidmode.width(),
-                        vidmode.height(),
-                        launcherParams.getWindowTitle(),
-                        NULL,
-                        NULL);
+
+                System.out.println(
+                        "engine: macOS borderless fullscreen"
+                );
+
+                glfwWindowHint(
+                        GLFW_DECORATED,
+                        GLFW_FALSE
+                );
+
+                glfwWindowHint(
+                        GLFW_RESIZABLE,
+                        GLFW_FALSE
+                );
+
+
+                try (MemoryStack stack = stackPush()) {
+
+                    IntBuffer x = stack.mallocInt(1);
+                    IntBuffer y = stack.mallocInt(1);
+                    IntBuffer width = stack.mallocInt(1);
+                    IntBuffer height = stack.mallocInt(1);
+
+
+                    glfwGetMonitorWorkarea(
+                            monitor,
+                            x,
+                            y,
+                            width,
+                            height
+                    );
+
+
+                    window = glfwCreateWindow(
+                            width.get(0),
+                            height.get(0),
+                            launcherParams.getWindowTitle(),
+                            NULL,
+                            NULL
+                    );
+
+
+                    if (window == NULL) {
+                        throw new RuntimeException(
+                                "Failed to create the GLFW window"
+                        );
+                    }
+
+
+                    glfwSetWindowPos(
+                            window,
+                            x.get(0),
+                            y.get(0)
+                    );
+                }
+
             } else {
-                System.out.println("engine: using general full screen mode. Press ESC to exit.");
+
+                System.out.println(
+                        "engine: using general fullscreen mode. Press ESC to exit."
+                );
+
+
                 window = glfwCreateWindow(
                         vidmode.width(),
                         vidmode.height(),
                         launcherParams.getWindowTitle(),
-                        glfwGetPrimaryMonitor(),
-                        NULL);
+                        monitor,
+                        NULL
+                );
             }
 
         } else {
+
+            final int initialWidth = 1280;
+            final int initialHeight = 720;
+
+
             window = glfwCreateWindow(
-                    vidmode.width(),
-                    vidmode.height(),
+                    initialWidth,
+                    initialHeight,
                     launcherParams.getWindowTitle(),
                     NULL,
-                    NULL);
+                    NULL
+            );
+
+
+            if (window == NULL) {
+                throw new RuntimeException(
+                        "Failed to create the GLFW window"
+                );
+            }
+
+
             glfwMaximizeWindow(window);
         }
 
-        if (window == NULL)
-            throw new RuntimeException("Failed to create the GLFW window");
+
+        if (window == NULL) {
+
+            throw new RuntimeException(
+                    "Failed to create the GLFW window"
+            );
+        }
+
+
         desktopBridge.attachWindow(window);
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (action == GLFW_PRESS) {
-                KeyboardProcessor.onKeyPressed(glfwKeyToName(key, scancode));
-            } else if (action == GLFW_RELEASE) {
-                KeyboardProcessor.onKeyReleased(glfwKeyToName(key, scancode));
-            }
 
-            if (launcherParams.getFullScreen()) {
-                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                    if (fullScreenOpened) {
-                        fullScreenOpened = false;
-                        //переход в border less режим
-                        goBoardLessMode(window);
+        /*
+         * Make OpenGL context current and initialize GL capabilities FIRST
+         * before making any OpenGL calls (like glViewport).
+         */
+        glfwMakeContextCurrent(window);
+        GL.createCapabilities();
 
-                        //выход в оконный режим
 
-                        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
-                        glfwSetWindowSize(window, 800, 800);
-                        glfwSetWindowPos(window, 100, 100);
+        /*
+         * -----------------------------------------------------------------
+         * Read the initial window/framebuffer sizes.
+         * -----------------------------------------------------------------
+         */
+        updateWindowSize();
 
-                        //это костыль, который не дает схлопываться окну когда его берет юзер
-                        glfwHideWindow(window);
-                        glfwShowWindow(window);
-                        glfwMaximizeWindow(window);
-                    } else {
-                        fullScreenOpened = true;
-                        if (osName.contains("mac")) {
-                            System.out.println("engine: This is a Mac operating system. Using custom full screen. Press ESC to exit.");
-                            goBoardLessMode(window);
-                        } else {
-                            System.out.println("engine: using general full screen mode. Press ESC to exit.");
-                            GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
-                            assert vid != null;
-                            glfwSetWindowMonitor(
-                                    window,
-                                    glfwGetPrimaryMonitor(),
-                                    0, 0,
-                                    vid.width(),
-                                    vid.height(),
-                                    vid.refreshRate()
-                            );
+        updateFramebufferSize();
+
+
+        /*
+         * -----------------------------------------------------------------
+         * Keyboard
+         * -----------------------------------------------------------------
+         */
+
+        glfwSetKeyCallback(
+                window,
+                (window, key, scancode, action, mods) -> {
+
+                    if (action == GLFW_PRESS) {
+
+                        KeyboardProcessor.onKeyPressed(
+                                glfwKeyToName(
+                                        key,
+                                        scancode
+                                )
+                        );
+
+                    } else if (action == GLFW_RELEASE) {
+
+                        KeyboardProcessor.onKeyReleased(
+                                glfwKeyToName(
+                                        key,
+                                        scancode
+                                )
+                        );
+                    }
+
+
+                    if (launcherParams.getFullScreen()) {
+
+                        if (
+                                key == GLFW_KEY_ESCAPE
+                                        && action == GLFW_RELEASE
+                        ) {
+
+                            if (fullScreenOpened) {
+
+                                fullScreenOpened = false;
+
+                                goBoardLessMode(window);
+
+                            } else {
+
+                                fullScreenOpened = true;
+
+
+                                String currentOs =
+                                        System.getProperty(
+                                                "os.name"
+                                        ).toLowerCase(
+                                                Locale.ROOT
+                                        );
+
+
+                                if (currentOs.contains("mac")) {
+
+                                    goBoardLessMode(window);
+
+                                } else {
+
+                                    GLFWVidMode vid =
+                                            glfwGetVideoMode(
+                                                    glfwGetPrimaryMonitor()
+                                            );
+
+                                    if (vid == null) {
+                                        return;
+                                    }
+
+
+                                    glfwSetWindowMonitor(
+                                            window,
+                                            glfwGetPrimaryMonitor(),
+                                            0,
+                                            0,
+                                            vid.width(),
+                                            vid.height(),
+                                            vid.refreshRate()
+                                    );
+                                }
+                            }
                         }
                     }
                 }
-            }
-        });
+        );
 
 
-        glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
-            glViewport(0, 0, width, height);
-            float ky = (float) height / 1280.0f;
-            float kx = (float) width / 720.0f;
-            if ((float) width > (float) height) {
-                kx = (float) width / 1280.0f;
-                ky = (float) height / 720.0f;
-            }
-            Utils.setDim((float) width, (float) height, kx, ky);
-            engine.onSurfaceChanged(width, height);
-        });
+        /*
+         * -----------------------------------------------------------------
+         * Framebuffer resize
+         * -----------------------------------------------------------------
+         */
+        glfwSetFramebufferSizeCallback(
+                window,
+                (win, width, height) -> {
 
-        // Get the thread stack and push a new frame
-        setDisplayRes(window);
+                    framebufferWidth = width;
+                    framebufferHeight = height;
 
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
-        // Enable v-sync
+
+                    if (
+                            width <= 0
+                                    || height <= 0
+                    ) {
+                        return;
+                    }
+
+
+                    glViewport(
+                            0,
+                            0,
+                            width,
+                            height
+                    );
+
+
+                    updateUtilsDimensions();
+
+                    engine.onSurfaceChanged(
+                            width,
+                            height
+                    );
+                }
+        );
+
+
+        /*
+         * -----------------------------------------------------------------
+         * Window resize
+         * -----------------------------------------------------------------
+         */
+        glfwSetWindowSizeCallback(
+                window,
+                (win, width, height) -> {
+
+                    windowWidth = width;
+                    windowHeight = height;
+
+                    System.out.println(
+                            "Window size: "
+                                    + width
+                                    + " x "
+                                    + height
+                    );
+                }
+        );
+
+
+        /*
+         * Enable v-sync.
+         */
         glfwSwapInterval(1);
 
-        // Make the window visible
+
+        /*
+         * Show window.
+         */
         glfwShowWindow(window);
 
-        //снова обработка тача
-        //начало и конец тача
-        glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
-            if (button == GLFW_MOUSE_BUTTON_LEFT) {
-                int motionAction;
 
-                if (action == GLFW_PRESS) {
-                    mousePressed = true;
-                    TouchProcessor.onLeftButtonPressed((float) mouseX, (float) mouseY);
-                    motionAction = MyMotionEvent.ACTION_DOWN;
-                } else if (action == GLFW_RELEASE) {
-                    mousePressed = false;
-                    TouchProcessor.onLeftButtonReleased((float) mouseX, (float) mouseY);
-                    motionAction = MyMotionEvent.ACTION_UP;
-                } else {
-                    return;
+        /*
+         * -----------------------------------------------------------------
+         * Mouse buttons
+         * -----------------------------------------------------------------
+         */
+
+        glfwSetMouseButtonCallback(
+                window,
+                (w, button, action, mods) -> {
+
+                    float touchX =
+                            getFramebufferMouseX();
+
+                    float touchY =
+                            getFramebufferMouseY();
+
+
+                    if (
+                            button
+                                    == GLFW_MOUSE_BUTTON_LEFT
+                    ) {
+
+                        int motionAction;
+
+
+                        if (action == GLFW_PRESS) {
+
+                            mousePressed = true;
+
+                            TouchProcessor.onLeftButtonPressed(
+                                    touchX,
+                                    touchY
+                            );
+
+                            motionAction =
+                                    MyMotionEvent.ACTION_DOWN;
+
+
+                        } else if (action == GLFW_RELEASE) {
+
+                            mousePressed = false;
+
+                            TouchProcessor.onLeftButtonReleased(
+                                    touchX,
+                                    touchY
+                            );
+
+                            motionAction =
+                                    MyMotionEvent.ACTION_UP;
+
+
+                        } else {
+
+                            return;
+                        }
+
+
+                        TouchProcessor.onTouch(
+                                mouseTouchEvent.set(
+                                        motionAction,
+                                        touchX,
+                                        touchY
+                                )
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                            button
+                                    == GLFW_MOUSE_BUTTON_RIGHT
+                                    && action == GLFW_PRESS
+                    ) {
+
+                        TouchProcessor.onRightButtonPressed(
+                                touchX,
+                                touchY
+                        );
+
+                    } else if (
+                            button
+                                    == GLFW_MOUSE_BUTTON_RIGHT
+                                    && action == GLFW_RELEASE
+                    ) {
+
+                        TouchProcessor.onRightButtonReleased(
+                                touchX,
+                                touchY
+                        );
+                    }
                 }
+        );
 
-                TouchProcessor.onTouch(mouseTouchEvent.set(motionAction, (float) mouseX, (float) mouseY));
-                return;
-            }
 
-            if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-                TouchProcessor.onRightButtonPressed((float) mouseX, (float) mouseY);
-            } else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
-                TouchProcessor.onRightButtonReleased((float) mouseX, (float) mouseY);
-            }
-        });
-        //touchMoved
-        glfwSetCursorPosCallback(window, (w, x, y) -> {
-            mouseX = x;
-            mouseY = y;
+        /*
+         * -----------------------------------------------------------------
+         * Mouse movement
+         * -----------------------------------------------------------------
+         */
 
-            TouchProcessor.onMouseMoved((float) x, (float) y);
+        glfwSetCursorPosCallback(
+                window,
+                (w, x, y) -> {
 
-            if (!mousePressed) return;
+                    mouseX = x;
+                    mouseY = y;
 
-            TouchProcessor.onTouch(mouseTouchEvent.set(MyMotionEvent.ACTION_MOVE, (float) x, (float) y));
-        });
-        glfwSetScrollCallback(window, (w, xoffset, yoffset) ->
-                TouchProcessor.onMouseWheel((float) mouseX, (float) mouseY, (float) xoffset, (float) yoffset)
+
+                    float touchX =
+                            getFramebufferMouseX();
+
+                    float touchY =
+                            getFramebufferMouseY();
+
+
+                    TouchProcessor.onMouseMoved(
+                            touchX,
+                            touchY
+                    );
+
+
+                    if (!mousePressed) {
+                        return;
+                    }
+
+
+                    TouchProcessor.onTouch(
+                            mouseTouchEvent.set(
+                                    MyMotionEvent.ACTION_MOVE,
+                                    touchX,
+                                    touchY
+                            )
+                    );
+                }
+        );
+
+
+        /*
+         * -----------------------------------------------------------------
+         * Mouse wheel
+         * -----------------------------------------------------------------
+         */
+
+        glfwSetScrollCallback(
+                window,
+                (w, xoffset, yoffset) -> {
+
+                    TouchProcessor.onMouseWheel(
+                            getFramebufferMouseX(),
+                            getFramebufferMouseY(),
+                            (float) xoffset,
+                            (float) yoffset
+                    );
+                }
         );
     }
 
-    private void goBoardLessMode(long window) {
-        glfwSetWindowMonitor(window, NULL, 0, 0, 800, 600, 0);
 
-        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
+    /*
+     * ---------------------------------------------------------------------
+     * Window size
+     * ---------------------------------------------------------------------
+     */
 
-        GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        assert vid != null;
-        glfwSetWindowSize(window, vid.width(), vid.height());
-        glfwSetWindowPos(window, 0, 0);
-        glfwMaximizeWindow(window);
-    }
+    private void updateWindowSize() {
 
-    private void setDisplayRes(long window) {
         try (MemoryStack stack = stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1); // int*
-            IntBuffer pHeight = stack.mallocInt(1); // int*
 
-            // Get the window size passed to glfwCreateWindow
-            glfwGetWindowSize(window, pWidth, pHeight);
+            IntBuffer width =
+                    stack.mallocInt(1);
 
-            // Center the window
-            /*glfwSetWindowPos(
+            IntBuffer height =
+                    stack.mallocInt(1);
+
+
+            glfwGetWindowSize(
                     window,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
-            );*/
-        } // the stack frame is popped automatically
+                    width,
+                    height
+            );
+
+
+            windowWidth =
+                    width.get(0);
+
+            windowHeight =
+                    height.get(0);
+        }
     }
+
+
+    /*
+     * ---------------------------------------------------------------------
+     * Framebuffer size
+     * ---------------------------------------------------------------------
+     */
+
+    private void updateFramebufferSize() {
+
+        try (MemoryStack stack = stackPush()) {
+
+            IntBuffer width =
+                    stack.mallocInt(1);
+
+            IntBuffer height =
+                    stack.mallocInt(1);
+
+
+            glfwGetFramebufferSize(
+                    window,
+                    width,
+                    height
+            );
+
+
+            framebufferWidth =
+                    width.get(0);
+
+            framebufferHeight =
+                    height.get(0);
+
+
+            if (
+                    framebufferWidth > 0
+                            && framebufferHeight > 0
+            ) {
+
+                glViewport(
+                        0,
+                        0,
+                        framebufferWidth,
+                        framebufferHeight
+                );
+
+                updateUtilsDimensions();
+            }
+        }
+    }
+
+
+    /*
+     * ---------------------------------------------------------------------
+     * Utils dimensions
+     * ---------------------------------------------------------------------
+     */
+    private void updateUtilsDimensions() {
+
+        if (
+                framebufferWidth <= 0
+                        || framebufferHeight <= 0
+        ) {
+            return;
+        }
+
+
+        float kx =
+                (float) framebufferWidth
+                        / 720.0f;
+
+        float ky =
+                (float) framebufferHeight
+                        / 1280.0f;
+
+
+        if (
+                (float) framebufferWidth
+                        > (float) framebufferHeight
+        ) {
+
+            kx =
+                    (float) framebufferWidth
+                            / 1280.0f;
+
+            ky =
+                    (float) framebufferHeight
+                            / 720.0f;
+        }
+
+
+        Utils.setDim(
+                (float) framebufferWidth,
+                (float) framebufferHeight,
+                kx,
+                ky
+        );
+    }
+
+
+    /*
+     * ---------------------------------------------------------------------
+     * Mouse -> framebuffer conversion
+     * ---------------------------------------------------------------------
+     */
+    private float getFramebufferMouseX() {
+
+        if (windowWidth <= 0) {
+            return 0;
+        }
+
+        return (float)
+                (
+                        mouseX
+                                * framebufferWidth
+                                / (double) windowWidth
+                );
+    }
+
+
+    private float getFramebufferMouseY() {
+
+        if (windowHeight <= 0) {
+            return 0;
+        }
+
+        return (float)
+                (
+                        mouseY
+                                * framebufferHeight
+                                / (double) windowHeight
+                );
+    }
+
+
+    /*
+     * ---------------------------------------------------------------------
+     * Borderless fullscreen
+     * ---------------------------------------------------------------------
+     */
+    private void goBoardLessMode(long window) {
+
+        long monitor =
+                glfwGetPrimaryMonitor();
+
+
+        if (monitor == NULL) {
+            return;
+        }
+
+
+        try (MemoryStack stack = stackPush()) {
+
+            IntBuffer x =
+                    stack.mallocInt(1);
+
+            IntBuffer y =
+                    stack.mallocInt(1);
+
+            IntBuffer width =
+                    stack.mallocInt(1);
+
+            IntBuffer height =
+                    stack.mallocInt(1);
+
+
+            glfwGetMonitorWorkarea(
+                    monitor,
+                    x,
+                    y,
+                    width,
+                    height
+            );
+
+
+            glfwSetWindowMonitor(
+                    window,
+                    NULL,
+                    x.get(0),
+                    y.get(0),
+                    width.get(0),
+                    height.get(0),
+                    0
+            );
+
+
+            glfwSetWindowAttrib(
+                    window,
+                    GLFW_DECORATED,
+                    GLFW_FALSE
+            );
+
+
+            glfwSetWindowAttrib(
+                    window,
+                    GLFW_RESIZABLE,
+                    GLFW_FALSE
+            );
+
+
+            glfwSetWindowPos(
+                    window,
+                    x.get(0),
+                    y.get(0)
+            );
+
+
+            glfwSetWindowSize(
+                    window,
+                    width.get(0),
+                    height.get(0)
+            );
+        }
+    }
+
 
     private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
-        GL.createCapabilities();
+
         coreRenderer.onSurfaceCreated();
+
+
         if (launcherParams.isDebug()) {
             Debugger.debuggerInit();
         }
-        // Set the clear color
-        glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
 
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window) && !engine.isShutdownRequested()) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+        glClearColor(
+                0.0f,
+                1.0f,
+                0.0f,
+                0.0f
+        );
+
+
+        while (
+                !glfwWindowShouldClose(window)
+                        && !engine.isShutdownRequested()
+        ) {
+
+            glClear(
+                    GL_COLOR_BUFFER_BIT
+                            | GL_DEPTH_BUFFER_BIT
+            );
+
+
             coreRenderer.draw();
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwSwapBuffers(window); // swap the color buffers
-            glfwPollEvents();
 
+
+            glfwSwapBuffers(window);
+
+            glfwPollEvents();
         }
+
+
         try {
-            com.nikitos.CoreRenderer.engine.getPlatformBridge().getAudioPlayer().stopMusic();
+
+            com.nikitos.CoreRenderer.engine
+                    .getPlatformBridge()
+                    .getAudioPlayer()
+                    .stopMusic();
+
         } catch (Exception ignored) {
         }
+
+
         engine.close();
     }
 }
