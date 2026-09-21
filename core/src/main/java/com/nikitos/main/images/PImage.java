@@ -188,7 +188,7 @@ public class PImage {
     }
 
     public void stroke(float r, float g, float b) {
-        impl.stroke((int) (r), (int) (g), (int) (b), (int) (g));
+        impl.stroke((int) (r), (int) (g), (int) (b), 255);
     }
 
     public void clear() {
