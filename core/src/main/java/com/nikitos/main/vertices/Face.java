@@ -20,7 +20,24 @@ public class Face {
         PVector edge2 = PVector.sub(vertices[2], vertices[0]);
         PVector deltaUV1 = PVector.sub(textureCoordinates[1], textureCoordinates[0]);
         PVector deltaUV2 = PVector.sub(textureCoordinates[2], textureCoordinates[0]);
-        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+        float determinant = deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y;
+        if (!Float.isFinite(determinant) || Math.abs(determinant) < 1e-8f) {
+            PVector surfaceNormal = PVector.add(PVector.add(normal[0], normal[1]), normal[2]);
+            if (surfaceNormal.length() < 1e-6f) {
+                surfaceNormal = PVector.cross(edge1, edge2);
+            }
+            if (surfaceNormal.length() < 1e-6f) {
+                surfaceNormal = new PVector(0, 0, 1);
+            }
+            surfaceNormal.normalize();
+            PVector reference = Math.abs(surfaceNormal.z) < 0.999f
+                    ? new PVector(0, 0, 1)
+                    : new PVector(0, 1, 0);
+            tangent = PVector.normalize(PVector.cross(reference, surfaceNormal));
+            bitangent = PVector.normalize(PVector.cross(surfaceNormal, tangent));
+            return;
+        }
+        float f = 1.0f / determinant;
 
         tangent = new PVector();
         bitangent = new PVector();
