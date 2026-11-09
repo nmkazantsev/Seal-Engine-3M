@@ -179,7 +179,7 @@ public class Shape implements VerticesSet {
     }
 
     public void setPBRMaterial(PBRMaterial pbrMaterial) {
-        if (faces == null && !lightVboLoaded) {
+        if (vboLoaded && faces == null && !lightVboLoaded) {
             throw new IllegalStateException("Set the PBR material before drawing this Shape with a legacy shader");
         }
         this.pbrMaterial = pbrMaterial;
