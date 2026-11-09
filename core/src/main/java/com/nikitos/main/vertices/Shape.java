@@ -14,7 +14,6 @@ import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
-import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
@@ -179,9 +178,6 @@ public class Shape implements VerticesSet {
     }
 
     public void setPBRMaterial(PBRMaterial pbrMaterial) {
-        if (vboLoaded && faces == null && !lightVboLoaded) {
-            throw new IllegalStateException("Set the PBR material before drawing this Shape with a legacy shader");
-        }
         this.pbrMaterial = pbrMaterial;
     }
 
@@ -216,18 +212,13 @@ public class Shape implements VerticesSet {
             }
         }
         if (!dataLoaded && faces == null) {
-            throw new IllegalStateException("This Shape needs its mesh data to switch shader adapters; set its PBR material before the first draw");
+            throw new IllegalStateException("Mesh data is unavailable for this Shape's GPU buffer rebuild");
         }
         adaptor.bindData(faces, vertexBuffer, dataLoaded);
         if (!dataLoaded) {
             object = null;
             if (lightData) {
                 lightVboLoaded = true;
-            }
-            if (CoreRenderer.engine.getPlatform() == Platform.DESKTOP) { //on mobile, we may need to reload to gpu faces
-                if (lightData || pbrMaterial == null) {
-                    faces = null;
-                }
             }
             System.gc();
         }
