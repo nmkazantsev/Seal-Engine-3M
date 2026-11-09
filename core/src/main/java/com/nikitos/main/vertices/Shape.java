@@ -4,14 +4,16 @@ package com.nikitos.main.vertices;
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
+import com.nikitos.main.light.PBRMaterial;
 import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.shaders.default_adaptors.LightShaderAdaptor;
+import com.nikitos.main.shaders.default_adaptors.PBRShaderAdaptor;
 import com.nikitos.main.textures.NormalMap;
 import com.nikitos.main.textures.Texture;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
 import com.nikitos.maths.PVector;
 import com.nikitos.platformBridge.GLConstBridge;
 import com.nikitos.platformBridge.GeneralPlatformBridge;
-import com.nikitos.platformBridge.Platform;
 import com.nikitos.platformBridge.PlatformBridge;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
@@ -49,7 +51,9 @@ public class Shape implements VerticesSet {
     private VertexBuffer vertexBuffer;
 
     private boolean vboLoaded = false;
+    private boolean lightVboLoaded = false;
     private int numFaces = 0;
+    private PBRMaterial pbrMaterial;
 
     public Shape(PreLoadedMesh preLoadedMesh, String textureFileName, GamePageClass page) {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
@@ -173,6 +177,22 @@ public class Shape implements VerticesSet {
         normalTexture = new NormalMap(creator);
     }
 
+    public void setPBRMaterial(PBRMaterial pbrMaterial) {
+        this.pbrMaterial = pbrMaterial;
+    }
+
+    public PBRMaterial getPBRMaterial() {
+        return pbrMaterial;
+    }
+
+    public boolean hasNormalMap() {
+        return normalTexture != null;
+    }
+
+    public GamePageClass getCreator() {
+        return creator;
+    }
+
     private PImage loadTexture(Void v) {
         if (normalMapFileName != null) {
             normalImage = loadImage(normalMapFileName);
@@ -182,17 +202,23 @@ public class Shape implements VerticesSet {
 
 
     public void bindData() {
+        var adaptor = Shader.getActiveShader().getAdaptor();
+        boolean lightData = adaptor instanceof LightShaderAdaptor;
+        boolean dataLoaded = lightData ? lightVboLoaded : vboLoaded;
         if (!vboLoaded) {
             vertexBuffer = new VertexBuffer(5, creator); //5 because 5 types of coordinates so we need 5 buffers
             if (numFaces == 0) {
                 numFaces = object.getNumFaces();
             }
         }
-        Shader.getActiveShader().getAdaptor().bindData(faces, vertexBuffer, vboLoaded);
-        if (!vboLoaded) {
+        if (!dataLoaded && faces == null) {
+            throw new IllegalStateException("Mesh data is unavailable for this Shape's GPU buffer rebuild");
+        }
+        adaptor.bindData(faces, vertexBuffer, dataLoaded);
+        if (!dataLoaded) {
             object = null;
-            if (CoreRenderer.engine.getPlatform() == Platform.DESKTOP) { //on mobile, we may need to reload to gpu faces
-                faces = null;
+            if (lightData) {
+                lightVboLoaded = true;
             }
             System.gc();
         }
@@ -224,6 +250,16 @@ public class Shape implements VerticesSet {
             gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
         } else {
             gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
+        }
+        if (Shader.getActiveShader().getAdaptor() instanceof PBRShaderAdaptor pbrAdaptor) {
+            if (pbrMaterial == null) {
+                pbrMaterial = new PBRMaterial();
+            }
+            pbrAdaptor.bindMaterial(pbrMaterial, this);
+            if (pbrMaterial.baseColorMapPath == null || pbrMaterial.baseColorMapPath.isBlank()) {
+                gl.glActiveTexture(glc.GL_TEXTURE0());
+                gl.glBindTexture(glc.GL_TEXTURE_2D(), texture.getId());
+            }
         }
         postToGlNeeded = false;
     }
@@ -260,6 +296,7 @@ public class Shape implements VerticesSet {
     public void onRedrawSetup() {
         setRedrawNeeded(true);
         vboLoaded = false;
+        lightVboLoaded = false;
     }
 
     @Override
@@ -268,7 +305,6 @@ public class Shape implements VerticesSet {
         postToGlNeeded = true;
         if (redrawNeeded) {
             VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
-            vboLoaded = false;
             postToGlNeeded = true;
             //  VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
             //vboLoaded = false;
@@ -283,7 +319,6 @@ public class Shape implements VerticesSet {
 
     @Override
     public void onRedraw() {
-        vboLoaded = false;
         if (image != null) {
             image.delete();
         }

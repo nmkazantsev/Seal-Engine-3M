@@ -16,7 +16,7 @@ Android: https://github.com/nmkazantsev/Demo-app
 
 ## Введение
 
-Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.4.0). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и разделённого цикла `update/render`.
+Данный документ описывает основные классы и методы игрового движка **Seal Engine 3-M** (версия 3.5.0). Движок предназначен для создания 2D и 3D игр с использованием OpenGL. Архитектура построена вокруг страниц (`GamePageClass`), камеры, шейдеров, вершинных объектов и разделённого цикла `update/render`.
 
 Документ сгруппирован по функциональным разделам. Для каждого класса приведено краткое описание и список публичных методов, которые могут быть полезны разработчику.
 
@@ -54,15 +54,17 @@ Android-варианты должны соответствовать испол�
 
 Миграция со старого layout: переместите каждый одиночный `.glsl` из корня ресурсов в обе папки, сохраните одно и то же относительное имя, затем адаптируйте только GLSL dialect/version под платформу. Java call sites оставьте с прежними логическими именами.
 
+Начиная с v3.5.0 включён отдельный расширенный Phong-шейдер для материалов с картами: `pbr/vertex.glsl` и `pbr/fragment.glsl`. Используйте `PBRShaderAdaptor` и `Shape.setPBRMaterial(...)`; доступные карты BaseColor, Normal, Metallic, Roughness и AO могут разделяться одним `PBRMaterial`. Отсутствующие карты отключаются и используют скалярные defaults. Roughness управляет шириной Phong-блика, Metallic — его цветом и долей diffuse, AO ослабляет ambient. Для вырожденных UV-граней движок строит устойчивый касательный базис для normal map. Legacy shader для обычных Shape не меняется.
+
 ## Сборка release JAR
 
-Одна команда собирает три runtime JAR версии 3.4.0:
+Одна команда собирает три runtime JAR версии 3.5.0:
 
 ```bash
 ./gradlew clean releaseJars
 ```
 
-Результаты: `core/build/libs/core-3.4.0.jar`, `android/build/libs/android-3.4.0.jar` и `desktop/build/libs/desktop-3.4.0.jar`. Android build также сохраняет versioned AAR `android/build/libs/android-3.4.0.aar` как дополнительный artifact.
+Результаты: `core/build/libs/core-3.5.0.jar`, `android/build/libs/android-3.5.0.jar` и `desktop/build/libs/desktop-3.5.0.jar`. Android build также сохраняет versioned AAR `android/build/libs/android-3.5.0.aar` как дополнительный artifact.
 
 ---
 
@@ -80,7 +82,7 @@ Android-варианты должны соответствовать испол�
 Главный класс движка. Управляет жизненным циклом, переключением страниц, FPS.
 
 **Публичные методы:**
-- `static String getVersion()` – возвращает версию движка (для этого release — "v3.4.0").
+- `static String getVersion()` – возвращает версию движка (для этого release — "v3.5.0").
 - `void startNewPage(GamePageClass newPage)` – переключает текущую игровую страницу. Старая страница удаляется сборщиком мусора.
 - `long pageMillis()` – возвращает время в миллисекундах с момента загрузки текущей страницы.
 - `EngineRunState getRunState()` – возвращает `RUNNING`, `SIMULATION_PAUSED`, `RENDERING_SUSPENDED` или `CLOSED`.
@@ -454,11 +456,16 @@ img.text("Hello, World!", 100, 100);
 
 **Публичные методы:**
 - `void addNormalMap(String normalMapFileName)` – добавляет карту нормалей для модели.
+- `void setPBRMaterial(PBRMaterial material)` / `PBRMaterial getPBRMaterial()` – задаёт материал для `PBRShaderAdaptor`.
 - `void prepareAndDraw()` – отрисовывает модель с текущей матрицей трансформации (должна быть задана через `Matrix.applyMatrix`).
 - `void redrawNow()` – принудительно перезагружает текстуру.
 - `void onRedrawSetup()`, `void setRedrawNeeded(boolean redrawNeeded)`, `boolean isRedrawNeeded()` – управление перезагрузкой.
 - `void delete()` – удаляет ресурсы.
 - Статический метод `static void loadFacesAsync(String fileName, Function<PreLoadedMesh, Void> callback)` – асинхронная загрузка OBJ.
+
+### PBR-style Phong материал
+
+Для отдельного PBR прохода используйте `PBRShaderAdaptor` и логические пути `pbr/vertex.glsl`, `pbr/fragment.glsl`. Он наследует пятиканальную загрузку вершин из `LightShaderAdaptor`. `PBRMaterial` принимает optional пути BaseColor, Normal, Metallic, Roughness и AO; отсутствующие карты используют скалярные значения материала. Если карта BaseColor не задана, используется обычная текстура Shape. Текущая реализация — расширенный Phong: normal map меняет нормаль, roughness управляет шириной блика, metallic — его цветом и долей diffuse, AO приглушает ambient. Для UV-треугольников с нулевой площадью касательный базис выбирается по нормали поверхности, чтобы не передавать `NaN` в шейдер. Alpha BaseColor передаётся в цвет фрагмента; вызывающий код отвечает за включение blending и сортировку прозрачных Shape. Материал можно разделять между несколькими Shape, чтобы карты загружались один раз. Данные меша сохраняются для переключения между legacy и PBR адаптерами и пересоздания GPU-буферов после потери контекста. Обычный `Shape` и legacy shader продолжают работать без изменений.
 
 ### Polygon
 Класс для создания простого прямоугольного полигона (два треугольника) с динамически генерируемой текстурой (через `Function`).

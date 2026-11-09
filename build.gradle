@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = 'com.nikitos'
-    version = '3.4.0'
+    version = '3.5.0'
 }
 
 tasks.register('releaseJars') {

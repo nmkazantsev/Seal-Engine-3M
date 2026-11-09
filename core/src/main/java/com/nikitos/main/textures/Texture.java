@@ -15,8 +15,8 @@ public class Texture extends VRAMobject {
 
     public Texture(GamePageClass creator, boolean mipMap) {
         super(creator);
-        id = createTexture();
         this.mipMap = mipMap;
+        id = createTexture();
     }
 
     @Override
