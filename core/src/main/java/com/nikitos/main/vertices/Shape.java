@@ -304,8 +304,6 @@ public class Shape implements VerticesSet {
         postToGlNeeded = true;
         if (redrawNeeded) {
             VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
-            vboLoaded = false;
-            lightVboLoaded = false;
             postToGlNeeded = true;
             //  VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
             //vboLoaded = false;
@@ -320,8 +318,6 @@ public class Shape implements VerticesSet {
 
     @Override
     public void onRedraw() {
-        vboLoaded = false;
-        lightVboLoaded = false;
         if (image != null) {
             image.delete();
         }
