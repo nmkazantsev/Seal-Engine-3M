@@ -6,6 +6,7 @@ import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
 import com.nikitos.main.light.PBRMaterial;
 import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.shaders.default_adaptors.LightShaderAdaptor;
 import com.nikitos.main.shaders.default_adaptors.PBRShaderAdaptor;
 import com.nikitos.main.textures.NormalMap;
 import com.nikitos.main.textures.Texture;
@@ -51,6 +52,7 @@ public class Shape implements VerticesSet {
     private VertexBuffer vertexBuffer;
 
     private boolean vboLoaded = false;
+    private boolean lightVboLoaded = false;
     private int numFaces = 0;
     private PBRMaterial pbrMaterial;
 
@@ -177,6 +179,9 @@ public class Shape implements VerticesSet {
     }
 
     public void setPBRMaterial(PBRMaterial pbrMaterial) {
+        if (faces == null && !lightVboLoaded) {
+            throw new IllegalStateException("Set the PBR material before drawing this Shape with a legacy shader");
+        }
         this.pbrMaterial = pbrMaterial;
     }
 
@@ -201,17 +206,28 @@ public class Shape implements VerticesSet {
 
 
     public void bindData() {
+        var adaptor = Shader.getActiveShader().getAdaptor();
+        boolean lightData = adaptor instanceof LightShaderAdaptor;
+        boolean dataLoaded = lightData ? lightVboLoaded : vboLoaded;
         if (!vboLoaded) {
             vertexBuffer = new VertexBuffer(5, creator); //5 because 5 types of coordinates so we need 5 buffers
             if (numFaces == 0) {
                 numFaces = object.getNumFaces();
             }
         }
-        Shader.getActiveShader().getAdaptor().bindData(faces, vertexBuffer, vboLoaded);
-        if (!vboLoaded) {
+        if (!dataLoaded && faces == null) {
+            throw new IllegalStateException("This Shape needs its mesh data to switch shader adapters; set its PBR material before the first draw");
+        }
+        adaptor.bindData(faces, vertexBuffer, dataLoaded);
+        if (!dataLoaded) {
             object = null;
+            if (lightData) {
+                lightVboLoaded = true;
+            }
             if (CoreRenderer.engine.getPlatform() == Platform.DESKTOP) { //on mobile, we may need to reload to gpu faces
-                faces = null;
+                if (lightData || pbrMaterial == null) {
+                    faces = null;
+                }
             }
             System.gc();
         }
@@ -244,11 +260,15 @@ public class Shape implements VerticesSet {
         } else {
             gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
         }
-        if (Shader.getActiveShader().getAdaptor() instanceof PBRShaderAdaptor adaptor) {
+        if (Shader.getActiveShader().getAdaptor() instanceof PBRShaderAdaptor pbrAdaptor) {
             if (pbrMaterial == null) {
                 pbrMaterial = new PBRMaterial();
             }
-            adaptor.bindMaterial(pbrMaterial, this);
+            pbrAdaptor.bindMaterial(pbrMaterial, this);
+            if (pbrMaterial.baseColorMapPath == null || pbrMaterial.baseColorMapPath.isBlank()) {
+                gl.glActiveTexture(glc.GL_TEXTURE0());
+                gl.glBindTexture(glc.GL_TEXTURE_2D(), texture.getId());
+            }
         }
         postToGlNeeded = false;
     }
@@ -294,6 +314,7 @@ public class Shape implements VerticesSet {
         if (redrawNeeded) {
             VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
             vboLoaded = false;
+            lightVboLoaded = false;
             postToGlNeeded = true;
             //  VerticesShapesManager.allShapesToRedraw.add(new WeakReference<>(this));//добавить ссылку на Poligon
             //vboLoaded = false;
@@ -309,6 +330,7 @@ public class Shape implements VerticesSet {
     @Override
     public void onRedraw() {
         vboLoaded = false;
+        lightVboLoaded = false;
         if (image != null) {
             image.delete();
         }

@@ -38,7 +38,7 @@ public class PBRMaterial {
         boolean[] enabled = new boolean[paths.length];
         for (String path : paths) {
             if (path != null && !path.isBlank()) {
-                maps.computeIfAbsent(path, key -> new MapTexture(page, key));
+                texture(page, path);
             }
         }
         for (int i = 0; i < paths.length; i++) {
@@ -47,8 +47,7 @@ public class PBRMaterial {
                 enabled[i] = i == 0 || (i == 1 && shapeHasNormalMap);
                 continue;
             }
-            MapTexture map = maps.computeIfAbsent(path, key -> new MapTexture(page, key));
-            map.bind(gl, glc, i);
+            texture(page, path).bind(gl, glc, i);
             enabled[i] = true;
         }
         return enabled;
@@ -56,9 +55,19 @@ public class PBRMaterial {
 
     private final Map<String, MapTexture> maps = new HashMap<>();
 
+    private MapTexture texture(GamePageClass page, String path) {
+        MapTexture map = maps.get(path);
+        if (map == null || map.isDeleted()) {
+            map = new MapTexture(page, path);
+            maps.put(path, map);
+        }
+        return map;
+    }
+
     private static class MapTexture extends Texture {
         private final PImage image;
         private int uploadedId = -1;
+        private boolean deleted;
 
         private MapTexture(GamePageClass page, String path) {
             super(page, true);
@@ -75,15 +84,21 @@ public class PBRMaterial {
             }
         }
 
+        private boolean isDeleted() {
+            return deleted;
+        }
+
         @Override
         public void reload() {
             super.reload();
             uploadedId = -1;
+            deleted = false;
         }
 
         @Override
         public void delete() {
             super.delete();
+            deleted = true;
             if (image != null) {
                 image.delete();
             }

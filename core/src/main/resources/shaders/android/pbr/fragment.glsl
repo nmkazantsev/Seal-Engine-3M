@@ -27,7 +27,8 @@ uniform DirectionalLight dLights[4];
 uniform AmbientLight aLight;
 out vec4 FragColor;
 void main() {
-    vec3 albedo = baseColor * (baseColorMapEnable == 1 ? texture(u_TextureUnit, TexCoord).rgb : vec3(1.0));
+    vec4 baseColorSample = baseColorMapEnable == 1 ? texture(u_TextureUnit, TexCoord) : vec4(1.0);
+    vec3 albedo = baseColor * baseColorSample.rgb;
     vec3 normal = normalize(Normal);
     if (normalMapEnable == 1) {
         vec3 tangent = normalize(Tangent - normal * dot(normal, Tangent));
@@ -45,10 +46,14 @@ void main() {
     vec3 lighting = aLight.color * albedo * ao;
     for (int i = 0; i < dLightNum && i < 4; i++) {
         vec3 lightDirection = normalize(-dLights[i].direction);
-        float diffuse = max(dot(normal, lightDirection), 0.0) * dLights[i].diffuse;
-        vec3 halfDirection = normalize(lightDirection + viewDirection);
-        float specular = pow(max(dot(normal, halfDirection), 0.0), exponent) * dLights[i].specular;
+        float normalLight = max(dot(normal, lightDirection), 0.0);
+        float diffuse = normalLight * dLights[i].diffuse;
+        float specular = 0.0;
+        if (normalLight > 0.0) {
+            vec3 halfDirection = normalize(lightDirection + viewDirection);
+            specular = pow(max(dot(normal, halfDirection), 0.0), exponent) * dLights[i].specular;
+        }
         lighting += dLights[i].color * (diffuseColor * diffuse + specularColor * specular);
     }
-    FragColor = vec4(lighting, 1.0);
+    FragColor = vec4(lighting, baseColorSample.a);
 }
