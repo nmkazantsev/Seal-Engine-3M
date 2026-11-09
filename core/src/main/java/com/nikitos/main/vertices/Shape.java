@@ -296,6 +296,7 @@ public class Shape implements VerticesSet {
     public void onRedrawSetup() {
         setRedrawNeeded(true);
         vboLoaded = false;
+        lightVboLoaded = false;
     }
 
     @Override
