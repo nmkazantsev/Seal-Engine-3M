@@ -1,3 +1,15 @@
+# Seal Engine 3-M Release v3.5.0 Notes
+
+## PBR-style Phong materials
+
+- Added `PBRMaterial` and `Shape.setPBRMaterial(...)` for optional BaseColor, Normal, Metallic, Roughness and AO images plus scalar defaults.
+- Added the separate `PBRShaderAdaptor` and mirrored Android/Desktop shaders at `pbr/vertex.glsl` and `pbr/fragment.glsl`.
+- The shader extends Phong: normal maps perturb the normal, roughness controls highlight width, metallic tints specular and reduces diffuse, and AO attenuates ambient light.
+- Material images are cached per shared material and reload with the engine texture lifecycle. Shapes without a PBR material keep the existing legacy path.
+- `./gradlew clean releaseJars` builds `core-3.5.0.jar`, `android-3.5.0.jar`, `desktop-3.5.0.jar` and `android-3.5.0.aar`.
+
+---
+
 # Seal Engine 3-M Release v3.4.0 Notes
 
 ## Platform-specific shaders

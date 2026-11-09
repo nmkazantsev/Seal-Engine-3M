@@ -4,7 +4,9 @@ package com.nikitos.main.vertices;
 import com.nikitos.CoreRenderer;
 import com.nikitos.GamePageClass;
 import com.nikitos.main.images.PImage;
+import com.nikitos.main.light.PBRMaterial;
 import com.nikitos.main.shaders.Shader;
+import com.nikitos.main.shaders.default_adaptors.PBRShaderAdaptor;
 import com.nikitos.main.textures.NormalMap;
 import com.nikitos.main.textures.Texture;
 import com.nikitos.main.vertex_bueffer.VertexBuffer;
@@ -50,6 +52,7 @@ public class Shape implements VerticesSet {
 
     private boolean vboLoaded = false;
     private int numFaces = 0;
+    private PBRMaterial pbrMaterial;
 
     public Shape(PreLoadedMesh preLoadedMesh, String textureFileName, GamePageClass page) {
         platformBridge = CoreRenderer.engine.getPlatformBridge();
@@ -173,6 +176,22 @@ public class Shape implements VerticesSet {
         normalTexture = new NormalMap(creator);
     }
 
+    public void setPBRMaterial(PBRMaterial pbrMaterial) {
+        this.pbrMaterial = pbrMaterial;
+    }
+
+    public PBRMaterial getPBRMaterial() {
+        return pbrMaterial;
+    }
+
+    public boolean hasNormalMap() {
+        return normalTexture != null;
+    }
+
+    public GamePageClass getCreator() {
+        return creator;
+    }
+
     private PImage loadTexture(Void v) {
         if (normalMapFileName != null) {
             normalImage = loadImage(normalMapFileName);
@@ -224,6 +243,12 @@ public class Shape implements VerticesSet {
             gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 1);
         } else {
             gl.glUniform1i(Shader.getActiveShader().getAdaptor().getNormalMapEnableLocation(), 0);
+        }
+        if (Shader.getActiveShader().getAdaptor() instanceof PBRShaderAdaptor adaptor) {
+            if (pbrMaterial == null) {
+                pbrMaterial = new PBRMaterial();
+            }
+            adaptor.bindMaterial(pbrMaterial, this);
         }
         postToGlNeeded = false;
     }
